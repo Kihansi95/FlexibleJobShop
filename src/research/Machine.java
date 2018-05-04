@@ -12,7 +12,8 @@ public class Machine {
     
     public Machine(int id) {
     	this.id = id;
-    	lastAssignment = null;
+    	this.lastAssignment = null;
+    	this.ready = true;
     }
     
     public int getId() {
@@ -23,8 +24,20 @@ public class Machine {
     	lastAssignment = assignment;
     }
     
+    public void setState(boolean state)	{
+    	this.ready = state;
+    }
+    
     public boolean isReady() {
     	return ready;
     }
     
+    @Override
+	public boolean equals(Object other) {
+		return other instanceof Machine && this.id == ((Machine) other).id;
+	}
+
+	public Label getLastAssignment() {
+		return lastAssignment;
+	}
 }

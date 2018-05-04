@@ -3,12 +3,28 @@ package data;
 import java.util.HashMap;
 import java.util.Map;
 
-public class Operation {
-     
-    private Map<Integer, Integer> tuples; // <machine , processingtime>
+import research.Machine;
 
-    public Operation(int nb_machines){
+public class Operation {
+    
+	private int idJob;
+	private int id;
+    private Map<Integer, Integer> tuples; // <machine , processingtime>
+    private Operation next;
+
+    public Operation(int idJob, int id, int nb_machines){
+    	this.idJob = idJob;
+    	this.id = id;
         this.tuples = new HashMap<Integer, Integer>();
+        this.next = null;
+    }
+    
+    public void setNext(Operation next) {
+    	this.next = next;
+    }
+    
+    public Operation getNext() {
+    	return next;
     }
 
     public void addTuple(int num_machine, int process_time){
@@ -31,7 +47,14 @@ public class Operation {
     
     @Override
     public String toString() {
-    	return this.tuples.toString(); // dont know how
+    	return this.idJob+"."+this.id;
     }
+    
+    @Override
+	public boolean equals(Object other) {
+		return other instanceof Operation 
+				&& this.idJob == ((Operation) other).id 
+				&& this.id == ((Operation) other).id;
+	}
 }
 

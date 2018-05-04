@@ -57,4 +57,36 @@ public class Label {
 	public int getProcessingTime() {
 		return this.operation.getProcessingTime(this.machine.getId());
 	}
+	
+	public Label getFather()	{
+		return this.father;
+	}
+	
+	public void setMachineState(boolean state) {
+		this.machine.setState(state);
+	}
+	
+	public void setMachineMemory(Label assignment)	{
+		this.machine.memoryLabel(assignment);
+	}
+	
+	@Override
+	public boolean equals(Object other) {
+		return other instanceof Label
+				&& ( (this.operation.equals(((Label) other).operation)
+				|| this.machine.equals(((Label) other).machine)) );
+	}
+
+	public int getFinishTime() {
+		return this.finishTime;
+	}
+
+	public void setFatherByMachine() {
+		this.father = this.machine.getLastAssignment();		
+	}
+
+	public void updateFinishTime(int currentTime) {
+		int assign_machine = machine.getId();
+		finishTime = currentTime + operation.getProcessingTime(assign_machine);	
+	}
 }

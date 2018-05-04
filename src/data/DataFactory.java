@@ -49,22 +49,27 @@ public class DataFactory {
     private static Job scanJob(int idJob, Scanner input) {
     	int nb_activities = input.nextInt();
     	Job job = new Job(idJob);
+    	Operation lastCreatedOp = null;	// memory the last one in order to set next
     	
-    	for(int activity = 0; activity < nb_activities; activity++) {
+    	for(int operation = 0; operation < nb_activities; operation++) {
 
     		int nb_machine = input.nextInt(); //get nb machine allowed for this operation
-    		Operation act = new Operation(nb_machine);
+    		Operation op = new Operation(idJob,operation, nb_machine);
     		
+    		if(operation > 0)
+    			lastCreatedOp.setNext(op);
+    		    		
     		for(int machine = 0; machine < nb_machine; machine++) {
     		
     			int id_machine = input.nextInt();
     			int duration = input.nextInt();
     			
-    			act.addTuple(id_machine, duration);
+    			op.addTuple(id_machine, duration);
     			// act.addTuple(input.nextInt(), input.nextInt()); shorthand
     		}
     		
-    		job.addActivity(act);
+    		job.addActivity(op);
+    		lastCreatedOp = op;
     	}
     	
     	return job;

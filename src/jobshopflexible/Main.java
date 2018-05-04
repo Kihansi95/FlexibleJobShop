@@ -15,9 +15,12 @@ public class Main {
         
         // Process the initial solution
         InitialSolution is = new InitialSolution(shop);
+        is.start();
         
         // Visualize the solution
-
+        System.out.println(is.getSolution());
+        
+        
         System.out.println("fin");
     }
 }
