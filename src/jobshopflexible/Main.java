@@ -5,13 +5,13 @@ import research.InitialSolution;
 
 public class Main {
 	
-	public static final String PATH = "./data/mt10c1.fjs";
-
-
     public static void main(String args[]) {
+    	
+    	// load configuration
+    	Configuration conf = new Configuration();
 
     	// initiate research context
-        FlexibleJobShop shop = DataFactory.initiateJobShop(PATH);
+        FlexibleJobShop shop = DataFactory.initiateJobShop(conf.DataPath);
         
         // Process the initial solution
         
@@ -24,4 +24,5 @@ public class Main {
         
         System.out.println("fin");
     }
+    
 }
