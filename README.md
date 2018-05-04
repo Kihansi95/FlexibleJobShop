@@ -16,8 +16,8 @@ dataPath=data/mt10c1.fjs
 ```
 
 ## TODO
-* Représentation de problème (graphe)
-* Représentation de solution
+* :poop: Représentation de problème (graphe)
+* :poop: Représentation de solution
 * Implémentation de l'algorithme:
 	* Méta heuristique de recherche local
 	* Méthode à population de solution
