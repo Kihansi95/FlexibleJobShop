@@ -1,1 +1,6 @@
+Monaldo/
+*.pdf
+*.txt
 /bin/
+/.classpath
+/.project
