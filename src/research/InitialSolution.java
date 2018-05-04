@@ -1,7 +1,6 @@
 package research;
 
 import java.util.ArrayList;
-import java.util.Collection;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.LinkedList;
@@ -9,8 +8,6 @@ import java.util.List;
 import java.util.Map;
 
 import data.*;
-import javafx.collections.transformation.SortedList;
-import jdk.nashorn.internal.ir.Assignment;
 
 public class InitialSolution {
 	
