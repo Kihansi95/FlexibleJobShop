@@ -53,7 +53,7 @@ public class Operation {
     @Override
 	public boolean equals(Object other) {
 		return other instanceof Operation 
-				&& this.idJob == ((Operation) other).id 
+				&& this.idJob == ((Operation) other).idJob 
 				&& this.id == ((Operation) other).id;
 	}
 }

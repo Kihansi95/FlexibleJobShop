@@ -60,7 +60,7 @@ public class Job {
     	for(Operation operation: operations) {
     		builder.append(operation).append(", ");
     	}
-    	builder.append("]}");
+    	builder.replace(builder.length() - 2, builder.length(), "]}"); // replace ", " by "]}"
     	return builder.toString();
     }
 

@@ -14,6 +14,7 @@ public class Main {
         FlexibleJobShop shop = DataFactory.initiateJobShop(PATH);
         
         // Process the initial solution
+        
         InitialSolution is = new InitialSolution(shop);
         is.start();
         

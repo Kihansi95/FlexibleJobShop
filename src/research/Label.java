@@ -76,6 +76,11 @@ public class Label {
 				&& ( (this.operation.equals(((Label) other).operation)
 				|| this.machine.equals(((Label) other).machine)) );
 	}
+	
+	@Override
+	public String toString() {
+		return "{" + operation+ "-"+this.machine.getId()+"-"+this.getProcessingTime()+"}";
+	}
 
 	public int getFinishTime() {
 		return this.finishTime;

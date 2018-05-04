@@ -31,7 +31,7 @@ public class InitialSolution {
 		// init machine from context
 		int nbMachines = context.getNbMachine();		
 		for(int i = 0; i < nbMachines; i++) {
-			machines.add(new Machine(i)); 
+			machines.add(new Machine(i + 1)); 
 		}
 		
 		// init available activities
@@ -48,8 +48,8 @@ public class InitialSolution {
 		List<Label> candidateList = new LinkedList<Label>();
 		List<Label> chosenCandidate = new LinkedList<Label>();
 		
-		for(int i = 0; i < 2; i++)	{
-		//while(!availableOperations.isEmpty()) {
+		//for(int i = 0; i < 2; i++)	{
+		while(!availableOperations.isEmpty()) {
 			
 			// make candidate list
 			candidateList.clear();
@@ -80,9 +80,7 @@ public class InitialSolution {
 				
 				// remove the corresponding from waiting available list
 				Operation chosenOp = best.getOperation();
-				
-				System.out.println("Chosen op = " +chosenOp);
-				
+								
 				availableOperations.remove(chosenOp);
 				Operation next = chosenOp.getNext();
 				if(next != null)
@@ -115,7 +113,7 @@ public class InitialSolution {
 			this.assignments.addAll(chosenCandidate);
 			chosenCandidate.clear(); // TODO check if all assigned labels are null
 			
-			System.out.println(availableOperations);
+			System.out.println("availableOperations = "+availableOperations);
 		}
 		
 		
