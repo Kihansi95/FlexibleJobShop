@@ -10,10 +10,14 @@
 * You can see an example of configuration in the below section. For the dev reason, we ignore to put track fjs.conf in the project.
 
 ## Configuration
+Example for `fjs.conf`
 ```
 mode=DEBUG
 dataPath=data/mt10c1.fjs
 ```
+
+## PDF generate
+Pdf generation in principle will generate a `.tex` file and then compile the file in pdf
 
 ## TODO
 * :poop: Représentation de problème (graphe)
