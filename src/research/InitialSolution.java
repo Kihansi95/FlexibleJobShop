@@ -69,12 +69,10 @@ public class InitialSolution {
 		List<Label> candidateList = new LinkedList<Label>();
 		List<Label> chosenCandidate = new LinkedList<Label>();
 		
-		for(int i = 0; i < 3; i++)	{
-		//while(!availableOperations.isEmpty()) {
+		//for(int i = 0; i < 3; i++)	{
+		while(!availableOperations.isEmpty()) {
 			
 			// make candidate list
-
-			
 			candidateList.clear();
 			for(Label operation: this.availableOperations) {
 				Map<Integer, Integer> tuples = operation.getOperation().getTuples();
@@ -90,10 +88,6 @@ public class InitialSolution {
 				}
 			}
 			
-			//TODOS debugging
-			System.out.println("availOp = "+availableOperations);
-			System.out.println("candidate list = "+candidateList);
-			
 			// choose the best candidate(s) but be careful with duplicata assignments
 			Collections.sort(candidateList, comparator);
 			while(!candidateList.isEmpty()) {
@@ -108,10 +102,9 @@ public class InitialSolution {
 				while(candidateList.remove(best));	//not the best but the corresponding
 				
 				// remove the corresponding from waiting available list
-				Operation chosenOp = best.getOperation();
-								
-				availableOperations.remove(chosenOp);
-				Operation nextOp = chosenOp.getNext();
+				availableOperations.remove(best);
+				
+				Operation nextOp = best.getOperation().getNext();
 				if(nextOp != null)
 					availableOperations.add(new Label(nextOp, best));	// memory the best as its father
 			}
@@ -128,6 +121,7 @@ public class InitialSolution {
 					if(father.getFinishTime() < time) {
 						candidate.setCriticalFatherByMachine();
 					}
+					candidate.updateMachineMemory();
 				}
 			}
 
@@ -170,6 +164,7 @@ public class InitialSolution {
 			
 			// add path by actual node
 			System.out.println(label + " has father:  " + label.getFathers());
+			
 			for(Label father : label.getFathers()) {
 				String from = convertNode(father);
 				pdfOutput.addPath(from, node, father.getProcessingTime());
@@ -177,20 +172,11 @@ public class InitialSolution {
 		}
 		pdfOutput.addNode(endNode, false, true);
 		
-		// add paths:
-		/*
-		for(Label label : getSolution()) {
-			
-		}
-		*/
-		
-		// TODO: check if we can add node and path at the same time
-		
 		pdfOutput.write();
 	}
 	
 	private String convertNode(Label label) {
-		return label.getOperation().getIdJob() + "." + label.getOperation().getId() + "." + label.getMachine();
+		return label.getOperation().getIdJob() + "-" + label.getOperation().getId() + "-" + label.getMachine();
 	}
 	
 }

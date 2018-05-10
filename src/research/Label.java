@@ -29,15 +29,15 @@ public class Label {
 	private int finishTime;
 	
 	/**
-	 * By default, each operation will follow the precedent operation in the same job
+	 * Constructor for a standard label
 	 * @param operation
 	 * @param precedentLabel
 	 */
 	public Label(Operation operation, Machine machine, Label precedentLabel) {
 		this.operation = operation;
 		this.fathers = new Stack<Label>();
-		if(precedentLabel != null) 
-			this.fathers.push(precedentLabel); // avoid NullPointerException
+		if(precedentLabel != null) 		// avoid NullPointerException
+			this.fathers.push(precedentLabel); 
 		this.criticalFather = precedentLabel;
 		this.finishTime = -1;
 		this.machine = machine;
@@ -101,8 +101,8 @@ public class Label {
 		this.machine.setState(state);
 	}
 	
-	public void setMachineMemory(Label assignment)	{
-		this.machine.memoryLabel(assignment);
+	public void updateMachineMemory()	{
+		this.machine.memoryLabel(this);
 	}
 	
 	@Override

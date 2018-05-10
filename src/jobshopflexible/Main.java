@@ -20,7 +20,7 @@ public class Main {
         
         // Visualize the solution
         //System.out.println(is.getSolution());
-        //is.visualizeSolution();
+        is.visualizeSolution();
         
         System.out.println("fin");
     }

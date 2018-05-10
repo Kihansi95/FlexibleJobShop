@@ -59,7 +59,7 @@ public class PdfWriter {
 			.append("(q_2) edge  node [swap] {0} (q_3) ").append(endL)
 			.append("\t edge [loop below] node {1} ();").append(endL)
 			 */
-			.append("\\path[->]").append(endL)
+			.append("\t\\path[->]").append(endL)
 			.append(pathToken).append(endL).append(endL)
 			
 			.append("\\end{tikzpicture}").append(endL)
@@ -74,7 +74,7 @@ public class PdfWriter {
 	public void addNode(String node, boolean start, boolean end) {
 		
 		// translate into latex's node
-		StringBuilder nodeString = new StringBuilder("\\node[state");
+		StringBuilder nodeString = new StringBuilder("\t\\node[state");
 		if(start) nodeString.append(",initial");
 		if(end) nodeString.append(",accepting");
 		nodeString.append("] (" + node + ") {$" + node + "$};").append(endL);
@@ -95,7 +95,7 @@ public class PdfWriter {
 		.append("(q_2) edge  node [swap] {0} (q_3) ").append(endL)
 		.append("\t edge [loop below] node {1} ();").append(endL)
 		 */
-		String pathString = from + " edge node {" + weight + "} ("+to + ")" + endL;
+		String pathString = "\t(" + from + ") edge node {" + weight + "} ("+to + ")" + endL;
 		
 		int place = template.indexOf(pathToken);
 		template.insert(place, pathString);
@@ -104,7 +104,9 @@ public class PdfWriter {
 	public void write() {
 		
 		// clear paramter in template
-		String content = template.toString().replaceFirst(nodeToken, "").replaceFirst(pathToken, ""); // can use replace all but use this for performance
+		String content = template.toString()
+				.replaceFirst(nodeToken, "")
+				.replaceFirst(pathToken, ";"); // can use replace all but use this for performance
 		
         try {
         	
@@ -119,7 +121,7 @@ public class PdfWriter {
             if(!lastPdf.delete()) 
             	System.err.println("Unable to delete "+lastPdf.getPath());
             
-            /*
+            
             // Execute LaTeX from command line  to generate picture
             verbose("Generate the " + filename + ".pdf");
             ProcessBuilder pb = new ProcessBuilder("C:\\Program Files\\MiKTeX 2.9\\miktex\\bin\\x64\\pdflatex", "-shell-escape", this.filename + ".tex");
@@ -130,7 +132,7 @@ public class PdfWriter {
             StreamPrinter fluxErreur = new StreamPrinter(p.getErrorStream(), true);
             new Thread(fluxSortie).start();
             new Thread(fluxErreur).start();
-            p.waitFor();*/
+            p.waitFor();
             
             // Display picture
             /*
@@ -166,9 +168,9 @@ public class PdfWriter {
                    
         } catch (IOException ex) {
             ex.printStackTrace();
-        } /*catch (InterruptedException e) {
+        } catch (InterruptedException e) {
 			e.printStackTrace();
-		}*/
+		}
 	}
 	
 	private void verbose(String msg) {
