@@ -37,11 +37,13 @@ public class Job {
      * 		Activity A2 = J1.popActivity(); // we are not sure whether A1 has been done before getting A2
      * @return Activity
      */
-    public Operation getOperation() {
-    	// TODO if we wish to keep the list of activity, we prefer to change this method into getActivity(index)
-    	// in order to keep the list.
-    	
-    	return this.operations.remove(); // == .poll(), to see if need
+    public Operation getFirstOperation() {
+    	// return this.operations.remove(); // == .poll(), to see if need
+    	return this.operations.peek();
+    }
+    
+    public int getNbOperation() {
+    	return this.operations.size();
     }
     
     /**
@@ -51,7 +53,7 @@ public class Job {
      * @return true if finished, false if not
      */
     public boolean isFinished() {
-    	return this.operations.isEmpty();
+    	return this.operations.isEmpty();	// TODO to be removed because this will be processed in algorithm
     }
     
     @Override

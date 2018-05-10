@@ -1,6 +1,11 @@
 Monaldo/
 *.pdf
+
 *.txt
-/bin/
+/
+bin/
+
 /.classpath
+
 /.project
+tmp

@@ -9,7 +9,7 @@ public class Main {
     	
     	// load configuration
     	Configuration conf = new Configuration();
-
+    		
     	// initiate research context
         FlexibleJobShop shop = DataFactory.initiateJobShop(conf.DataPath);
         
@@ -19,8 +19,8 @@ public class Main {
         is.start();
         
         // Visualize the solution
-        System.out.println(is.getSolution());
-        
+        //System.out.println(is.getSolution());
+        //is.visualizeSolution();
         
         System.out.println("fin");
     }

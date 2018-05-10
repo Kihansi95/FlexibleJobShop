@@ -35,6 +35,14 @@ public class Operation {
     	return this.tuples; //TODO clones before return
     }
     
+    public int getIdJob() {
+    	return idJob;
+    }
+    
+    public int getId() {
+    	return id;
+    }
+    
     /**
      * Get le temps 
      * @param machine

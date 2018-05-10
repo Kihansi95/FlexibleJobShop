@@ -1,5 +1,7 @@
 package research;
 
+import java.util.Stack;
+
 import data.Operation;
 
 public class Label {
@@ -12,9 +14,14 @@ public class Label {
 	private Machine machine;
 	
 	/**
+	 * All the possible fathers
+	 */
+	private Stack<Label> fathers;
+	
+	/**
 	 * The last activity it has to wait in order to be executed
 	 */
-	private Label father;
+	private Label criticalFather;
 	
 	/**
 	 * Recorded time when finished
@@ -28,8 +35,28 @@ public class Label {
 	 */
 	public Label(Operation operation, Machine machine, Label precedentLabel) {
 		this.operation = operation;
-		this.father = precedentLabel;
+		this.fathers = new Stack<Label>();
+		if(precedentLabel != null) 
+			this.fathers.push(precedentLabel); // avoid NullPointerException
+		this.criticalFather = precedentLabel;
 		this.finishTime = -1;
+		this.machine = machine;
+	}
+	
+	/**
+	 * Constructor of candidate label
+	 * @param other : label from available operation
+	 * @param machine
+	 */
+	public Label(Label other, Machine machine) {
+		
+		// copy from other
+		this.operation = other.operation;
+		this.fathers = other.fathers;
+		this.criticalFather = other.criticalFather;
+		this.finishTime = other.finishTime;
+		
+		// assign new machine
 		this.machine = machine;
 	}
 	
@@ -38,7 +65,7 @@ public class Label {
 	 * @param operation
 	 */
 	public Label(Operation operation) {
-		this(operation, null);
+		this(operation, null); 
 	}
 	
 	/**
@@ -54,12 +81,20 @@ public class Label {
 		return this.operation;
 	}
 	
+	public int getMachine() {
+		return this.machine.getId();
+	}
+	
 	public int getProcessingTime() {
 		return this.operation.getProcessingTime(this.machine.getId());
 	}
 	
-	public Label getFather()	{
-		return this.father;
+	public Label getCriticalFather()	{
+		return this.criticalFather;
+	}
+	
+	public Stack<Label> getFathers()	{
+		return this.fathers;
 	}
 	
 	public void setMachineState(boolean state) {
@@ -79,15 +114,17 @@ public class Label {
 	
 	@Override
 	public String toString() {
-		return "{" + operation+ "-"+this.machine.getId()+"-"+this.getProcessingTime()+"}";
+		//return "{" + operation+ "."+this.machine.getId()+"="+this.getProcessingTime()+"}";
+		return "{" + operation+ "."+(this.machine == null? "#=?" : this.machine.getId() +"="+this.getProcessingTime() ) + (this.criticalFather == null? "" : ", father:"+ this.criticalFather.operation+"."+this.criticalFather.machine.getId()) +"}";
 	}
 
 	public int getFinishTime() {
 		return this.finishTime;
 	}
 
-	public void setFatherByMachine() {
-		this.father = this.machine.getLastAssignment();		
+	public void setCriticalFatherByMachine() {
+		this.fathers.push(this.machine.getLastAssignment());
+		this.criticalFather = this.machine.getLastAssignment();		
 	}
 
 	public void updateFinishTime(int currentTime) {
