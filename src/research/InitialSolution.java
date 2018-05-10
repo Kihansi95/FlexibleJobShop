@@ -79,6 +79,7 @@ public class InitialSolution {
 				}
 			}
 			
+			//TODOS debugging
 			System.out.println("availOp = "+availableOperations);
 			System.out.println("candidate list = "+candidateList);
 			
