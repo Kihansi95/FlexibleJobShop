@@ -1,12 +1,5 @@
 package research;
 
-import java.awt.FlowLayout;
-import java.io.BufferedReader;
-import java.io.File;
-import java.io.FileWriter;
-import java.io.IOException;
-import java.io.InputStream;
-import java.io.InputStreamReader;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
@@ -14,11 +7,8 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 
-import javax.swing.ImageIcon;
-import javax.swing.JFrame;
-import javax.swing.JLabel;
-
 import data.*;
+import jobshopflexible.Configuration;
 import output.PdfWriter;
 
 public class InitialSolution {
@@ -30,7 +20,8 @@ public class InitialSolution {
 	private AssignmentComparator comparator;
 	
 	// output
-	private List<Label> assignments;
+	private List<Label> assignments;	// solution
+	private PdfWriter pdfOutput;		// solution visualizer
 	
 	//comparator that helps sort  
 	private class AssignmentComparator implements Comparator<Label> {
@@ -41,13 +32,14 @@ public class InitialSolution {
 		}
 	}
 	
-	public InitialSolution(FlexibleJobShop context) {
+	public InitialSolution(Configuration conf, FlexibleJobShop context) {
 		
 		this.machines = new ArrayList<Machine>();
 		this.availableOperations = new LinkedList<Label>();
 		this.context = context; // TODO to copy context or to reference
 		this.comparator = new AssignmentComparator();
 		this.assignments = new LinkedList<Label>();
+		pdfOutput = new PdfWriter(conf);
 		
 		// init machine from context
 		int nbMachines = context.getNbMachine();		
@@ -148,7 +140,6 @@ public class InitialSolution {
 	}
 	
 	public void visualizeSolution() {
-		PdfWriter pdfOutput = new PdfWriter("tmp", "is");
 		
 		String startNode = "start"; //TODO can put this into conf file
 		String endNode = "end";		//TODO can put this into conf file

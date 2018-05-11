@@ -6,18 +6,29 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Scanner;
 
+import jobshopflexible.Configuration;
+
 public class DataFactory {
 
-	public static FlexibleJobShop initiateJobShop(String filename){
+	private static final String[] DATAPATH = {
+				"data.path", 		// param name
+				"conf/fjs.conf"		// default value if not found
+			};
+	private static final String VERBOSE = "data.verbose";
+	
+	public static FlexibleJobShop initiateJobShop(Configuration conf){
     
     	List<Job> jobs = new ArrayList<Job>();
-        String line = null;
-        int cpt_line = 0;
-        
+    	Scanner input;
+    	boolean verbose = false;
+    	
 		try {
-
-	        Scanner input;
-			input = new Scanner(new FileReader(filename));
+        
+			input = new Scanner(new FileReader(conf.getParam(DATAPATH[0], DATAPATH[1])));
+			
+			String v =  conf.getParam(VERBOSE);
+			verbose = v != null && !v.toUpperCase().equalsIgnoreCase("FALSE");
+			
 			
 			// scan the first line
 	        int nb_job = input.nextInt();
@@ -29,11 +40,14 @@ public class DataFactory {
 	        	jobs.add(scanJob(job, input));
 	        }
 	        
-	        // check if all the job has been correctly instantiated
-	        System.out.println("The problem has "+nb_job+" jobs, "+nb_machine+" machines:");
-	        for(Job job: jobs) {
-	        	System.out.println(job);
+	        if(verbose) {
+	        	// check if all the job has been correctly instantiated
+		        System.out.println("The problem has "+nb_job+" jobs, "+nb_machine+" machines:");
+		        for(Job job: jobs) {
+		        	System.out.println(job);
+		        }
 	        }
+	        
 	        
 			input.close();
 			

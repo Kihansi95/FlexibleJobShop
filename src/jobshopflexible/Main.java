@@ -11,11 +11,11 @@ public class Main {
     	Configuration conf = new Configuration();
     		
     	// initiate research context
-        FlexibleJobShop shop = DataFactory.initiateJobShop(conf.DataPath);
+        FlexibleJobShop shop = DataFactory.initiateJobShop(conf);
         
         // Process the initial solution
         
-        InitialSolution is = new InitialSolution(shop);
+        InitialSolution is = new InitialSolution(conf, shop);
         is.start();
         
         // Visualize the solution

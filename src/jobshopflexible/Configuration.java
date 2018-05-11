@@ -9,22 +9,21 @@ public class Configuration {
 
 	public String DataPath;
 	public Mode mode;
+	public String pdfLatexPath;
+	
+	private  final Properties prop = new Properties();
 	
 	private static final String CONF = "conf/fjs.conf";
 	
 	public Configuration() {
-		final Properties prop = new Properties();
+		
 		InputStream input = null;
 		
 		try {
-
 			input = new FileInputStream(CONF);
 
 			// load conf file
 			prop.load(input);
-
-			this.DataPath = prop.getProperty("dataPath");
-			
 
 		} catch (final IOException ex) {
 			ex.printStackTrace();
@@ -38,5 +37,24 @@ public class Configuration {
 			}
 		}
 
+	}
+	
+	/**
+	 * Return the value corresponding the parameter
+	 * @param paramName
+	 * @return found value or null
+	 */
+	public String getParam(String paramName) {
+		return prop.getProperty(paramName);
+	}
+	
+	/**
+	 * Return the value corresponding the parameter
+	 * @param paramName
+	 * @param optional 
+	 * @return found value or the optional
+	 */
+	public String getParam(String paramName, String optional) {
+		return prop.getProperty(paramName, optional);
 	}
 }

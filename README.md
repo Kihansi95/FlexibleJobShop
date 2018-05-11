@@ -10,23 +10,20 @@
 * You can see an example of configuration in the below section. For the dev reason, we ignore to put track fjs.conf in the project.
 
 ## Configuration
-Example for `fjs.conf`
-```
-mode=DEBUG
-dataPath=data/mt10c1.fjs
-```
+See documentation [here](jobshopflexible)
 
 ## PDF generate
+
 Pdf generation in principle will generate a `.tex` file and then compile the file in pdf
 
 ## TODO
-* :poop: Repr√©sentation de probl√®me (graphe)
-* :poop: Repr√©sentation de solution
-* Impl√©mentation de l'algorithme:
-	* M√©ta heuristique de recherche local
-	* M√©thode √† population de solution
+* :poop: ReprÈsentation de problËme (graphe)
+* :poop: ReprÈsentation de solution
+* ImplÈmentation de l'algorithme:
+	* MÈta heuristique de recherche local
+	* MÈthode ‡ population de solution
 * Test avec jeu de donn√©e
-* Visualiser mesure de performance (temps d'exec, espace m√©moire occup√©e)
+* Visualiser mesure de performance (temps d'exec, espace mÈmoire occupÈe)
 
 * une solution
 * evaluation, stockage

@@ -1,17 +1,18 @@
 package output;
 
-import java.awt.FlowLayout;
 import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
 
-import javax.swing.ImageIcon;
-import javax.swing.JFrame;
-import javax.swing.JLabel;
+import jobshopflexible.Configuration;
 
 public class PdfWriter {
-
-	// references : https://tex.stackexchange.com/questions/41609/tex-rendering-in-a-java-application (solution by Nicolas 56)
+	
+	// config const
+	private static final String[] 
+			DIRECTORY = {"output.directory", "tmp"},
+			FILENAME = {"output.filename", "is"};
+	private static final String VERBOSE = "output.verbose";
 	
 	// config affectation
 	private String directory;
@@ -24,12 +25,11 @@ public class PdfWriter {
 	private static final String nodeToken = "@nodes@";
 	private static final String pathToken = "@paths@";
 	
-	public PdfWriter(String directory, String filename) {
-		this.directory = directory;
-		this.filename = filename;
-		
-		// TODO affected from .conf
-		verbose = true;
+	public PdfWriter(Configuration conf) {
+		this.directory = conf.getParam(DIRECTORY[0], DIRECTORY[1]);
+		this.filename = conf.getParam(FILENAME[0], FILENAME[1]);
+		String v =  conf.getParam(VERBOSE);
+		verbose = v != null && !v.toUpperCase().equalsIgnoreCase("FALSE");
 		
 		template = new StringBuilder();
 		template
@@ -128,8 +128,8 @@ public class PdfWriter {
             pb.directory(new File(this.directory));
             
             Process p = pb.start();
-            StreamPrinter fluxSortie = new StreamPrinter(p.getInputStream(), true);
-            StreamPrinter fluxErreur = new StreamPrinter(p.getErrorStream(), true);
+            StreamPrinter fluxSortie = new StreamPrinter(p.getInputStream(), verbose);
+            StreamPrinter fluxErreur = new StreamPrinter(p.getErrorStream(), verbose);
             new Thread(fluxSortie).start();
             new Thread(fluxErreur).start();
             p.waitFor();
