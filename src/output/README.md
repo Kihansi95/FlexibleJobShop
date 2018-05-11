@@ -1,4 +1,8 @@
-# Flexible Job
+# Flexible Job Shop
+
+## Authors
+* Duc Hau NGUYEN
+* Gael AYOUBA
 
 ## Output
 

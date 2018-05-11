@@ -1,4 +1,8 @@
-# Flexible Job
+# Flexible Job Shop
+
+## Authors
+* Duc Hau NGUYEN
+* Gael AYOUBA
 
 ## Getting started
 ### Eclipse configuration
@@ -10,11 +14,12 @@
 * You can see an example of configuration in the below section. For the dev reason, we ignore to put track fjs.conf in the project.
 
 ## Configuration
-See documentation [here](jobshopflexible)
+See documentation [here](src/jobshopflexible/README.md)
 
 ## PDF generate
 
 Pdf generation in principle will generate a `.tex` file and then compile the file in pdf
+See more documentation [here](src/output)
 
 ## TODO
 * :poop: Représentation de problème (graphe)
@@ -28,7 +33,3 @@ Pdf generation in principle will generate a `.tex` file and then compile the fil
 * une solution
 * evaluation, stockage
 * -> faire evoluer
-
-## Authors
-* Duc Hau NGUYEN
-* Gael AYOUBA
