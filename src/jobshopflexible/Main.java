@@ -22,7 +22,7 @@ public class Main {
         //System.out.println(is.getSolution());
         is.visualizeSolution();
         
-        System.out.println("fin");
+        System.out.println("done");
     }
     
 }

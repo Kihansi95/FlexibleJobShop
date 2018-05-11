@@ -1,6 +1,7 @@
 package data;
 
 import java.util.LinkedList;
+import java.util.List;
 import java.util.Queue;
 
 import data.Operation;
@@ -10,7 +11,7 @@ public class Job {
 	/**
 	 * All the required operations for a job
 	 */
-    private Queue<Operation> operations;
+    private List<Operation> operations;
     
     private int id;
 
@@ -29,17 +30,18 @@ public class Job {
     }
     
     /**
-     * Get the first activity available from the job. 
+     * Get the first operation available from the job. 
      * This method does not guarantee whether the previous operation has been done, 
      * therefore the availability of the given activity must be checked.
-     * @example Job J1 has Activity A1 and A2. 
-     * 		Activity A1 = J1.popActivity(); 
-     * 		Activity A2 = J1.popActivity(); // we are not sure whether A1 has been done before getting A2
      * @return Activity
      */
     public Operation getFirstOperation() {
     	// return this.operations.remove(); // == .poll(), to see if need
-    	return this.operations.peek();
+    	return this.operations.get(0);
+    }
+    
+    public Operation getLastOperation() {
+    	return this.operations.get(operations.size() - 1);
     }
     
     public int getNbOperation() {

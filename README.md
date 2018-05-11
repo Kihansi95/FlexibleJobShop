@@ -14,7 +14,7 @@
 * You can see an example of configuration in the below section. For the dev reason, we ignore to put track fjs.conf in the project.
 
 ## Configuration
-See documentation [here](src/jobshopflexible/README.md)
+See documentation [here](src/jobshopflexible/README)
 
 ## PDF generate
 

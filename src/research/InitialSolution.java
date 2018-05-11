@@ -6,6 +6,7 @@ import java.util.Comparator;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
+import java.util.Stack;
 
 import data.*;
 import jobshopflexible.Configuration;
@@ -23,12 +24,29 @@ public class InitialSolution {
 	private List<Label> assignments;	// solution
 	private PdfWriter pdfOutput;		// solution visualizer
 	
-	//comparator that helps sort  
+	// config
+	private static final String VERBOSE = "is.verbose";
+	private boolean verbose;
+	
+	// comparator that helps sort by processing time
 	private class AssignmentComparator implements Comparator<Label> {
 
 		@Override
 		public int compare(Label label1, Label label2) {
 			return label1.getProcessingTime() - label2.getProcessingTime();
+		}
+	}
+	
+	// comparator to sort before the visualization
+	private class SolutionComparator implements Comparator<Label> {
+		
+		@Override
+		public int compare(Label label1, Label label2) {
+			int diff = label1.getOperation().getIdJob() - label2.getOperation().getIdJob();
+			diff = diff == 0 ? label1.getOperation().getId() - label2.getOperation().getId() : diff;
+			diff = diff == 0 ? label1.getMachine() - label2.getMachine() : diff;
+			return diff;
+			
 		}
 	}
 	
@@ -40,6 +58,10 @@ public class InitialSolution {
 		this.comparator = new AssignmentComparator();
 		this.assignments = new LinkedList<Label>();
 		pdfOutput = new PdfWriter(conf);
+		
+		// config
+		String v =  conf.getParam(VERBOSE);
+		verbose = v != null && !v.toUpperCase().equalsIgnoreCase("FALSE");
 		
 		// init machine from context
 		int nbMachines = context.getNbMachine();		
@@ -126,10 +148,10 @@ public class InitialSolution {
 			
 			// save chosen candidate into output solution 
 			this.assignments.addAll(chosenCandidate);
-			chosenCandidate.clear(); // TODO check if all assigned labels are null
+			chosenCandidate.clear(); 
 			
-			// TODO create option VERBOSE
-			System.out.println("solution = "+ assignments);
+			if(verbose)
+				System.out.println("solution = "+ assignments);
 		}
 		
 		
@@ -141,33 +163,90 @@ public class InitialSolution {
 	
 	public void visualizeSolution() {
 		
-		String startNode = "start"; //TODO can put this into conf file
-		String endNode = "end";		//TODO can put this into conf file
+		assignments.sort(new SolutionComparator());
+		System.out.println(assignments);
 		
-		// add nodes
-		pdfOutput.addNode(startNode, true, false);
-		//System.out.println(getSolution());
+		
+		// start node
+		pdfOutput.addStartNode("start");
+		
+		// assignment nodes
 		for(Label label: getSolution()) {
 			
 			// add actual node
 			String node = convertNode(label);
-			pdfOutput.addNode(node);
+			String param = convertParam(label);
+			pdfOutput.addNode(node, param);
 			
 			// add path by actual node
-			System.out.println(label + " has father:  " + label.getFathers());
-			
 			for(Label father : label.getFathers()) {
 				String from = convertNode(father);
 				pdfOutput.addPath(from, node, father.getProcessingTime());
 			}
+			
+			// if there ain't father == first op of the job
+			if(label.getFathers().isEmpty())
+				pdfOutput.addPath("start", node, 0);
+			
 		}
-		pdfOutput.addNode(endNode, false, true);
 		
+		// end node		
+		for(Job job : context.getJobs()) {
+			Operation lastOp = job.getLastOperation();
+			
+			for(Label label: assignments) {
+				if(label.getOperation().equals(job.getLastOperation())) {
+					pdfOutput.addPath(convertNode(label), "end", label.getProcessingTime());
+					
+					if(lastOp.getIdJob() == (context.getJobs().size()/2))
+						pdfOutput.addNode("end", "above right of=" + convertNode(label));
+				}
+					
+			}
+			
+		}
+		
+		
+		// clean template and write down
 		pdfOutput.write();
 	}
 	
 	private String convertNode(Label label) {
 		return label.getOperation().getIdJob() + "-" + label.getOperation().getId() + "-" + label.getMachine();
+	}
+	
+	private String convertParam(Label label) {
+		
+		int job = label.getOperation().getIdJob();
+		int op = label.getOperation().getId();
+		
+		// for the first job's operation line
+		if(job == 0) {
+			if(op == 0)
+				return "above right of=start";
+			
+			// get father of the same job
+			for (Label father : label.getFathers())
+				if(father.getOperation().getIdJob() == job)
+					return "right of="+ convertNode(father);
+		}
+		
+		// for other operation
+		// TODO dirty method
+		for(Label upperLabel : this.assignments) {
+			if(upperLabel.getOperation().getIdJob() == (job - 1) && upperLabel.getOperation().getId() == op) {
+				
+				// alternate left / right for each line
+				return "below " + (job % 2 == 0 ? "left" : "right") + " of=" + convertNode(upperLabel);
+				
+			}
+		}
+		
+		// how can you reach here ???
+		if(verbose)
+			System.err.println("error at label "+label);
+		throw new RuntimeException("Can't be here");
+		
 	}
 	
 }

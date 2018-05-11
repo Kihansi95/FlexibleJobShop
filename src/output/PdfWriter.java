@@ -40,7 +40,7 @@ public class PdfWriter {
 			.append("\\usetikzlibrary{arrows,automata,positioning}").append(endL).append(endL)
 			.append("\\begin{document}").append(endL)
 			.append("\\begin{center}").append(endL)
-			.append("\\begin{tikzpicture}[shorten >=1pt,node distance=2cm,on grid,auto] ").append(endL).append(endL)
+			.append("\\begin{tikzpicture}[shorten >=1pt,node distance=1cm,on grid,auto] ").append(endL).append(endL)
 
 			/*
 			.append("\\node[state,initial] (q_0)   {$q_0$};").append(endL)
@@ -67,17 +67,22 @@ public class PdfWriter {
 			.append("\\end{document}").append(endL);
 	}
 	
-	public void addNode(String node) {
-		this.addNode(node, false, false);
+	public void addStartNode(String node) {
+		this.addNode(node, "initial");
 	}
 	
-	public void addNode(String node, boolean start, boolean end) {
-		
+	public void addEndNode(String node) {
+		this.addNode(node, "accepting");
+	}
+	
+	public void addNode(String node, String param) {
 		// translate into latex's node
 		StringBuilder nodeString = new StringBuilder("\t\\node[state");
-		if(start) nodeString.append(",initial");
-		if(end) nodeString.append(",accepting");
-		nodeString.append("] (" + node + ") {$" + node + "$};").append(endL);
+		
+		if(param != null) 
+			nodeString.append(", " +param);
+		
+		nodeString.append("] (" + node + ") {$" + node + "$};");
 		
 		// fill into the template
 		int place = template.indexOf(nodeToken);
@@ -85,16 +90,7 @@ public class PdfWriter {
 	}
 	
 	public void addPath(String from, String to, int weight) {
-		
-		/*
-		
-		.append("(q_0) edge  node {0} (q_1)").append(endL)
-		.append("\t edge  node [swap] {1} (q_2)").append(endL)
-		.append("(q_1) edge  node  {1} (q_3)").append(endL)
-		.append("\t edge [loop above] node {0} ()").append(endL)
-		.append("(q_2) edge  node [swap] {0} (q_3) ").append(endL)
-		.append("\t edge [loop below] node {1} ();").append(endL)
-		 */
+
 		String pathString = "\t(" + from + ") edge node {" + weight + "} ("+to + ")" + endL;
 		
 		int place = template.indexOf(pathToken);
