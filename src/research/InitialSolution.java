@@ -19,14 +19,14 @@ public class InitialSolution extends Verbose {
 	private FlexibleJobShop context; //TODO need it??
 	private List<Machine> machines;
 	private List<Label> availableOperations;
-	private AssignmentComparator comparator;
+	private ProcessingTimeComparator comparator;
 	
 	// output
 	private List<Label> assignments;	// solution
 	private PdfWriter pdfOutput;		// solution visualizer
 	
-	// comparator that helps sort by processing time
-	private class AssignmentComparator implements Comparator<Label> {
+	// comparator based on processing time
+	private class ProcessingTimeComparator implements Comparator<Label> {
 
 		@Override
 		public int compare(Label label1, Label label2) {
@@ -34,8 +34,8 @@ public class InitialSolution extends Verbose {
 		}
 	}
 	
-	// comparator to sort before the visualization
-	private class SolutionComparator implements Comparator<Label> {
+	// comparator based on operation's id
+	private class IdOperationComparator implements Comparator<Label> {
 		
 		@Override
 		public int compare(Label label1, Label label2) {
@@ -54,7 +54,7 @@ public class InitialSolution extends Verbose {
 		this.machines = new ArrayList<Machine>();
 		this.availableOperations = new LinkedList<Label>();
 		this.context = context; // TODO to copy context or to reference
-		this.comparator = new AssignmentComparator();
+		this.comparator = new ProcessingTimeComparator();
 		this.assignments = new LinkedList<Label>();
 		pdfOutput = new PdfWriter(conf);
 		
@@ -158,7 +158,7 @@ public class InitialSolution extends Verbose {
 	
 	public void visualizeSolution() {
 		
-		assignments.sort(new SolutionComparator());
+		assignments.sort(new IdOperationComparator());
 		System.out.println(assignments);
 		
 		
@@ -194,7 +194,7 @@ public class InitialSolution extends Verbose {
 					pdfOutput.addPath(convertNode(label), "end", label.getProcessingTime());
 					
 					if(lastOp.getIdJob() == (context.getJobs().size()/2))
-						pdfOutput.addNode("end", "above right of=" + convertNode(label));
+						pdfOutput.addNode("end", "right of=" + convertNode(label));
 				}
 					
 			}
@@ -207,7 +207,8 @@ public class InitialSolution extends Verbose {
 	}
 	
 	private String convertNode(Label label) {
-		return label.getOperation().getIdJob() + "-" + label.getOperation().getId() + "-" + label.getMachine();
+		final String SEPARATOR = "/";
+		return label.getOperation().getIdJob() + SEPARATOR + label.getOperation().getId() + SEPARATOR + label.getMachine();
 	}
 	
 	private String convertParam(Label label) {

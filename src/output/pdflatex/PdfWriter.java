@@ -5,19 +5,19 @@ import java.io.FileWriter;
 import java.io.IOException;
 
 import jobshopflexible.Configuration;
+import utility.Verbose;
 
-public class PdfWriter {
+public class PdfWriter extends Verbose {
 	
 	// config const
 	private static final String[] 
 			DIRECTORY = {"output.directory", "tmp"},
-			FILENAME = {"output.filename", "is"};
-	private static final String VERBOSE = "output.verbose";
-	
-	// config affectation
+			FILENAME = {"output.filename", "is"},
+			PDFLATEX = {"output.pdflatex", "C:\\Program Files\\MiKTeX 2.9\\miktex\\bin\\x64\\pdflatex"}; // default for window
+		// config affectation
 	private String directory;
 	private String filename;
-	private boolean verbose;
+	private String pdflatex;
 	
 	private StringBuilder template;
 	
@@ -26,10 +26,12 @@ public class PdfWriter {
 	private static final String pathToken = "@paths@";
 	
 	public PdfWriter(Configuration conf) {
+		
+		super(conf, "output");
+		
 		this.directory = conf.getParam(DIRECTORY[0], DIRECTORY[1]);
 		this.filename = conf.getParam(FILENAME[0], FILENAME[1]);
-		String v =  conf.getParam(VERBOSE);
-		verbose = v != null && !v.toUpperCase().equalsIgnoreCase("FALSE");
+		this.pdflatex = conf.getParam(PDFLATEX[0], PDFLATEX[1]);
 		
 		template = new StringBuilder();
 		template
@@ -40,7 +42,7 @@ public class PdfWriter {
 			.append("\\usetikzlibrary{arrows,automata,positioning}").append(endL).append(endL)
 			.append("\\begin{document}").append(endL)
 			.append("\\begin{center}").append(endL)
-			.append("\\begin{tikzpicture}[shorten >=1pt,node distance=1cm,on grid,auto] ").append(endL).append(endL)
+			.append("\\begin{tikzpicture}[shorten >=1pt,node distance=3cm,on grid,auto] ").append(endL).append(endL)
 
 			/*
 			.append("\\node[state,initial] (q_0)   {$q_0$};").append(endL)
@@ -107,20 +109,21 @@ public class PdfWriter {
         try {
         	
         	// Create the .tex file
-        	verbose("Create the " + filename + ".tex");
+        	System.out.println("Create the " + filename + ".tex");
         	FileWriter writer = new FileWriter(this.directory + "\\" + this.filename + ".tex", false);
             writer.write(content, 0, content.length());
             writer.close();
             
             // Clear the last result if exist
             File lastPdf = new File(directory+"\\"+ filename +".pdf");
-            if(!lastPdf.delete()) 
+            
+            if(lastPdf.exists() && !lastPdf.delete()) 
             	System.err.println("Unable to delete "+lastPdf.getPath());
             
             
             // Execute LaTeX from command line  to generate picture
-            verbose("Generate the " + filename + ".pdf");
-            ProcessBuilder pb = new ProcessBuilder("C:\\Program Files\\MiKTeX 2.9\\miktex\\bin\\x64\\pdflatex", "-shell-escape", this.filename + ".tex");
+            System.out.println("Generate the " + this.filename + ".pdf");
+            ProcessBuilder pb = new ProcessBuilder(this.pdflatex, "-shell-escape", this.filename + ".tex");
             pb.directory(new File(this.directory));
             
             Process p = pb.start();
@@ -167,10 +170,6 @@ public class PdfWriter {
         } catch (InterruptedException e) {
 			e.printStackTrace();
 		}
-	}
-	
-	private void verbose(String msg) {
-		if(verbose) System.out.println(msg);
 	}
 	
 }
