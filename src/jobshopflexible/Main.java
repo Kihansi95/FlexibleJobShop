@@ -11,7 +11,7 @@ public class Main {
     	Configuration conf = new Configuration();
     		
     	// initiate research context
-        FlexibleJobShop shop = DataFactory.initiateJobShop(conf);
+        FlexibleJobShop shop = DataFactory.instance(conf).initiateJobShop(conf);
         
         // Process the initial solution
         

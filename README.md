@@ -19,7 +19,7 @@ See documentation [here](src/jobshopflexible/README)
 ## PDF generate
 
 Pdf generation in principle will generate a `.tex` file and then compile the file in pdf
-See more documentation [here](src/output)
+See more documentation [here](src/output/pdflatex)
 
 ## TODO
 * :poop: Représentation de problème (graphe)

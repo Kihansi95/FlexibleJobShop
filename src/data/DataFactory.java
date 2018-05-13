@@ -7,32 +7,40 @@ import java.util.List;
 import java.util.Scanner;
 
 import jobshopflexible.Configuration;
+import utility.Verbose;
 
-public class DataFactory {
+public final class DataFactory extends Verbose {
 
 	private static final String[] DATAPATH = {
 				"data.path", 		// param name
 				"conf/fjs.conf"		// default value if not found
 			};
-	private static final String VERBOSE = "data.verbose";
 	
-	public static FlexibleJobShop initiateJobShop(Configuration conf){
-    
+	
+	
+	// singleton
+	private static DataFactory _instance;
+	private DataFactory(Configuration conf) {
+		super(conf, "data");
+	}
+	public final static DataFactory instance(Configuration conf) {
+		if(_instance == null)
+			_instance = new DataFactory(conf);
+		return _instance;
+	}
+	
+	public FlexibleJobShop initiateJobShop(Configuration conf){
+		
     	List<Job> jobs = new ArrayList<Job>();
     	Scanner input;
-    	boolean verbose = false;
     	
 		try {
         
 			input = new Scanner(new FileReader(conf.getParam(DATAPATH[0], DATAPATH[1])));
 			
-			String v =  conf.getParam(VERBOSE);
-			verbose = v != null && !v.toUpperCase().equalsIgnoreCase("FALSE");
-			
-			
 			// scan the first line
 	        int nb_job = input.nextInt();
-	        int nb_machine = input.nextInt(); //TODO do we need it?
+	        int nb_machine = input.nextInt();
 	        int avg_machine_per_operation = input.nextInt(); // really dont need
 	        
 	        // for each following line, we get a new job
@@ -60,7 +68,7 @@ public class DataFactory {
 	}
 
     
-    private static Job scanJob(int idJob, Scanner input) {
+    private Job scanJob(int idJob, Scanner input) {
     	int nb_activities = input.nextInt();
     	Job job = new Job(idJob);
     	Operation lastCreatedOp = null;	// memory the last one in order to set next

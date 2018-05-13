@@ -1,9 +1,5 @@
 package research;
 
-import java.util.List;
-
-import data.*;
-
 public class Machine {
 
     private int id;

@@ -19,6 +19,10 @@ public class Job {
     	this.id = id;
         this.operations = new LinkedList<Operation>();	// TODO if multithreading, use ConcurrentLinkedQueue<>
     }
+    
+    public int getId() {
+    	return id;
+    }
 
     /**
      * Add an operation into the job

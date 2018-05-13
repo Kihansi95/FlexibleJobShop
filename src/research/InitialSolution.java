@@ -10,9 +10,10 @@ import java.util.Stack;
 
 import data.*;
 import jobshopflexible.Configuration;
-import output.PdfWriter;
+import output.pdflatex.PdfWriter;
+import utility.Verbose;
 
-public class InitialSolution {
+public class InitialSolution extends Verbose {
 	
 	// input
 	private FlexibleJobShop context; //TODO need it??
@@ -23,10 +24,6 @@ public class InitialSolution {
 	// output
 	private List<Label> assignments;	// solution
 	private PdfWriter pdfOutput;		// solution visualizer
-	
-	// config
-	private static final String VERBOSE = "is.verbose";
-	private boolean verbose;
 	
 	// comparator that helps sort by processing time
 	private class AssignmentComparator implements Comparator<Label> {
@@ -52,16 +49,14 @@ public class InitialSolution {
 	
 	public InitialSolution(Configuration conf, FlexibleJobShop context) {
 		
+		super(conf, "is");
+		
 		this.machines = new ArrayList<Machine>();
 		this.availableOperations = new LinkedList<Label>();
 		this.context = context; // TODO to copy context or to reference
 		this.comparator = new AssignmentComparator();
 		this.assignments = new LinkedList<Label>();
 		pdfOutput = new PdfWriter(conf);
-		
-		// config
-		String v =  conf.getParam(VERBOSE);
-		verbose = v != null && !v.toUpperCase().equalsIgnoreCase("FALSE");
 		
 		// init machine from context
 		int nbMachines = context.getNbMachine();		
