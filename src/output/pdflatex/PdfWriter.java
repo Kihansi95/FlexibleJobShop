@@ -130,8 +130,12 @@ public class PdfWriter extends Verbose {
             // Clear the last result if exist
             File lastPdf = new File(directory+"\\"+ filename +".pdf");
             
-            if(lastPdf.exists() && !lastPdf.delete()) 
+            if(lastPdf.exists() && !lastPdf.delete()) {
             	System.err.println("Unable to delete "+lastPdf.getPath());
+            	System.err.println("Please verify no other program is using this file");
+            	return;
+            }
+            	
             
             
             // Execute LaTeX from command line  to generate picture

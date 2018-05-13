@@ -18,7 +18,7 @@ public class LabelDescriptor implements IDescriptor {
 		totalTime = lastNode.getFinishTime();
 		criticalNodes = new Stack<Label>();
 		System.out.println("last node = "+lastNode);
-		for(Label node = lastNode.getCriticalFather(); node != null; node = node.getCriticalFather()) {
+		for(Label node = lastNode; node != null; node = node.getCriticalFather()) {
 			criticalNodes.push(node);
 		}
 		this.is = is;
@@ -29,15 +29,13 @@ public class LabelDescriptor implements IDescriptor {
 		
 		StringBuilder des = new StringBuilder();
 		des.append("Total processing time = "+totalTime+"\\\\")
-		  .append("Critical path : ");
-		
-		System.out.println("critical nodes = " + criticalNodes);
+		  .append("Critical path : start");
 		
 		while(!criticalNodes.isEmpty()) {
-			String node = is.convertNode(criticalNodes.pop());
-			des.append(node).append(" \\arrow ");
+			String node = is.convertNode( criticalNodes.pop());
+			des.append("("+ node + ")").append(" $\\rightarrow$ ");
 		}
-		return des.toString();
+		return des.append("end").toString();
 	}
 
 }

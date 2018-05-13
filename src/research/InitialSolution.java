@@ -107,8 +107,6 @@ public class InitialSolution extends Verbose {
 				}
 			}
 			
-			System.out.println("Time "+time +": candidate = "+candidateList);
-			
 			// choose the best candidate(s) but be careful with duplicata assignments
 			Collections.sort(candidateList, comparator);
 			while(!candidateList.isEmpty()) {
@@ -141,17 +139,15 @@ public class InitialSolution extends Verbose {
 					if(father.getFinishTime() < time) {
 						candidate.setCriticalFatherByMachine();
 					}
-					candidate.updateMachineMemory();
+					
 				}
+				candidate.updateMachineMemory();
 			}
 
 			// advance time cost and update machine state (ready)
 			chosenCandidate.sort(new ProcessingTimeComparator());
 			int min_time = chosenCandidate.get(0).getProcessingTime();
-			time += min_time;
-			
-			System.out.println("[IS - " +step+ "] min_time = "+ min_time);
-			
+			time += min_time;			
 			
 			// save chosen candidate into output solution 
 			this.assignments.addAll(chosenCandidate);
