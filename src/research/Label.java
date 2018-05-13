@@ -97,10 +97,6 @@ public class Label {
 		return this.fathers;
 	}
 	
-	public void setMachineState(boolean state) {
-		this.machine.setState(state);
-	}
-	
 	public void updateMachineMemory()	{
 		this.machine.memoryLabel(this);
 	}
@@ -114,8 +110,14 @@ public class Label {
 	
 	@Override
 	public String toString() {
-		//return "{" + operation+ "."+this.machine.getId()+"="+this.getProcessingTime()+"}";
-		return "{" + operation+ "."+(this.machine == null? "#=?" : this.machine.getId() +"="+this.getProcessingTime() ) + (this.criticalFather == null? "" : ", father:"+ this.criticalFather.operation+"."+this.criticalFather.machine.getId()) +"}";
+		String msg = new String("{");
+		msg += operation+ ".";
+		msg += this.machine == null? "#=?" : this.machine.getId();
+		msg += ", processTime: "+this.getProcessingTime();
+		msg += ", finishTime: "+ this.finishTime;
+		msg += this.criticalFather == null? "" : ", father:"+ this.criticalFather.operation+"."+this.criticalFather.machine.getId();
+		return msg + "}";
+		//return "{" + operation+ "."+() + () +"}";
 	}
 
 	public int getFinishTime() {

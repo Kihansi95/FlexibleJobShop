@@ -14,16 +14,19 @@ public class PdfWriter extends Verbose {
 			DIRECTORY = {"output.directory", "tmp"},
 			FILENAME = {"output.filename", "is"},
 			PDFLATEX = {"output.pdflatex", "C:\\Program Files\\MiKTeX 2.9\\miktex\\bin\\x64\\pdflatex"}; // default for window
-		// config affectation
+		
+	// attribute get from config
 	private String directory;
 	private String filename;
 	private String pdflatex;
 	
 	private StringBuilder template;
 	
+	// for template latex
 	private static final String endL = System.getProperty("line.separator"); // == \n
 	private static final String nodeToken = "@nodes@";
 	private static final String pathToken = "@paths@";
+	private static final String descriptionToken = "@descriptionToken@";
 	
 	public PdfWriter(Configuration conf) {
 		
@@ -66,6 +69,10 @@ public class PdfWriter extends Verbose {
 			
 			.append("\\end{tikzpicture}").append(endL)
 			.append("\\end{center}").append(endL)
+			
+			.append("\\section{Description}").append(endL)
+			.append(descriptionToken).append(endL)
+			
 			.append("\\end{document}").append(endL);
 	}
 	
@@ -99,12 +106,18 @@ public class PdfWriter extends Verbose {
 		template.insert(place, pathString);
 	}
 	
+	public void addDescription(IDescriptor descriptor) {
+		int place = template.indexOf(descriptionToken);
+		template.insert(place, descriptor.toDescription());
+	}
+	
 	public void write() {
 		
 		// clear paramter in template
 		String content = template.toString()
 				.replaceFirst(nodeToken, "")
-				.replaceFirst(pathToken, ";"); // can use replace all but use this for performance
+				.replaceFirst(pathToken, ";")
+				.replaceFirst(descriptionToken, ""); // can use replace all but use this for performance
 		
         try {
         	

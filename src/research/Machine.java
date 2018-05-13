@@ -4,12 +4,10 @@ public class Machine {
 
     private int id;
     private Label lastAssignment;
-    private boolean ready;
     
     public Machine(int id) {
     	this.id = id;
     	this.lastAssignment = null;
-    	this.ready = true;
     }
     
     public int getId() {
@@ -20,12 +18,10 @@ public class Machine {
     	lastAssignment = assignment;
     }
     
-    public void setState(boolean state)	{
-    	this.ready = state;
-    }
-    
-    public boolean isReady() {
-    	return ready;
+    public boolean isReady(int currentTime) {
+    	if(lastAssignment == null)
+    		return true;
+    	return lastAssignment.getFinishTime() <= currentTime; 
     }
     
     @Override

@@ -6,7 +6,6 @@ import java.util.Comparator;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
-import java.util.Stack;
 
 import data.*;
 import jobshopflexible.Configuration;
@@ -47,6 +46,15 @@ public class InitialSolution extends Verbose {
 		}
 	}
 	
+	private class FinishTimeComparator implements Comparator<Label> {
+
+		@Override
+		public int compare(Label label1, Label label2) {
+			return label2.getFinishTime() - label1.getFinishTime();
+		}
+		
+	}
+	
 	public InitialSolution(Configuration conf, FlexibleJobShop context) {
 		
 		super(conf, "is");
@@ -78,6 +86,8 @@ public class InitialSolution extends Verbose {
 		List<Label> candidateList = new LinkedList<Label>();
 		List<Label> chosenCandidate = new LinkedList<Label>();
 		
+		int step = 0;
+		
 		//for(int i = 0; i < 3; i++)	{
 		while(!availableOperations.isEmpty()) {
 			
@@ -89,7 +99,7 @@ public class InitialSolution extends Verbose {
 				for(Integer idMachine: tuples.keySet()) {
 					
 					Machine machine = machines.get(idMachine - 1);
-					if(machine.isReady()) {
+					if(machine.isReady(time)) {
 						Label candidate = new Label(operation, machine);
 						candidateList.add(candidate);
 					}
@@ -97,13 +107,14 @@ public class InitialSolution extends Verbose {
 				}
 			}
 			
+			System.out.println("Time "+time +": candidate = "+candidateList);
+			
 			// choose the best candidate(s) but be careful with duplicata assignments
 			Collections.sort(candidateList, comparator);
 			while(!candidateList.isEmpty()) {
 				
 				// choose the best
 				Label best = candidateList.remove(0);
-				best.setMachineState(false);
 				best.updateFinishTime(time);
 				chosenCandidate.add(best);
 				
@@ -135,18 +146,20 @@ public class InitialSolution extends Verbose {
 			}
 
 			// advance time cost and update machine state (ready)
+			chosenCandidate.sort(new ProcessingTimeComparator());
 			int min_time = chosenCandidate.get(0).getProcessingTime();
 			time += min_time;
-			for(Label label : chosenCandidate)	{	// update machine state
-				label.setMachineState(time <= label.getFinishTime());
-			}
+			
+			System.out.println("[IS - " +step+ "] min_time = "+ min_time);
+			
 			
 			// save chosen candidate into output solution 
 			this.assignments.addAll(chosenCandidate);
 			chosenCandidate.clear(); 
 			
 			if(verbose)
-				System.out.println("solution = "+ assignments);
+				System.out.println("[IS - " +step+ "] Solution = "+ assignments);
+			step++;
 		}
 		
 		
@@ -201,17 +214,21 @@ public class InitialSolution extends Verbose {
 			
 		}
 		
+		// add description
+		assignments.sort(new FinishTimeComparator());
+		Label last_label_in_critical_path = assignments.get(0);
+		pdfOutput.addDescription(new LabelDescriptor(last_label_in_critical_path, this));
 		
 		// clean template and write down
 		pdfOutput.write();
 	}
 	
-	private String convertNode(Label label) {
+	public String convertNode(Label label) {
 		final String SEPARATOR = "/";
 		return label.getOperation().getIdJob() + SEPARATOR + label.getOperation().getId() + SEPARATOR + label.getMachine();
 	}
 	
-	private String convertParam(Label label) {
+	public String convertParam(Label label) {
 		
 		int job = label.getOperation().getIdJob();
 		int op = label.getOperation().getId();
