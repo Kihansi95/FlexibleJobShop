@@ -44,6 +44,7 @@ public final class DataFactory extends Verbose {
 	        int avg_machine_per_operation = input.nextInt(); // really dont need
 	        
 	        // for each following line, we get a new job
+	        int index = 0;
 	        for(int job = 0; job < nb_job; job++) {
 	        	jobs.add(scanJob(job, input));
 	        }
@@ -72,6 +73,8 @@ public final class DataFactory extends Verbose {
     	int nb_activities = input.nextInt();
     	Job job = new Job(idJob);
     	Operation lastCreatedOp = null;	// memory the last one in order to set next
+    	
+    	int index = 0;
     	
     	for(int operation = 0; operation < nb_activities; operation++) {
 

@@ -11,8 +11,17 @@ public class Operation {
 	private int id;
     private Map<Integer, Integer> tuples; // <machine , processingtime>
     private Operation next;
+    private int index; //index in os solution vector 
 
-    public Operation(int idJob, int id, int nb_machines){
+    public int getIndex() {
+		return index;
+	}
+
+	public void setIndex(int index) {
+		this.index = index;
+	}
+
+	public Operation(int idJob, int id, int nb_machines){
     	this.idJob = idJob;
     	this.id = id;
         this.tuples = new HashMap<Integer, Integer>();

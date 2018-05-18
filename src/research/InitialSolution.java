@@ -166,6 +166,14 @@ public class InitialSolution extends Verbose {
 		return new Solution(assignments, context.getNbMachine(), context.getJobs().size());
 	}
 	
+	public int[][] getSolution() {
+		return null; //TODO
+	}
+	
+	public List<Label> getCriticalPath() {
+		
+	}
+	
 	public void visualizeSolution() {
 		
 		assignments.sort(new IdOperationComparator());

@@ -7,6 +7,7 @@ import java.util.List;
 import data.Operation;
 import research.Label;
 import research.Machine;
+import data.FlexibleJobShop; 
 
 public class Solution {
 	
@@ -19,7 +20,7 @@ public class Solution {
 	
 	
 	
-	public Solution(List<Label> listLabels, int nb_machines, int nb_jobs) {
+	public Solution(List<Label> listLabels, int nb_machines, int nb_jobs, FlexibleJobShop context) {
 		
 		this.ms = new int[nb_machines];
 		this.os = new int[nb_jobs]; 
@@ -31,6 +32,8 @@ public class Solution {
 		for (Label iterLabel : listLabels) {
 			ms[i]=(iterLabel.getMachine());
 			os[i]=iterLabel.getOperation().getId();
+			context.getJobs().get(iterLabel.getOperation().getIdJob()).getOperations().get(iterLabel.getOperation());
+			
 			if (iterLabel.getFinishTime()>maxFinishTime) {
 				maxFinishTime=iterLabel.getFinishTime();
 				lastLabel=iterLabel; 
@@ -46,7 +49,7 @@ public class Solution {
 			currentLabel=currentLabel.getCriticalFather();	
 		}
 		
-		this.graphe = new Graphe(listLabels);
+		this.graphe = new Graphe(ms, os, context);
 	
 		
 	}
