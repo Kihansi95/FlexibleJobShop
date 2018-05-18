@@ -14,7 +14,7 @@
 * You can see an example of configuration in the below section. For the dev reason, we ignore to put track fjs.conf in the project.
 
 ## Configuration
-See documentation [here](src/jobshopflexible/README)
+Copy the from the template file **fjs.conf** and paste it into **conf/fjs.conf**, adapt conf parameter as you environment.
 
 ## Solution Visualization
 
@@ -31,13 +31,13 @@ This step is optional, do it when you have error:
 * Click to the tab **Order and export**, move all the `.jar` files up and let the project source at the final order.
 
 ## TODO
-* :poop: Représentation de problème (graphe)
-* :poop: Représentation de solution
-* Implémentation de l'algorithme:
-	* Méta heuristique de recherche local
-	* Méthode à population de solution
+* :poop: Reprï¿½sentation de problï¿½me (graphe)
+* :poop: Reprï¿½sentation de solution
+* Implï¿½mentation de l'algorithme:
+	* Mï¿½ta heuristique de recherche local
+	* Mï¿½thode ï¿½ population de solution
 * Test avec jeu de donnÃ©e
-* Visualiser mesure de performance (temps d'exec, espace mémoire occupée)
+* Visualiser mesure de performance (temps d'exec, espace mï¿½moire occupï¿½e)
 
 * une solution
 * evaluation, stockage
