@@ -18,6 +18,7 @@ public class Main {
         InitialSolution is = new InitialSolution(conf, shop);
         is.start();
         
+        
         // Visualize the solution
         //System.out.println(is.getSolution());
         is.visualizeSolution();
