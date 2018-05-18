@@ -19,7 +19,7 @@ public class LocalSearch {
 		int id_job=S.getCriticalPath().getLast().getOperation().getIdJob(); 
 		
 		while (!endOfCriticalPath) {
-			if(context.getJobs().get(id_job).getOperations().get(op).getTuples()..size()>1) {
+			if(context.getJobs().get(id_job).getOperations().get(op).getTuples().size()>1) {
 				ok=false;
 				tmp_solution=S;
 				current_machine=S.getMs()getClass()[S.getIndex(id_job, op, context.getJobs().get(index))
