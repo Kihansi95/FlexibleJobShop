@@ -123,8 +123,11 @@ public class PdfWriter extends Verbose {
         	
         	// Create the .tex file
         	System.out.println("Create the " + filename + ".tex");
-        	FileWriter writer = new FileWriter(this.directory + "\\" + this.filename + ".tex", false);
-            writer.write(content, 0, content.length());
+        	File dir = new File(this.directory);
+        	dir.mkdirs();
+        	File file = new File(dir, this.filename + ".tex");
+        	FileWriter writer = new FileWriter(file, false);	// ecrease the existing content
+            writer.write(content, 0, content.length());	
             writer.close();
             
             // Clear the last result if exist
@@ -144,6 +147,7 @@ public class PdfWriter extends Verbose {
             pb.directory(new File(this.directory));
             
             Process p = pb.start();
+            System.out.println("verbose : "+verbose);
             StreamPrinter fluxSortie = new StreamPrinter(p.getInputStream(), verbose);
             StreamPrinter fluxErreur = new StreamPrinter(p.getErrorStream(), verbose);
             new Thread(fluxSortie).start();
