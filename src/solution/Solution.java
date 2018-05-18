@@ -25,7 +25,10 @@ public class Solution {
 		this.ms = new int[nb_machines];
 		this.os = new int[nb_jobs]; 
 		int i=0;
-		listLabels.sort(new IdOperationComparator());
+		
+		//To be done in the converter
+		
+		/*listLabels.sort(new IdOperationComparator());
 		Label lastLabel; 
 		int maxFinishTime=0;
 		
@@ -47,7 +50,7 @@ public class Solution {
 		while (currentLabel != null) {
 			critical_path.add(currentLabel);
 			currentLabel=currentLabel.getCriticalFather();	
-		}
+		}*/
 		
 		this.graphe = new Graphe(ms, os, context);
 	
@@ -55,6 +58,11 @@ public class Solution {
 	}
 	
 	
+	public void setMs(int[] ms) {
+		this.ms = ms;
+	}
+
+
 	public int[] getMs() {
 		return ms;
 	}
@@ -81,6 +89,21 @@ public class Solution {
 	
 	public int getIndex(int nJob, int nOp, int nbOps ) {
 		int index=((nJob-1)*nbOps)+nOp;
+	}
+	
+	public int makespan() {
+		return this.critical_path.getLast().getFinishTime();
+	}
+	
+	public void update() { //recalculate the graph with new assignment vectors
+		this.graphe.update(ms,os);
+	}
+	
+	public void permute (Operation opA, Operation opB) {
+		int indexA=opA.getIndex();
+		int indexB=opB.getIndex();
+		this.os[indexA]=opB.getId();
+		this.os[indexB]=opA.getId();
 	}
 
 
