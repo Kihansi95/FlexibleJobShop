@@ -33,7 +33,11 @@ public class Job {
         return this.operations.add(operation);
     }
     
-    /**
+    public List<Operation> getOperations() {
+		return operations;
+	}
+
+	/**
      * Get the first operation available from the job. 
      * This method does not guarantee whether the previous operation has been done, 
      * therefore the availability of the given activity must be checked.

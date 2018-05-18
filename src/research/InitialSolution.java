@@ -10,6 +10,7 @@ import java.util.Map;
 import data.*;
 import jobshopflexible.Configuration;
 import output.pdflatex.PdfWriter;
+import solution.Solution;
 import utility.Verbose;
 
 public class InitialSolution extends Verbose {
@@ -161,8 +162,8 @@ public class InitialSolution extends Verbose {
 		
 	}
 	
-	public List<Label> getSolution()	{
-		return assignments;
+	public Solution getSolution(){
+		return new Solution(assignments, context.getNbMachine(), context.getJobs().size());
 	}
 	
 	public void visualizeSolution() {
@@ -175,7 +176,7 @@ public class InitialSolution extends Verbose {
 		pdfOutput.addStartNode("start");
 		
 		// assignment nodes
-		for(Label label: getSolution()) {
+		for(Label label: assignments) {
 			
 			// add actual node
 			String node = convertNode(label);
