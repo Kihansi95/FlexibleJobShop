@@ -40,7 +40,7 @@ public class InitialSolution extends Verbose {
 		public int compare(Label label1, Label label2) {
 			int diff = label1.getOperation().getIdJob() - label2.getOperation().getIdJob();
 			diff = diff == 0 ? label1.getOperation().getId() - label2.getOperation().getId() : diff;
-			diff = diff == 0 ? label1.getMachine() - label2.getMachine() : diff;
+			diff = diff == 0 ? label1.getMachine().getId() - label2.getMachine().getId() : diff;
 			return diff;
 			
 		}
@@ -133,10 +133,13 @@ public class InitialSolution extends Verbose {
 				
 				// check father
 				Label father = best.getCriticalFather();
-				if(father != null) {						
-					// case label doesn't have father yet, its the first time we process algo so no need to update the father
-					if(father.getFinishTime() < time) 
-						best.setCriticalFatherByMachine();
+				
+				if(father == null && best.getMachine().getMemory() != null) {
+					best.setCriticalFatherByMachine();
+				}
+				
+				if(father != null && father.getFinishTime() < time) {						
+					best.setCriticalFatherByMachine();
 				}
 				
 				// update machine after check with father
@@ -330,7 +333,7 @@ public class InitialSolution extends Verbose {
 	
 	public String convertNode(Label label) {
 		final String SEPARATOR = "/";
-		return label.getOperation().getIdJob() + SEPARATOR + label.getOperation().getId() + SEPARATOR + label.getMachine();
+		return label.getOperation().getIdJob() + SEPARATOR + label.getOperation().getId() + SEPARATOR + label.getMachine().getId();
 	}
 	
 	public String convertParam(Label label) {

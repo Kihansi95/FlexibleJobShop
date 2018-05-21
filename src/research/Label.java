@@ -81,8 +81,8 @@ public class Label {
 		return this.operation;
 	}
 	
-	public int getMachine() {
-		return this.machine.getId();
+	public Machine getMachine() {
+		return this.machine;
 	}
 	
 	public int getProcessingTime() {

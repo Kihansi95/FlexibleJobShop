@@ -32,4 +32,8 @@ public class Machine {
 	public Label getLastAssignment() {
 		return lastAssignment;
 	}
+
+	public Label getMemory() {
+		return lastAssignment;
+	}
 }
