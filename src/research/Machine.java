@@ -5,9 +5,6 @@ public class Machine {
     private int id;
     private Label lastAssignment;
 
-    
-
-
 	public Machine(int id) {
     	this.id = id;
     	this.lastAssignment = null;

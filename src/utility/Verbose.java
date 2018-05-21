@@ -11,5 +11,6 @@ public abstract class Verbose {
 		verbose = false;
 		String v =  conf.getParam(prefix + "." +VERBOSE);
 		verbose = v != null && !v.toUpperCase().equalsIgnoreCase("FALSE");
+		System.out.println(prefix + "."+VERBOSE+" : "+ verbose);
 	}
 }

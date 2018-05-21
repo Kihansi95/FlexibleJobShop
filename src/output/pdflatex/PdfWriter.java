@@ -147,7 +147,6 @@ public class PdfWriter extends Verbose {
             pb.directory(new File(this.directory));
             
             Process p = pb.start();
-            System.out.println("verbose : "+verbose);
             StreamPrinter fluxSortie = new StreamPrinter(p.getInputStream(), verbose);
             StreamPrinter fluxErreur = new StreamPrinter(p.getErrorStream(), verbose);
             new Thread(fluxSortie).start();

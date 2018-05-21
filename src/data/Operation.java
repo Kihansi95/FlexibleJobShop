@@ -1,9 +1,9 @@
 package data;
 
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
-
-import research.Machine;
 
 public class Operation {
     
@@ -72,6 +72,10 @@ public class Operation {
 		return other instanceof Operation 
 				&& this.idJob == ((Operation) other).idJob 
 				&& this.id == ((Operation) other).id;
+	}
+
+	public List<Integer> getMachines() {
+		return new ArrayList<Integer>(this.tuples.keySet());
 	}
 }
 

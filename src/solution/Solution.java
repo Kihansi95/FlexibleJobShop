@@ -7,18 +7,58 @@ import java.util.List;
 import data.Operation;
 import research.Label;
 import research.Machine;
-import data.FlexibleJobShop; 
+import data.FlexibleJobShop;
+import data.Job; 
 
 public class Solution {
 	
 	private int[] ms ;
 	private int[] os ;
-	private LinkedList<Label> critical_path;
-	//private LinkedList<Label> graph; class graph to dev (bellman ford)
-	private Graphe graphe;
+	private Graph graph;
+	
 	private int endTime; 
 	
-	
+	/**
+	 * Initialize solution
+	 * @param ms
+	 * @param os
+	 * @param context
+	 */
+	public Solution(int[] ms, int[] os, FlexibleJobShop context) {
+		
+		List<Job> jobs = context.getJobs();
+		
+		// init array ms and os
+		int nbOps = context.getNbOperation();
+		this.ms = new int[nbOps];
+		this.os = new int[nbOps];
+		
+		// fill os by assign all job number and the same case
+		int id = 0;
+		for(Job job : jobs) {
+			for(int i = 0; i < job.getNbOperation(); i++) {
+				this.os[id++] = job.getId();
+			}
+		}
+
+		// fill ms by choosing randomly
+		for(Job job : jobs) {
+			for(Operation op: job.getOperations()) {
+				
+				// list all possible machine to assign for this op
+				List<Integer> possible_assigned_machines = context.getMachines(op);
+				
+				// randomly pick a machine
+				int rd_index = (int) (Math.random() * (possible_assigned_machines.size() - 1));
+				int chosen_machine = possible_assigned_machines.get(rd_index);
+				
+				// assign to ms
+				ms[op.getIndex()] = chosen_machine;
+			}
+		}
+		
+		graph = new Graph(this.ms, this.os, context);
+	}
 	
 	public Solution(List<Label> listLabels, int nb_machines, int nb_jobs, FlexibleJobShop context) {
 		
@@ -52,8 +92,6 @@ public class Solution {
 			currentLabel=currentLabel.getCriticalFather();	
 		}*/
 		
-		this.graphe = new Graphe(ms, os, context);
-	
 		
 	}
 	
@@ -73,13 +111,13 @@ public class Solution {
 	}
 
 
-	public LinkedList<Label> getCriticalPath() {
-		return critical_path;
+	public List<Label> getCriticalPath() {
+		return this.graph.getCriticalPath();
 	}
 
 
-	public Graphe getGraphe() {
-		return graphe;
+	public Graph getGraphe() {
+		return graph;
 	}
 
 
@@ -87,16 +125,12 @@ public class Solution {
 		return endTime;
 	}
 	
-	public int getIndex(int nJob, int nOp, int nbOps ) {
-		int index=((nJob-1)*nbOps)+nOp;
-	}
-	
 	public int makespan() {
-		return this.critical_path.getLast().getFinishTime();
+		return this.getCriticalPath().getLast().getFinishTime();
 	}
 	
-	public void update() { //recalculate the graph with new assignment vectors
-		this.graphe.update(ms,os);
+	public void update(FlexibleJobShop context) { //recalculate the graph with new assignment vectors
+		this.graph.update(this.ms, this.os, context);
 	}
 	
 	public void permute (Operation opA, Operation opB) {

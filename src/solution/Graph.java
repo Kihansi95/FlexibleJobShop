@@ -2,12 +2,14 @@ package solution;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
+import java.util.TreeMap;
 
 import data.*;
 
 public class Graph {
 	
-	private List<Node> nodes;
+	private Map<Operation, Node> nodes;
 	
 	private List<Arc> disjuncArcs;
 	private List<Arc> conjuncArcs;
@@ -18,7 +20,7 @@ public class Graph {
 	 * Default constructor
 	 */
 	private Graph() {
-		nodes = new ArrayList<Node>();
+		nodes = new TreeMap<Operation, Node>();
 		disjuncArcs = new ArrayList<Arc>();
 		conjuncArcs = new ArrayList<Arc>();
 	}

@@ -6,10 +6,16 @@ public class FlexibleJobShop {
 
 	private int nbMachine;
     private List<Job> jobs;
+    private int nbOperation;
 
     public FlexibleJobShop(List<Job> jobs, int nbMachine){
     	this.nbMachine = nbMachine;
         this.jobs = jobs;
+        
+        this.nbOperation = 0;
+        for(Job job : jobs) {
+        	nbOperation += job.getNbOperation();
+        }
     }
 
     public int getNbMachine()	{
@@ -19,5 +25,13 @@ public class FlexibleJobShop {
     public List<Job> getJobs()	{
     	return jobs;
     }
+
+	public List<Integer> getMachines(Operation operation) {
+		return operation.getMachines();
+	}
+
+	public int getNbOperation() {
+		return nbOperation;
+	}
 
 }
