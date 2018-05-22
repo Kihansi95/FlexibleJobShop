@@ -96,6 +96,12 @@ public class Solution {
 	}
 	
 	
+	public Solution(int[] ms, int[] os, Graph graph) {
+		this.ms = ms;
+		this.os = os;
+		this.graph = graph;
+	}
+
 	public void setMs(int[] ms) {
 		this.ms = ms;
 	}
