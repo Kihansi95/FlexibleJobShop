@@ -34,6 +34,15 @@ public class Graph {
 		
 	}
 	
+	public Node getDisjunctiveFather(Node current ) {
+		for (Edge iteredge : this.disjuncArcs) {
+			if (iteredge.to==current) {
+				return iteredge.from;
+			}
+		}
+		return null;
+	}
+	
 	private Node getNode(Operation operation) {
 		return nodes.get(operation);	
 	}
