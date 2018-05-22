@@ -18,26 +18,26 @@ public class InitialSolution extends Verbose {
 	// input
 	private FlexibleJobShop context; //TODO need it??
 	private List<Machine> machines;
-	private List<Lable> availableOperations;
+	private List<Label> availableOperations;
 	
 	// output
-	private List<Lable> assignments;	// solution
+	private List<Label> assignments;	// solution
 	private PdfWriter pdfOutput;		// solution visualizer
 	
 	// comparator based on processing time
-	private class ProcessingTimeComparator implements Comparator<Lable> {
+	private class ProcessingTimeComparator implements Comparator<Label> {
 
 		@Override
-		public int compare(Lable label1, Lable label2) {
+		public int compare(Label label1, Label label2) {
 			return label1.getProcessingTime() - label2.getProcessingTime();
 		}
 	}
 	
 	// comparator based on operation's id
-	private class IdOperationComparator implements Comparator<Lable> {
+	private class IdOperationComparator implements Comparator<Label> {
 		
 		@Override
-		public int compare(Lable label1, Lable label2) {
+		public int compare(Label label1, Label label2) {
 			int diff = label1.getOperation().getIdJob() - label2.getOperation().getIdJob();
 			diff = diff == 0 ? label1.getOperation().getId() - label2.getOperation().getId() : diff;
 			diff = diff == 0 ? label1.getMachine().getId() - label2.getMachine().getId() : diff;
@@ -46,19 +46,19 @@ public class InitialSolution extends Verbose {
 		}
 	}
 	
-	private class FinishTimeComparator implements Comparator<Lable> {
+	private class FinishTimeComparator implements Comparator<Label> {
 
 		@Override
-		public int compare(Lable label1, Lable label2) {
+		public int compare(Label label1, Label label2) {
 			return label1.getFinishTime() - label2.getFinishTime();
 		}
 		
 	}
 	
-	private class ReversedFinishTimeComparator implements Comparator<Lable> {
+	private class ReversedFinishTimeComparator implements Comparator<Label> {
 		
 		@Override
-		public int compare(Lable label1, Lable label2) {
+		public int compare(Label label1, Label label2) {
 			return label2.getFinishTime() - label1.getFinishTime();
 		}
 	}
@@ -68,9 +68,9 @@ public class InitialSolution extends Verbose {
 		super(conf, "is");
 		
 		this.machines = new ArrayList<Machine>();
-		this.availableOperations = new LinkedList<Lable>();
+		this.availableOperations = new LinkedList<Label>();
 		this.context = context; // TODO to copy context or to reference
-		this.assignments = new LinkedList<Lable>();
+		this.assignments = new LinkedList<Label>();
 		pdfOutput = new PdfWriter(conf);
 		
 		// init machine from context
@@ -82,7 +82,7 @@ public class InitialSolution extends Verbose {
 		// init available activities
 		for(Job job: context.getJobs()) {
 			Operation waitingOperation = job.getFirstOperation();
-			availableOperations.add(new Lable(waitingOperation));	// get the first activity from each job
+			availableOperations.add(new Label(waitingOperation));	// get the first activity from each job
 		}
 	}
 	
@@ -90,9 +90,9 @@ public class InitialSolution extends Verbose {
 		// new algo 
 		int time = 0;
 		
-		List<Lable> candidates = new ArrayList<Lable>();
-		List<Lable> waiting = this.availableOperations;
-		List<Lable> processing = new ArrayList<Lable>();
+		List<Label> candidates = new ArrayList<Label>();
+		List<Label> waiting = this.availableOperations;
+		List<Label> processing = new ArrayList<Label>();
 		
 		int step = 0;
 		
@@ -101,7 +101,7 @@ public class InitialSolution extends Verbose {
 			candidates.clear();
 			
 			// for all waiting operation
-			for(Lable operation : waiting) {
+			for(Label operation : waiting) {
 				Map<Integer, Integer> tuples = operation.getOperation().getTuples();
 				
 				// for all machine that can process this operation
@@ -110,7 +110,7 @@ public class InitialSolution extends Verbose {
 					
 					// check if machine is ready (does not have any other operation running on it)
 					if(machine.isReady(time)) {
-						Lable candidate = new Lable(operation, machine);
+						Label candidate = new Label(operation, machine);
 						candidates.add(candidate);
 					}
 					
@@ -122,7 +122,7 @@ public class InitialSolution extends Verbose {
 			while(!candidates.isEmpty()) {
 				
 				// choose the best
-				Lable best = candidates.remove(0);
+				Label best = candidates.remove(0);
 				
 				// move from waiting to processing list
 				waiting.remove(best);
@@ -134,7 +134,7 @@ public class InitialSolution extends Verbose {
 				best.addFatherFromMachine();
 				
 				// check father
-				Lable father = best.getCriticalFather();
+				Label father = best.getCriticalFather();
 				
 				if(father == null && best.getMachine().getMemory() != null) {
 					best.setCriticalFatherByMachine();
@@ -158,8 +158,8 @@ public class InitialSolution extends Verbose {
 			// after the process, remove from the processing list and enqueue the next op
 			//for(Label finished : processing) {
 			
-			for(Iterator<Lable> it = processing.iterator(); it.hasNext(); ) {
-				Lable finished = it.next();
+			for(Iterator<Label> it = processing.iterator(); it.hasNext(); ) {
+				Label finished = it.next();
 			
 				if(finished.getFinishTime() <= time) {
 					
@@ -168,7 +168,7 @@ public class InitialSolution extends Verbose {
 													// due to the usage of same machine, which is illogical
 					Operation nextOp = finished.getOperation().getNext();
 					if(nextOp != null)
-						waiting.add(new Lable(nextOp, finished));	// memory the best as its father
+						waiting.add(new Label(nextOp, finished));	// memory the best as its father
 					
 					// save this one into solution
 					this.assignments.add(finished);
@@ -197,7 +197,7 @@ public class InitialSolution extends Verbose {
 	public void visualizeSolution() {
 		
 		// copy so that not modify it
-		List<Lable> solution = getAssignments();
+		List<Label> solution = getAssignments();
 		solution.sort(new IdOperationComparator());
 		System.out.println(solution);
 		
@@ -205,7 +205,7 @@ public class InitialSolution extends Verbose {
 		pdfOutput.addStartNode("start");
 		
 		// assignment nodes
-		for(Lable label: solution) {
+		for(Label label: solution) {
 			
 			// add actual node
 			String node = convertNode(label);
@@ -213,7 +213,7 @@ public class InitialSolution extends Verbose {
 			pdfOutput.addNode(node, param);
 			
 			// add path by actual node
-			for(Lable father : label.getFathers()) {
+			for(Label father : label.getFathers()) {
 				String from = convertNode(father);
 				pdfOutput.addPath(from, node, father.getProcessingTime());
 			}
@@ -228,7 +228,7 @@ public class InitialSolution extends Verbose {
 		for(Job job : context.getJobs()) {
 			Operation lastOp = job.getLastOperation();
 			
-			for(Lable label: solution) {
+			for(Label label: solution) {
 				if(label.getOperation().equals(job.getLastOperation())) {
 					pdfOutput.addPath(convertNode(label), "end", label.getProcessingTime());
 					
@@ -242,7 +242,7 @@ public class InitialSolution extends Verbose {
 		
 		// add description
 		solution.sort(new ReversedFinishTimeComparator());
-		Lable last_label_in_critical_path = solution.get(0);
+		Label last_label_in_critical_path = solution.get(0);
 		System.out.println("Last label critical path : " + last_label_in_critical_path);
 		pdfOutput.addDescription(new LabelDescriptor(last_label_in_critical_path, this));
 		
@@ -250,12 +250,12 @@ public class InitialSolution extends Verbose {
 		pdfOutput.write();
 	}
 	
-	public String convertNode(Lable label) {
+	public String convertNode(Label label) {
 		final String SEPARATOR = "/";
 		return label.getOperation().getIdJob() + SEPARATOR + label.getOperation().getId() + SEPARATOR + label.getMachine().getId();
 	}
 	
-	public String convertParam(Lable label) {
+	public String convertParam(Label label) {
 		
 		int job = label.getOperation().getIdJob();
 		int op = label.getOperation().getId();
@@ -266,14 +266,14 @@ public class InitialSolution extends Verbose {
 				return "above right of=start";
 			
 			// get father of the same job
-			for (Lable father : label.getFathers())
+			for (Label father : label.getFathers())
 				if(father.getOperation().getIdJob() == job)
 					return "right of="+ convertNode(father);
 		}
 		
 		// for other operation
 		// TODO dirty method
-		for(Lable upperLabel : this.getAssignments()) {
+		for(Label upperLabel : this.getAssignments()) {
 			if(upperLabel.getOperation().getIdJob() == (job - 1) && upperLabel.getOperation().getId() == op) {
 				
 				// alternate left / right for each line
@@ -289,8 +289,8 @@ public class InitialSolution extends Verbose {
 		
 	}
 
-	public List<Lable> getAssignments() {
-		return new ArrayList<Lable>(this.assignments);
+	public List<Label> getAssignments() {
+		return new ArrayList<Label>(this.assignments);
 	}
 	
 }

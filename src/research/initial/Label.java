@@ -4,7 +4,7 @@ import java.util.Stack;
 
 import data.Operation;
 
-public class Lable {
+public class Label {
 
 	/**
 	 * Activity with whom this label assoc with
@@ -16,12 +16,12 @@ public class Lable {
 	/**
 	 * All the possible fathers
 	 */
-	private Stack<Lable> fathers;
+	private Stack<Label> fathers;
 	
 	/**
 	 * The last activity it has to wait in order to be executed
 	 */
-	private Lable criticalFather;
+	private Label criticalFather;
 	
 	/**
 	 * Recorded time when finished
@@ -38,9 +38,9 @@ public class Lable {
 	 * @param operation
 	 * @param precedentLabel
 	 */
-	public Lable(Operation operation, Machine machine, Lable precedentLabel) {
+	public Label(Operation operation, Machine machine, Label precedentLabel) {
 		this.operation = operation;
-		this.fathers = new Stack<Lable>();
+		this.fathers = new Stack<Label>();
 		if(precedentLabel != null) 		// avoid NullPointerException
 			this.fathers.push(precedentLabel); 
 		this.criticalFather = precedentLabel;
@@ -55,7 +55,7 @@ public class Lable {
 	 * @param other : label from available operation
 	 * @param machine
 	 */
-	public Lable(Lable other, Machine machine) {
+	public Label(Label other, Machine machine) {
 		
 		// copy from other
 		this.operation = other.operation;
@@ -71,7 +71,7 @@ public class Lable {
 	 * Constructor for the first label, so it does not has father
 	 * @param operation
 	 */
-	public Lable(Operation operation) {
+	public Label(Operation operation) {
 		this(operation, null); 
 	}
 	
@@ -80,7 +80,7 @@ public class Lable {
 	 * @param operation2
 	 * @param machine2
 	 */
-	public Lable(Operation operation, Lable precedentLabel) {
+	public Label(Operation operation, Label precedentLabel) {
 		this(operation, null, precedentLabel);
 	}
 
@@ -96,11 +96,11 @@ public class Lable {
 		return this.operation.getProcessingTime(this.machine.getId());
 	}
 	
-	public Lable getCriticalFather()	{
+	public Label getCriticalFather()	{
 		return this.criticalFather;
 	}
 	
-	public Stack<Lable> getFathers()	{
+	public Stack<Label> getFathers()	{
 		return this.fathers;
 	}
 	
@@ -110,9 +110,9 @@ public class Lable {
 	
 	@Override
 	public boolean equals(Object other) {
-		return other instanceof Lable
-				&& ( (this.operation.equals(((Lable) other).operation)
-				|| this.machine.equals(((Lable) other).machine)) );
+		return other instanceof Label
+				&& ( (this.operation.equals(((Label) other).operation)
+				|| this.machine.equals(((Label) other).machine)) );
 	}
 	
 	@Override
@@ -141,7 +141,7 @@ public class Lable {
 	}
 
 	public void addFatherFromMachine() {
-		Lable fatherFromMachine = this.machine.getLastAssignment();
+		Label fatherFromMachine = this.machine.getLastAssignment();
 		if(fatherFromMachine != null && fatherFromMachine.getOperation().getIdJob() != this.operation.getIdJob())
 			this.fathers.push(fatherFromMachine);
 	}

@@ -3,7 +3,7 @@ package research.initial;
 public class Machine {
 
     private int id;
-    private Lable lastAssignment;
+    private Label lastAssignment;
 
 	public Machine(int id) {
     	this.id = id;
@@ -14,7 +14,7 @@ public class Machine {
     	return id;
     }
     
-    public void memoryLabel(Lable assignment) {
+    public void memoryLabel(Label assignment) {
     	lastAssignment = assignment;
     }
     
@@ -29,11 +29,11 @@ public class Machine {
 		return other instanceof Machine && this.id == ((Machine) other).id;
 	}
 
-	public Lable getLastAssignment() {
+	public Label getLastAssignment() {
 		return lastAssignment;
 	}
 
-	public Lable getMemory() {
+	public Label getMemory() {
 		return lastAssignment;
 	}
 }
