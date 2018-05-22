@@ -1,6 +1,5 @@
 package solution;
 
-import java.util.Comparator;
 import java.util.List;
 
 public class CriticalPath {
@@ -9,7 +8,6 @@ public class CriticalPath {
 	
 	public CriticalPath(List<Edge> edges, int makespan) {
 		this.edges = edges;
-		this.edges.sort(new StartTimeComparator());
 		this.makespan = makespan;
 	}
 	
@@ -44,17 +42,6 @@ public class CriticalPath {
 			}
 		}
 		return null;
-	}
-	
-	private class StartTimeComparator implements Comparator<Edge>{
-
-		@Override
-		public int compare(Edge e1, Edge e2) {
-			return e1.getPredecessor().getStartTime() - e2.getPredecessor().getStartTime();
-		}
-		
-	}
-
-	
+	}	
 	
 }

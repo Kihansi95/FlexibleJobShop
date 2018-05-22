@@ -8,9 +8,6 @@ public class Node {
 	private int operation;
 	private int machine;
 	
-	private int start; 	// starting time
-	private int end;	// end time
-	
 	private int index;
 	
 	/**
@@ -22,18 +19,12 @@ public class Node {
 		this.machine = Integer.MIN_VALUE;
 	}
 	
-	public Node(Operation operation, int machine, int startTime, int finishTime) {
+	public Node(Operation operation, int machine) {
 		this();
 		this.job = operation.getIdJob();
 		this.operation = operation.getId();
 		this.index = operation.getIndex();
 		this.machine = machine;
-		this.start = startTime;
-		this.end = finishTime;
-	}
-
-	public int getStartTime() {
-		return start;
 	}
 	
 	@Override

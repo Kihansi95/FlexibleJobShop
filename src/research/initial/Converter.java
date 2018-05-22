@@ -37,9 +37,12 @@ public class Converter {
 		for(Label assign: initial_assigments) {
 			Node n = new Node(
 					assign.getOperation(), 
-					assign.getMachine().getId(),
+					assign.getMachine().getId()
+					/*
 					assign.getStartTime(),
-					assign.getFinishTime());
+					assign.getFinishTime()
+					*/
+					);
 			nodes.put(assign.getOperation(), n);
 		}
 		
