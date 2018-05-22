@@ -98,15 +98,13 @@ public class Solution {
 		return this.getCriticalPath().getMakespan();
 	}
 	
-	public void update(FlexibleJobShop context) { //recalculate the graph with new assignment vectors
-		this.graph.update(this.ms, this.os, context);
-	}
 	
 	public void permute (Operation opA, Operation opB) {
 		int indexA=opA.getIndex();
 		int indexB=opB.getIndex();
 		this.os[indexA]=opB.getId();
 		this.os[indexB]=opA.getId();
+		this.graph.update(opA,opB);
 	}
 	
 

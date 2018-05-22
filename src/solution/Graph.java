@@ -14,28 +14,28 @@ public class Graph {
 	private Map<Operation, Node> nodes;
 	
 	private List<Edge> disjuncEdges;
-	private List<Edge> conjuncArcs;
+	private List<Edge> conjuncEdges;
 	
 	private boolean changed; // to assert the change in graph's data
 	
 	/**
 	 * Default constructor
 	 */
-	public Graph(Map<Operation, Node> nodes, ArrayList<Edge> disjunctives, ArrayList<Edge> conjunctives) {
+	public Graph(Map<Operation, Node> nodes, List<Edge> disjunctives, List<Edge> conjunctives) {
 		this.nodes = nodes;
-		this.disjuncArcs = disjunctives;
-		this.conjuncArcs = conjunctives;
+		this.disjuncEdges = disjunctives;
+		this.conjuncEdges = conjunctives;
 		
 	}
 	
-	public Graph(int[] ms, int[] os, FlexibleJobShop context) {
+	/*public Graph(int[] ms, int[] os, FlexibleJobShop context) {
 		
 		
 		
-	}
+	}*/
 	
 	public Node getDisjunctiveFather(Node current ) {
-		for (Edge iteredge : this.disjuncArcs) {
+		for (Edge iteredge : this.disjuncEdges) {
 			if (iteredge.to==current) {
 				return iteredge.from;
 			}
@@ -49,13 +49,13 @@ public class Graph {
 	
 	public CriticalPath getCriticalPath() {
 		
-		List<Edge> critical_path = new ArrayList <Edge>();
+		
 		List<Edge> edges = new ArrayList <Edge>();
 		List<Node> currentNodes = new ArrayList <Node>();
 		List<Node> nodesFrom = new ArrayList<Node>();
 		List<Integer> cost = new ArrayList<Integer>();
-		edges.addAll(conjuncArcs);
-		edges.addAll(disjuncArcs); 
+		edges.addAll(conjuncEdges);
+		edges.addAll(disjuncEdges); 
 		edges.sort(new EdgeValueComparator());
 		int previousCost=0;
 		
@@ -105,7 +105,13 @@ public class Graph {
 	
 	
 	
-	public void update() {
+	public void update(Operation opA, Operation opB) {
+		Node savNd= this.getNode(opB);
+		for (Edge iteredge : this.conjuncEdges) {
+			if (iteredge.from.equals(savNd)) {
+				
+			}
+		}
 		
 	}
 	
