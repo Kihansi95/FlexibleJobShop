@@ -1,4 +1,4 @@
-package research;
+package research.initial;
 
 import java.util.ArrayList;
 import java.util.Comparator;
@@ -180,90 +180,6 @@ public class InitialSolution extends Verbose {
 	}
 	
 	/*
-	public void oldstart() {
-		//TODO using thread?
-		
-		int time = 0;
-		List<Label> candidateList = new LinkedList<Label>();
-		List<Label> chosenCandidate = new LinkedList<Label>();
-		
-		int step = 0;
-		
-		//for(int i = 0; i < 3; i++)	{
-		while(!availableOperations.isEmpty()) {
-			
-			// make candidate list
-			candidateList.clear();
-			for(Label operation: this.availableOperations) {
-				Map<Integer, Integer> tuples = operation.getOperation().getTuples();
-				
-				for(Integer idMachine: tuples.keySet()) {
-					
-					Machine machine = machines.get(idMachine - 1);
-					if(machine.isReady(time)) {
-						Label candidate = new Label(operation, machine);
-						candidateList.add(candidate);
-					}
-					
-				}
-			}
-			
-			// choose the best candidate(s) but be careful with duplicata assignments
-			Collections.sort(candidateList, comparator);
-			while(!candidateList.isEmpty()) {
-				
-				// choose the best
-				Label best = candidateList.remove(0);
-				best.updateFinishTime(time);
-				chosenCandidate.add(best);
-				
-				// remove duplicata machine || operation
-				while(candidateList.remove(best));	//not the best but the corresponding
-				
-				// remove the corresponding from waiting available list
-				availableOperations.remove(best);
-				
-				Operation nextOp = best.getOperation().getNext();
-				if(nextOp != null)
-					availableOperations.add(new Label(nextOp, best));	// memory the best as its father
-			}
-			
-			// update candidate's father
-			for(Label candidate: chosenCandidate) {
-				
-				Label father = candidate.getCriticalFather();
-				
-				// if label doesn't have father yet, its the first time we process algo
-				// so no need to update the father
-				if(father != null) {
-					
-					if(father.getFinishTime() < time) {
-						candidate.setCriticalFatherByMachine();
-					}
-					
-				}
-				candidate.updateMachineMemory();
-			}
-
-			// advance time cost and update machine state (ready)
-			chosenCandidate.sort(new ProcessingTimeComparator());
-			int min_time = chosenCandidate.get(0).getProcessingTime();
-			time += min_time;			
-			
-			// save chosen candidate into output solution 
-			this.assignments.addAll(chosenCandidate);
-			chosenCandidate.clear(); 
-			
-			if(verbose)
-				System.out.println("[IS - " +step+ "] Solution = "+ assignments);
-			step++;
-		}
-		
-		
-	}
-	*/
-	
-	/*
 	public Solution getSolution(){
 		return new Solution(assignments, context.getNbMachine(), context.getJobs().size());
 	}
@@ -279,15 +195,16 @@ public class InitialSolution extends Verbose {
 	
 	public void visualizeSolution() {
 		
-		assignments.sort(new IdOperationComparator());
-		System.out.println(assignments);
-		
+		// copy so that not modify it
+		List<Label> solution = getAssignments();
+		solution.sort(new IdOperationComparator());
+		System.out.println(solution);
 		
 		// start node
 		pdfOutput.addStartNode("start");
 		
 		// assignment nodes
-		for(Label label: assignments) {
+		for(Label label: solution) {
 			
 			// add actual node
 			String node = convertNode(label);
@@ -310,7 +227,7 @@ public class InitialSolution extends Verbose {
 		for(Job job : context.getJobs()) {
 			Operation lastOp = job.getLastOperation();
 			
-			for(Label label: assignments) {
+			for(Label label: solution) {
 				if(label.getOperation().equals(job.getLastOperation())) {
 					pdfOutput.addPath(convertNode(label), "end", label.getProcessingTime());
 					
@@ -323,8 +240,8 @@ public class InitialSolution extends Verbose {
 		}
 		
 		// add description
-		assignments.sort(new ReversedFinishTimeComparator());
-		Label last_label_in_critical_path = assignments.get(0);
+		solution.sort(new ReversedFinishTimeComparator());
+		Label last_label_in_critical_path = solution.get(0);
 		System.out.println("Last label critical path : " + last_label_in_critical_path);
 		pdfOutput.addDescription(new LabelDescriptor(last_label_in_critical_path, this));
 		
@@ -355,7 +272,7 @@ public class InitialSolution extends Verbose {
 		
 		// for other operation
 		// TODO dirty method
-		for(Label upperLabel : this.assignments) {
+		for(Label upperLabel : this.getAssignments()) {
 			if(upperLabel.getOperation().getIdJob() == (job - 1) && upperLabel.getOperation().getId() == op) {
 				
 				// alternate left / right for each line
@@ -369,6 +286,10 @@ public class InitialSolution extends Verbose {
 			System.err.println("error at label "+label);
 		throw new RuntimeException("Can't be here");
 		
+	}
+
+	public List<Label> getAssignments() {
+		return new ArrayList<Label>(this.assignments);
 	}
 	
 }

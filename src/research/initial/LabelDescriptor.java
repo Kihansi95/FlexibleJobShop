@@ -1,4 +1,4 @@
-package research;
+package research.initial;
 
 import java.util.Stack;
 

@@ -1,10 +1,10 @@
-package localsearch;
+package research.localsearch;
 
 import java.util.Map;
 
 import data.FlexibleJobShop;
 import data.Operation;
-import research.Machine;
+import research.initial.Machine;
 import solution.Solution;
 
 public class LocalSearch {

@@ -1,7 +1,7 @@
 package jobshopflexible;
 import data.DataFactory;
 import data.FlexibleJobShop;
-import research.InitialSolution;
+import research.initial.InitialSolution;
 
 public class Main {
 	
