@@ -5,8 +5,8 @@ import java.util.LinkedList;
 import java.util.List;
 
 import data.Operation;
-import research.Label;
-import research.Machine;
+import research.initial.Label;
+import research.initial.Machine;
 import data.FlexibleJobShop;
 import data.Job; 
 

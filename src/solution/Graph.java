@@ -28,43 +28,14 @@ public class Graph {
 	public Graph(int[] ms, int[] os, FlexibleJobShop context) {
 		
 		
-		for(Job job : context.getJobs()) {
-			
-			for(Operation op : job.getOperations()) {
-				
-				// init node for op
-				int index_op = index(op, context);	// calculate index in the ms string
-				int machine = ms[index_op];			// get the assigned machine id
-				nodes.add(new Node(op, machine));	// create new node corresponding this assignment
-				
-				// init conjunctive arcs for op
-				Operation successor = op.getNext();
-				if(successor != null) {
-					this.conjuncArcs.add(new Arc(op, successor, op.getProcessingTime(machine)));
-				}
-			}
-			
-			for(Operation op : job.getOperations()) {
-				
-				nodes.get()
-			}
-				
-		}
+		
 	}
 	
 	private Node getNode(Operation operation) {
 		for()
 	}
 	
-	private int index(Operation operation, FlexibleJobShop context) {
-		List<Job> jobs = context.getJobs();
-		int index = 0;
-		for(int i = 0; i < operation.getIdJob(); i++) {
-			index += jobs.get(i).getNbOperation();
-		}
-		
-		return index + operation.getId();
-	}
+	
 	
 	public void update() {
 		
