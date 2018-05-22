@@ -38,7 +38,7 @@ public class Graph {
 		return nodes.get(operation);	
 	}
 	
-	private List<Edge> getCriticalPath() {
+	public CriticalPath getCriticalPath() {
 		
 		List<Edge> critical_path = new ArrayList <Edge>();
 		List<Edge> edges = new ArrayList <Edge>();
@@ -88,10 +88,10 @@ public class Graph {
 			
 		}
 		
-		return edges; 
+		CriticalPath criticalPath = new CriticalPath(edges,maxcost);
 		
-			
-		
+		return criticalPath; 
+
 	}
 	
 	

@@ -24,9 +24,9 @@ public class Converter {
 		int ms[] = new int[nbOp];
 		int os[] = new int[nbOp];
 		
-		List<Lable> initial_assigments = init.getAssignments();
+		List<Label> initial_assigments = init.getAssignments();
 		int index = 0;
-		for(Lable assign : initial_assigments) {
+		for(Label assign : initial_assigments) {
 			int index_op = assign.getOperation().getIndex();
 			ms[index_op] = assign.getMachine().getId();
 			os[index++] = assign.getOperation().getIdJob();
@@ -34,7 +34,7 @@ public class Converter {
 		
 		// create associated graph
 		Map<Operation, Node> nodes = new HashMap<Operation, Node>();
-		for(Lable assign: initial_assigments) {
+		for(Label assign: initial_assigments) {
 			Node n = new Node(
 					assign.getOperation(), 
 					assign.getMachine().getId(),
@@ -45,8 +45,8 @@ public class Converter {
 		
 		List<Edge> conjunctives = new ArrayList<Edge>();
 		List<Edge> disjunctives = new ArrayList<Edge>();
-		for(Lable assign : initial_assigments) {
-			for(Lable father : assign.getFathers()) {
+		for(Label assign : initial_assigments) {
+			for(Label father : assign.getFathers()) {
 				
 				Node from = nodes.get(father.getOperation());
 				Node to = nodes.get(assign.getOperation());
