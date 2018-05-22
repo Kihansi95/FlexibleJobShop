@@ -1,6 +1,13 @@
 package jobshopflexible;
+import java.util.List;
+import java.util.Map;
+
 import data.DataFactory;
+import solution.Edge;
+import solution.Graph;
+import solution.Node;
 import data.FlexibleJobShop;
+import data.Operation;
 import research.initial.InitialSolution;
 
 public class Main {
@@ -16,9 +23,7 @@ public class Main {
         // Process the initial solution
         
         InitialSolution is = new InitialSolution(conf, shop);
-        is.start();
-        
-        
+
         // Visualize the solution
         //System.out.println(is.getSolution());
         is.visualizeSolution();
