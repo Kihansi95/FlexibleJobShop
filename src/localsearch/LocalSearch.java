@@ -59,7 +59,7 @@ public class LocalSearch {
 		while(!ok) {
 			op=S.getCriticalPath().getLast().getOperation();
 			while (op!=null) {
-				disjunctiveFather= S.getGraphe().getnode(op).getDisjunctiveFather;
+				disjunctiveFather= S.getGraphe().getDisjunctiveFather(op);
 				if (disjunctiveFather!=null) {
 					saveOp=op;
 					savePrec=disjunctiveFather;
