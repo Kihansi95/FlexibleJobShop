@@ -4,9 +4,11 @@ import data.Operation;
 
 public class Node {
 	
-	int job;
-	int operation;
-	int machine;
+	private int job;
+	private int operation;
+	private int machine;
+	private int start; 	// starting time
+	private int end;	// end time
 	
 	/**
 	 * Default constructor
@@ -17,11 +19,13 @@ public class Node {
 		this.machine = Integer.MIN_VALUE;
 	}
 	
-	public Node(Operation operation, int machine) {
+	public Node(Operation operation, int machine, int startTime, int finishTime) {
 		this();
 		this.job = operation.getIdJob();
 		this.operation = operation.getId();
 		this.machine = machine;
+		this.start = startTime;
+		this.end = finishTime;
 	}
 	
 }

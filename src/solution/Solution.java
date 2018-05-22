@@ -5,7 +5,7 @@ import java.util.LinkedList;
 import java.util.List;
 
 import data.Operation;
-import research.initial.Label;
+import research.initial.Lable;
 import research.initial.Machine;
 import data.FlexibleJobShop;
 import data.Job; 
@@ -79,7 +79,7 @@ public class Solution {
 	}
 
 
-	public List<Label> getCriticalPath() {
+	public List<Lable> getCriticalPath() {
 		return this.graph.getCriticalPath();
 	}
 
@@ -110,10 +110,10 @@ public class Solution {
 
 
 
-	private class IdOperationComparator implements Comparator<Label> {
+	private class IdOperationComparator implements Comparator<Lable> {
 			
 			@Override
-			public int compare(Label label1, Label label2) {
+			public int compare(Lable label1, Lable label2) {
 				int diff = label1.getOperation().getIdJob() - label2.getOperation().getIdJob();
 				diff = diff == 0 ? label1.getOperation().getId() - label2.getOperation().getId() : diff;
 				return diff;
