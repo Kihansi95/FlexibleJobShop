@@ -16,30 +16,33 @@ public class LocalSearch {
 	public LocalSearch(Solution solution, FlexibleJobShop context) {
 		
 		LocalSearchDij(solution,context);
+		
 		boolean ok;
 		Solution tmp_solution; //not used ? 
-		int currentMachine;
+		int current_Machine;
 		CriticalPath critical_path = solution.getCriticalPath();
 		Node node = critical_path.getLastNode();
-		int[]ms = solution.getMs();
+		
+		int[] ms = solution.getMs();
 		
 		while (node !=null) {
 			
 			//check if the operation has more than 1 candidate machine 
-			if(context.getJobs().get(node.getJob()).getOperations().get(node.getOperation()).getTuples().size()>1) { 
+			List<Integer> machines = context.getMachines(node.getJob(), node.getOperation());
+			if(machines.size() > 1)	{ 
 				
 				ok = false;
 				tmp_solution = solution;
-				currentMachine = ms[node.getIndex()]; //get the currently assigned machine
+				current_Machine = ms[node.getIndex()]; //get the currently assigned machine
 				
 				//get list of candidates machines
-				List<Integer> machines = new ArrayList<Integer>(context.getJobs().get(node.getJob()).getOperations().get(node.getOperation()).getTuples().keySet());
-				machines.remove(currentMachine);
+				machines.remove(current_Machine);
 				
 				for(int machine : machines) {
-					ms[node.getIndex()]=machine;
 					
-					//modify machine assignments vector
+					ms[node.getIndex()] = machine;
+					
+					//modify machine sequence
 					solution.setMs(ms); 
 					ok = LocalSearchDij(solution,context);
 					
@@ -60,33 +63,46 @@ public class LocalSearch {
 	
 	
 	
-	boolean LocalSearchDij(Solution S, FlexibleJobShop context) {
+	boolean LocalSearchDij(Solution solution, FlexibleJobShop context) {
 		
-		boolean ok=false;
-		Operation op;
-		Operation saveOp;
-		Operation savePrec; 
-		Operation disjunctiveFather;
-		Solution newS;
+		boolean ok = false;
+		
+		Node op;
+		Node saveOp;
+		Node savePrec; 
+		
+		Node disjunctiveFather;
+		Solution new_solution;
+		CriticalPath critical_path = solution.getCriticalPath();
+		
 		while(!ok) {
 			
-			op=S.getCriticalPath().getLast().getOperation();
+			op = critical_path.getLastNode();
+			
 			while (op!=null) {
-				disjunctiveFather= S.getGraphe().getDisjunctiveFather(op);
+				
+				disjunctiveFather = solution.getGraphe().getDisjunctiveFather(op);
+				
 				if (disjunctiveFather!=null) {
 					saveOp=op;
 					savePrec=disjunctiveFather;
 					ok=true;
 				}
-				op=S.getCriticalPath().get(S.getCriticalPath().indexOf(op)-1).getOperation();
+				
+				op = critical_path.getPredecessor(op);
 			}
+			
 			if (ok) {
-				newS=S;
-				newS.permute(saveOp,savePrec); //swap in OA
-				newS.update();
-				if (newS.makespan()<S.makespan()) {
-					S=newS;
-					ok=false;
+				
+				new_solution = solution;
+				
+				new_solution.permute(saveOp,savePrec); //swap in OA
+				
+				if (new_solution.getMakespan() < solution.getMakespan()) {
+					
+					solution = new_solution;
+					ok = false;
+					
 				}
 			}
 		}

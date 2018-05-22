@@ -94,7 +94,7 @@ public class Solution {
 		return endTime;
 	}
 	
-	public int makespan() {
+	public int getMakespan() {
 		return this.getCriticalPath().getMakespan();
 	}
 	

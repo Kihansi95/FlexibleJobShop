@@ -26,8 +26,8 @@ public class FlexibleJobShop {
     	return jobs;
     }
 
-	public List<Integer> getMachines(Operation operation) {
-		return operation.getMachines();
+	public List<Integer> getMachines(int job, int operation) {
+		return jobs.get(job).getOperations().get(operation).getMachines();
 	}
 
 	public int getNbOperation() {

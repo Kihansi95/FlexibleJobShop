@@ -11,7 +11,7 @@ public class Graph {
 	
 	private Map<Operation, Node> nodes;
 	
-	private List<Edge> disjuncArcs;
+	private List<Edge> disjuncEdges;
 	private List<Edge> conjuncArcs;
 	
 	private boolean changed; // to assert the change in graph's data
