@@ -6,7 +6,7 @@ import output.pdflatex.IDescriptor;
 
 public class LabelDescriptor implements IDescriptor {
 
-	private Stack<Label> criticalNodes;
+	private Stack<Lable> criticalNodes;
 	private int totalTime;
 	private InitialSolution is;
 	
@@ -14,10 +14,10 @@ public class LabelDescriptor implements IDescriptor {
 	 * the last node of the critical path
 	 * @param lastNode
 	 */
-	public LabelDescriptor(Label lastNode, InitialSolution is) {
+	public LabelDescriptor(Lable lastNode, InitialSolution is) {
 		totalTime = lastNode.getFinishTime();
-		criticalNodes = new Stack<Label>();
-		for(Label node = lastNode; node != null; node = node.getCriticalFather()) {
+		criticalNodes = new Stack<Lable>();
+		for(Lable node = lastNode; node != null; node = node.getCriticalFather()) {
 			criticalNodes.push(node);
 		}
 		this.is = is;

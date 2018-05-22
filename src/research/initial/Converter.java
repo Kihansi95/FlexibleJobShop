@@ -1,9 +1,9 @@
 package research.initial;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.TreeMap;
 
 import data.FlexibleJobShop;
 import data.Job;
@@ -24,24 +24,29 @@ public class Converter {
 		int ms[] = new int[nbOp];
 		int os[] = new int[nbOp];
 		
-		List<Label> initial_assigments = init.getAssignments();
+		List<Lable> initial_assigments = init.getAssignments();
 		int index = 0;
-		for(Label assign : initial_assigments) {
+		for(Lable assign : initial_assigments) {
 			int index_op = assign.getOperation().getIndex();
 			ms[index_op] = assign.getMachine().getId();
 			os[index++] = assign.getOperation().getIdJob();
 		}
 		
 		// create associated graph
-		Map<Operation, Node> nodes = new TreeMap<Operation, Node>();
-		for(Label assign: initial_assigments) {
-			nodes.put(assign.getOperation(), new Node(assign.getOperation(), assign.getMachine().getId()));
+		Map<Operation, Node> nodes = new HashMap<Operation, Node>();
+		for(Lable assign: initial_assigments) {
+			Node n = new Node(
+					assign.getOperation(), 
+					assign.getMachine().getId(),
+					assign.getStartTime(),
+					assign.getFinishTime());
+			nodes.put(assign.getOperation(), n);
 		}
 		
 		List<Edge> conjunctives = new ArrayList<Edge>();
 		List<Edge> disjunctives = new ArrayList<Edge>();
-		for(Label assign : initial_assigments) {
-			for(Label father : assign.getFathers()) {
+		for(Lable assign : initial_assigments) {
+			for(Lable father : assign.getFathers()) {
 				
 				Node from = nodes.get(father.getOperation());
 				Node to = nodes.get(assign.getOperation());

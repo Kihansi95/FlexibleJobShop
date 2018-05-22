@@ -1,46 +1,58 @@
 package research.localsearch;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Map;
 
 import data.FlexibleJobShop;
 import data.Operation;
 import research.initial.Machine;
+import solution.CriticalPath;
+import solution.Node;
 import solution.Solution;
 
 public class LocalSearch {
 
-	public LocalSearch(Solution S, FlexibleJobShop context) {
+	public LocalSearch(Solution solution, FlexibleJobShop context) {
 		
-		LocalSearchDij(S,context);
+		LocalSearchDij(solution,context);
 		boolean ok;
 		Solution tmp_solution; //not used ? 
 		int currentMachine;
-		Operation op=S.getCriticalPath().getLast().getOperation();
-		int id_job=S.getCriticalPath().getLast().getOperation().getIdJob(); 
-		int[]localMs=S.getMs();
+		CriticalPath critical_path = solution.getCriticalPath();
+		Node node = critical_path.getLastNode();
+		int[]ms = solution.getMs();
 		
-		while (op!=null) {
-			if(context.getJobs().get(id_job).getOperations().get(op.getId()).getTuples().size()>1) { //check if the operation has more than 1 candidate machine 
-				ok=false;
-				tmp_solution=S;
-				currentMachine=localMs[op.getIndex()]; //get the currently assigned machine
-				Map<Integer, Integer> machines = context.getJobs().get(id_job).getOperations().get(op.getId()).getTuples(); //get list of candidates machines
+		while (node !=null) {
+			
+			//check if the operation has more than 1 candidate machine 
+			if(context.getJobs().get(node.getJob()).getOperations().get(node.getOperation()).getTuples().size()>1) { 
+				
+				ok = false;
+				tmp_solution = solution;
+				currentMachine = ms[node.getIndex()]; //get the currently assigned machine
+				
+				//get list of candidates machines
+				List<Integer> machines = new ArrayList<Integer>(context.getJobs().get(node.getJob()).getOperations().get(node.getOperation()).getTuples().keySet());
 				machines.remove(currentMachine);
-				for(int machine : machines.values()) {
-					localMs[op.getIndex()]=machine;
-					S.setMs(localMs); //modify machine assignments vector
-					ok=LocalSearchDij(S,context);
+				
+				for(int machine : machines) {
+					ms[node.getIndex()]=machine;
+					
+					//modify machine assignments vector
+					solution.setMs(ms); 
+					ok = LocalSearchDij(solution,context);
 					
 					if (ok) {
-						op=S.getCriticalPath().getLast().getOperation();
-					}else {
-						op=S.getCriticalPath().get(S.getCriticalPath().indexOf(op)-1).getOperation();	
+						node = critical_path.getLastNode();
+					} else {
+						node = critical_path.getPredecessor(node);
 					}
 				}
 				
 				
-			}else {
-				op=S.getCriticalPath().get(S.getCriticalPath().indexOf(op)-1).getOperation();
+			} else {
+				node = critical_path.getPredecessor(node);
 			}
 		}
 		
@@ -57,6 +69,7 @@ public class LocalSearch {
 		Operation disjunctiveFather;
 		Solution newS;
 		while(!ok) {
+			
 			op=S.getCriticalPath().getLast().getOperation();
 			while (op!=null) {
 				disjunctiveFather= S.getGraphe().getDisjunctiveFather(op);
