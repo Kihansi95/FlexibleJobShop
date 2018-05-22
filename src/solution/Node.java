@@ -27,6 +27,13 @@ public class Node {
 		this.machine = machine;
 	}
 	
+	public Node(Node node) {
+		this.job = node.job;
+		this.operation = node.operation;
+		this.index = node.operation;
+		this.machine = node.machine;
+	}
+	
 	@Override
 	public boolean equals(Object another) {
 		Node other = (Node) another;
