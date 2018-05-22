@@ -15,6 +15,7 @@ public class Solution {
 	private int[] ms ;
 	private int[] os ;
 	private Graph graph;
+	private CriticalPath criticalPath;
 	
 	private int endTime; 
 	
@@ -79,8 +80,8 @@ public class Solution {
 	}
 
 
-	public List<Lable> getCriticalPath() {
-		return this.graph.getCriticalPath();
+	public CriticalPath getCriticalPath() {
+		return this.criticalPath;
 	}
 
 
@@ -94,7 +95,7 @@ public class Solution {
 	}
 	
 	public int makespan() {
-		return this.getCriticalPath().getLast().getFinishTime();
+		return this.getCriticalPath().getMakespan();
 	}
 	
 	public void update(FlexibleJobShop context) { //recalculate the graph with new assignment vectors
@@ -107,19 +108,6 @@ public class Solution {
 		this.os[indexA]=opB.getId();
 		this.os[indexB]=opA.getId();
 	}
-
-
-
-	private class IdOperationComparator implements Comparator<Lable> {
-			
-			@Override
-			public int compare(Lable label1, Lable label2) {
-				int diff = label1.getOperation().getIdJob() - label2.getOperation().getIdJob();
-				diff = diff == 0 ? label1.getOperation().getId() - label2.getOperation().getId() : diff;
-				return diff;
-				
-			}
-		}
 	
 
 }

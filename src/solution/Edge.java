@@ -11,5 +11,13 @@ public class Edge {
 		this.to = to;
 		this.value = value;
 	}
+	
+	public Node getSuccessor() {
+		return to;
+	}
+
+	public Node getPredecessor() {
+		return from;
+	}
 
 }
