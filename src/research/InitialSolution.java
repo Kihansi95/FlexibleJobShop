@@ -130,6 +130,7 @@ public class InitialSolution extends Verbose {
 				
 				// update all processing information
 				best.updateFinishTime(time);
+				best.addFatherFromMachine();
 				
 				// check father
 				Label father = best.getCriticalFather();
@@ -299,8 +300,8 @@ public class InitialSolution extends Verbose {
 				pdfOutput.addPath(from, node, father.getProcessingTime());
 			}
 			
-			// if there ain't father == first op of the job
-			if(label.getFathers().isEmpty())
+			// start link to first op of all job
+			if(label.getOperation().getId() == 0)
 				pdfOutput.addPath("start", node, 0);
 			
 		}

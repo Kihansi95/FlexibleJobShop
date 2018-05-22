@@ -125,12 +125,17 @@ public class Label {
 	}
 
 	public void setCriticalFatherByMachine() {
-		this.fathers.push(this.machine.getLastAssignment());
 		this.criticalFather = this.machine.getLastAssignment();		
 	}
 
 	public void updateFinishTime(int currentTime) {
 		int assign_machine = machine.getId();
 		finishTime = currentTime + operation.getProcessingTime(assign_machine);	
+	}
+
+	public void addFatherFromMachine() {
+		Label fatherFromMachine = this.machine.getLastAssignment();
+		if(fatherFromMachine != null && fatherFromMachine.getOperation().getIdJob() != this.operation.getIdJob())
+			this.fathers.push(fatherFromMachine);
 	}
 }
