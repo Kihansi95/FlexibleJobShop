@@ -60,42 +60,6 @@ public class Solution {
 		graph = new Graph(this.ms, this.os, context);
 	}
 	
-	public Solution(List<Label> listLabels, int nb_machines, int nb_jobs, FlexibleJobShop context) {
-		
-		this.ms = new int[nb_machines];
-		this.os = new int[nb_jobs]; 
-		int i=0;
-		
-		//To be done in the converter
-		
-		/*listLabels.sort(new IdOperationComparator());
-		Label lastLabel; 
-		int maxFinishTime=0;
-		
-		for (Label iterLabel : listLabels) {
-			ms[i]=(iterLabel.getMachine());
-			os[i]=iterLabel.getOperation().getId();
-			context.getJobs().get(iterLabel.getOperation().getIdJob()).getOperations().get(iterLabel.getOperation());
-			
-			if (iterLabel.getFinishTime()>maxFinishTime) {
-				maxFinishTime=iterLabel.getFinishTime();
-				lastLabel=iterLabel; 
-			}
-			i++;
-		}
-		
-		this.endTime=lastLabel.getFinishTime();
-		Label currentLabel=lastLabel;
-		
-		while (currentLabel != null) {
-			critical_path.add(currentLabel);
-			currentLabel=currentLabel.getCriticalFather();	
-		}*/
-		
-		
-	}
-	
-	
 	public Solution(int[] ms, int[] os, Graph graph) {
 		this.ms = ms;
 		this.os = os;
@@ -105,12 +69,10 @@ public class Solution {
 	public void setMs(int[] ms) {
 		this.ms = ms;
 	}
-
-
+	
 	public int[] getMs() {
 		return ms;
 	}
-
 
 	public int[] getOs() {
 		return os;
