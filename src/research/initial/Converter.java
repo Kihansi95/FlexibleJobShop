@@ -5,7 +5,7 @@ import java.util.List;
 import data.FlexibleJobShop;
 import data.Job;
 import data.Operation;
-import solution.Arc;
+import solution.Edge;
 import solution.Node;
 import solution.Solution;
 

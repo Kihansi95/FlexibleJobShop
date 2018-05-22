@@ -11,8 +11,8 @@ public class Graph {
 	
 	private Map<Operation, Node> nodes;
 	
-	private List<Arc> disjuncArcs;
-	private List<Arc> conjuncArcs;
+	private List<Edge> disjuncArcs;
+	private List<Edge> conjuncArcs;
 	
 	private boolean changed; // to assert the change in graph's data
 	
@@ -21,8 +21,8 @@ public class Graph {
 	 */
 	private Graph() {
 		nodes = new TreeMap<Operation, Node>();
-		disjuncArcs = new ArrayList<Arc>();
-		conjuncArcs = new ArrayList<Arc>();
+		disjuncArcs = new ArrayList<Edge>();
+		conjuncArcs = new ArrayList<Edge>();
 	}
 	
 	public Graph(int[] ms, int[] os, FlexibleJobShop context) {
@@ -32,7 +32,33 @@ public class Graph {
 	}
 	
 	private Node getNode(Operation operation) {
-		for()
+		return nodes.get(operation);	
+	}
+	
+	private List<Edge> getCriticalPath() {
+		
+		List<Edge> critical_path = new ArrayList <Edge>();
+		List<Edge> edges = new ArrayList <Edge>();
+		List<Node> currentNodes = new ArrayList <Node>();
+		List<Node> nodesFrom = new ArrayList<Node>;
+		List<int> cost = new ArrayList<int>;
+		edges.addAll(conjuncArcs);
+		edges.addAll(disjuncArcs); 
+		
+		while (!edges.isEmpty()) {
+			
+		}
+		
+		
+		
+		
+		
+		return edges; 
+		
+		
+		
+		
+		
 	}
 	
 	
