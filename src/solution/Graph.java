@@ -29,18 +29,17 @@ public class Graph {
 		
 	}
 	
-	/*public Graph(int[] ms, int[] os, FlexibleJobShop context) {
-		
-		
-		
-	}*/
-	
 	public Node getDisjunctiveFather(Node current ) {
-		for (Edge iteredge : this.disjuncEdges) {
-			if (iteredge.to==current) {
-				return iteredge.from;
-			}
-		}
+		for (Edge edge : this.disjuncEdges) 
+			if (edge.getSuccessor().equals(current)) 
+				return edge.getPredecessor();
+		return null;
+	}
+	
+	public Node getConjunctiveFather(Node current) {
+		for(Edge edge: this.conjuncEdges) 
+			if(edge.getSuccessor().equals(current)) 
+				return edge.getPredecessor();
 		return null;
 	}
 	

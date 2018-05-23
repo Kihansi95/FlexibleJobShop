@@ -9,8 +9,9 @@ import data.Operation;
 import research.arraysolution.MachineAS;
 import research.initial.Label;
 import research.initial.Machine;
+import solution.helper.TaskGroup;
 import solution.helper.TaskMachine;
-import solution.helper.TaskNode;
+import solution.helper.Task;
 import data.FlexibleJobShop;
 import data.Job; 
 
@@ -70,9 +71,9 @@ public class Solution {
 	}
 	
 	private void updateGraph(FlexibleJobShop context) {
-		List<TaskJob> jobs = new ArrayList<TaskJob>();
+		List<TaskGroup> jobs = new ArrayList<TaskGroup>();
 		List<TaskMachine> machines = new ArrayList<TaskMachine>();
-		List<TaskNode> tasks = new ArrayList<TaskNode>();
+		List<Task> tasks = new ArrayList<Task>();
 		
 		// prepare machines
 		int nbMachine = context.getNbMachine();
@@ -82,11 +83,11 @@ public class Solution {
 		
 		// TODO not complete
 		for(Node node : graph.getNodes()) {
-			tasks.add(new TaskNode(node));
+			tasks.add(new Task(node));
 		}
 		
 		// generate machine for each operation based on MS
-		for(TaskNode task : tasks) {
+		for(Task task : tasks) {
 			TaskMachine machine = machines.get(ms[task.getIndex()]);
 			task.machine = machine;
 		}
