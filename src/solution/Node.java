@@ -11,14 +11,20 @@ public class Node {
 	private int index;
 	
 	/**
-	 * Default constructor
+	 * Empty node, initialize with default value. Can be use for end node and start node
 	 */
-	private Node() {
+	public Node() {
 		this.job = Integer.MIN_VALUE;
 		this.operation = Integer.MIN_VALUE;
 		this.machine = Integer.MIN_VALUE;
+		this.index = Integer.MIN_VALUE;
 	}
 	
+	/**
+	 * Node correspond to Label
+	 * @param operation
+	 * @param machine
+	 */
 	public Node(Operation operation, int machine) {
 		this();
 		this.job = operation.getIdJob();

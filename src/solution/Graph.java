@@ -13,6 +13,7 @@ import research.initial.Label;
 public class Graph {
 	
 	private Map<Operation, Node> nodes;
+	private Node startNode, endNode;
 	
 	private List<Edge> disjuncEdges;
 	private List<Edge> conjuncEdges;
@@ -22,11 +23,12 @@ public class Graph {
 	/**
 	 * Default constructor
 	 */
-	public Graph(Map<Operation, Node> nodes, List<Edge> disjunctives, List<Edge> conjunctives) {
+	public Graph(Map<Operation, Node> nodes, List<Edge> disjunctives, List<Edge> conjunctives, Node start, Node end) {
 		this.nodes = nodes;
 		this.disjuncEdges = disjunctives;
 		this.conjuncEdges = conjunctives;
-		
+		this.startNode = start;
+		this.endNode = end;
 	}
 	
 	public Node getDisjunctiveFather(Node current ) {
@@ -126,31 +128,33 @@ public class Graph {
 	}
 	
 	public static void main(String args[]) {
-//Test Bellman Ford 
+		//Test Bellman Ford 
+        Job j0 = new Job(0);
+        Job j1 = new Job(1);
+        Job j2 = new Job(2);
         
+        Operation op00 = new Operation(j0, 0, 1);
+        Operation op01 = new Operation(j0, 1, 1);
+        Operation op02 = new Operation(j0, 2, 1);
+        Operation op10 = new Operation(j1, 0, 1);
+        Operation op11 = new Operation(j1, 1, 1);
+        Operation op20 = new Operation(j1, 0, 1);
+        Operation op21 = new Operation(j2, 1, 1);
+        Operation op22 = new Operation(j2, 2, 1);
+        // Operation opEnd=new Operation(-1, -1, 1);
         
+        // init nodes
+        Node nd00 = new Node(op00, 1);
+        Node nd01 = new Node(op01, 3);
+        Node nd02 = new Node(op02, 2);
+        Node nd11 = new Node(op11, 4);
+        Node nd10 = new Node(op10, 3);
+        Node nd20 = new Node(op20, 1);
+        Node nd21 = new Node(op21, 4);
+        Node nd22 = new Node(op22, 2);
         
-        
-        Operation op00=new Operation(0, 0, 1);
-        Operation op01=new Operation(0, 1, 1);
-        Operation op02=new Operation(0, 2, 1);
-        Operation op10=new Operation(1, 0, 1);
-        Operation op11=new Operation(1, 1, 1);
-        Operation op20=new Operation(2, 0, 1);
-        Operation op21=new Operation(2, 1, 1);
-        Operation op22=new Operation(2, 2, 1);
-        Operation opEnd=new Operation(-1, -1, 1);
-        
-        Node nd00=new Node(op00, 1);
-        Node nd01=new Node(op01, 3);
-        Node nd02=new Node(op02, 2);
-        Node nd10=new Node(op10, 3);
-        Node nd11=new Node(op11, 4);
-        Node nd20=new Node(op20, 1);
-        Node nd21=new Node(op21, 4);
-        Node nd22=new Node(op22, 2);
-        Node ndEnd=new Node(opEnd, -1);
-        
+        Node end = new Node();
+        Node start = new Node();
         
         Map<Operation, Node> nodes=new HashMap<Operation, Node>();
         nodes.put(op00, nd00);
@@ -161,40 +165,30 @@ public class Graph {
         nodes.put(op20, nd20);
         nodes.put(op21, nd21);
         nodes.put(op22, nd22);
-        nodes.put(opEnd, ndEnd);
+        nodes.put(null, start);
+        nodes.put(null, start);
+        nodes.put(null, start);
         
-        Edge conj1 = new Edge(nd00,nd01,10);
-        Edge conj2 = new Edge(nd01,nd02,4);
-        Edge conj3 = new Edge(nd02,ndEnd,5);
-        Edge conj4 = new Edge(nd10,nd11,7);
-        Edge conj5 = new Edge(nd11,ndEnd,15);
-        Edge conj6 = new Edge(nd20,nd21,11);
-        Edge conj7 = new Edge(nd21,nd22,12);
-        Edge conj8 = new Edge(nd22,ndEnd,10);
-        
+        // init conjunctives
         List<Edge> conjunctives=new ArrayList<Edge>();
-        conjunctives.add(conj1);
-        conjunctives.add(conj2);
-        conjunctives.add(conj3);
-        conjunctives.add(conj4);
-        conjunctives.add(conj5);
-        conjunctives.add(conj6);
-        conjunctives.add(conj7);
-        conjunctives.add(conj8);
+        conjunctives.add(new Edge(nd00,nd01,10));
+        conjunctives.add(new Edge(nd01,nd02,4));
+        conjunctives.add(new Edge(nd02,end,5));
+        conjunctives.add(new Edge(nd10,nd11,7));
+        conjunctives.add(new Edge(nd11,end,15));
+        conjunctives.add(new Edge(nd20,nd21,11));
+        conjunctives.add(new Edge(nd21,nd22,12));
+        conjunctives.add(new Edge(nd22,end,10));
         
-        Edge disj1 = new Edge(nd00,nd20,10);
-        Edge disj2 = new Edge(nd10,nd01,7);
-        Edge disj3 = new Edge(nd11,nd21,15);
-        Edge disj4 = new Edge(nd02,nd22,5);
-        
+        // init disjunctives
         List<Edge> disjunctives=new ArrayList<Edge>();
-        disjunctives.add(disj1);
-        disjunctives.add(disj2);
-        disjunctives.add(disj3);
-        disjunctives.add(disj4);
+        disjunctives.add(new Edge(nd00,nd20,10));
+        disjunctives.add(new Edge(nd10,nd01,7));
+        disjunctives.add(new Edge(nd11,nd21,15));
+        disjunctives.add(new Edge(nd02,nd22,5));
         
         
-        Graph gr = new Graph(nodes, disjunctives,conjunctives);
+        Graph gr = new Graph(nodes, disjunctives,conjunctives, start, end);
         CriticalPath critical = gr.getCriticalPath();
         
         

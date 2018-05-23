@@ -7,7 +7,7 @@ import java.util.Map;
 
 public class Operation {
     
-	private int idJob;
+	private Job job;
 	private int id;
     private Map<Integer, Integer> tuples; // <machine , processingtime>
     private Operation next;
@@ -21,8 +21,8 @@ public class Operation {
 		this.index = index;
 	}
 
-	public Operation(int idJob, int id, int nb_machines){
-    	this.idJob = idJob;
+	public Operation(Job job, int id, int nb_machines){
+    	this.job = job;
     	this.id = id;
         this.tuples = new HashMap<Integer, Integer>();
         this.next = null;
@@ -44,8 +44,12 @@ public class Operation {
     	return this.tuples; //TODO clones before return
     }
     
+    public Job getJob() {
+    	return job;
+    }
+    
     public int getIdJob() {
-    	return idJob;
+    	return job.getId();
     }
     
     public int getId() {
@@ -64,18 +68,22 @@ public class Operation {
     
     @Override
     public String toString() {
-    	return this.idJob+"."+this.id;
+    	return this.job.getId()+"."+this.id;
     }
     
     @Override
 	public boolean equals(Object other) {
 		return other instanceof Operation 
-				&& this.idJob == ((Operation) other).idJob 
+				&& this.job.getId() == ((Operation) other).job.getId()
 				&& this.id == ((Operation) other).id;
 	}
 
 	public List<Integer> getMachines() {
 		return new ArrayList<Integer>(this.tuples.keySet());
+	}
+
+	public boolean isLast() {
+		return this.equals(this.job.getLastOperation());
 	}
 }
 
