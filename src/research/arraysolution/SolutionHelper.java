@@ -78,7 +78,7 @@ public class SolutionHelper extends Verbose {
 			machine.addOperation(operation);
 		}
 		
-		return null;
+		return machines;
 		
 	}
 }
