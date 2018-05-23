@@ -52,26 +52,26 @@ public class Graph {
 		
 		
 		List<Edge> edges = new ArrayList <Edge>();
-		List<Node> currentNodes = new ArrayList <Node>();
-		List<Node> nodesFrom = new ArrayList<Node>();
-		List<Integer> cost = new ArrayList<Integer>();
+		List<Node> currentNodes = new ArrayList <Node>(); //successors
+		List<Node> nodesFrom = new ArrayList<Node>(); //predecessors
+		List<Integer> cost = new ArrayList<Integer>(); //cumulated cost for corresponding edge
 		edges.addAll(conjuncEdges);
-		edges.addAll(disjuncEdges); 
-		edges.sort(new EdgeValueComparator());
+		edges.addAll(disjuncEdges); //fusion of both disjunctive and conjunctive edges
+		edges.sort(new EdgeValueComparator()); //sort by descending edge cost
 		int previousCost=0;
 		
 
 		
 		for (Edge iteredge : edges) {
-			if (!(nodesFrom.contains(iteredge.from)&&currentNodes.contains(iteredge.to))) {
+			if (!(nodesFrom.contains(iteredge.from)&&currentNodes.contains(iteredge.to))) { //checking if edge has already been inserted in the tree
 				nodesFrom.add(iteredge.from);
 				currentNodes.add(iteredge.to);
 				for (Node nd : currentNodes) {
 					if (nd==iteredge.from) {
-						previousCost=cost.get(currentNodes.indexOf(nd)); 
+						previousCost=cost.get(currentNodes.indexOf(nd)); //getting the cost of preceding edge to add it to the current edge cost
 					}
 				}
-				cost.add(iteredge.value+previousCost);
+				cost.add(iteredge.value+previousCost); //previousCost=0 if no preceding edge found : PROBLEM 
 			}
 		}
 		
@@ -82,7 +82,7 @@ public class Graph {
 		
 		
 		
-		for (int currentCost : cost) {
+		for (int currentCost : cost) { //in this loop, getting the makespan(maxcost) and its index to know the corresponding node
 			if (currentCost > maxcost) {
 				maxcost=currentCost;
 				maxIndex=index;
@@ -90,9 +90,9 @@ public class Graph {
 			index++;
 		}
 			 
-		while (!endOfList) {
-			edges.add(new Edge(nodesFrom.get(maxIndex), currentNodes.get(maxIndex), cost.get(maxIndex)));
-			maxIndex=currentNodes.indexOf(nodesFrom.get(maxIndex));
+		while (!endOfList) { //building the critical path riding up edges
+			edges.add(new Edge(nodesFrom.get(maxIndex), currentNodes.get(maxIndex), cost.get(maxIndex))); //adding edge to critical path
+			maxIndex=currentNodes.indexOf(nodesFrom.get(maxIndex)); //finding index of predecessor which belongs to the preceding edge
 			if (maxIndex<0) {
 				endOfList=true;
 			}
@@ -121,7 +121,7 @@ public class Graph {
 		
 		@Override
 		public int compare(Edge edge1, Edge edge2) {
-			return edge1.value - edge2.value;
+			return  edge2.value - edge1.value ;
 			
 		}
 	}
@@ -200,6 +200,17 @@ public class Graph {
         
         
         System.out.println("done");
+        
+        System.out.println("Check if valid : "+critical.isValid());
+        
+        System.out.println("Makespan : "+critical.getMakespan()+" Path : ");
+        
+        Node currentNode = critical.getLastNode();
+        
+        while (currentNode != null) {
+        	System.out.println("J : "+currentNode.getJob()+" / Op : "+currentNode.getOperation()+" / M : "+currentNode.getMachine());
+        	currentNode=critical.getPredecessor(currentNode);
+        }
         
 	}
 }

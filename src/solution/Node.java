@@ -8,6 +8,7 @@ public class Node {
 	private int operation;
 	private int machine;
 	
+	
 	private int index;
 	
 	/**
@@ -53,6 +54,10 @@ public class Node {
 
 	public int getJob() {
 		return this.job;
+	}
+	
+	public int getMachine() {
+		return machine;
 	}
 	
 	
