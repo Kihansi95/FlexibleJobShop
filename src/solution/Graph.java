@@ -128,9 +128,6 @@ public class Graph {
 	public static void main(String args[]) {
 //Test Bellman Ford 
         
-        
-        
-        
         Operation op00=new Operation(0, 0, 1);
         Operation op01=new Operation(0, 1, 1);
         Operation op02=new Operation(0, 2, 1);
@@ -200,5 +197,9 @@ public class Graph {
         
         System.out.println("done");
         
+	}
+
+	public List<Node> getNodes() {
+		return new ArrayList<Node>(this.nodes.values());
 	}
 }

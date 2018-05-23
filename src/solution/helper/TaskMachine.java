@@ -18,6 +18,10 @@ public class TaskMachine {
 		tasks = new ArrayList<Task>();
 	}
 	
+	public int getId() {
+		return id;
+	}
+	
 	public List<IdleArea> getIdleAreas() {
 		Iterator<Task> it = tasks.iterator();
 		List<IdleArea> idles = new LinkedList<IdleArea>();
@@ -71,5 +75,9 @@ public class TaskMachine {
 			}
 		});
 		return clone_tasks.get(0).completionTime;
+	}
+
+	public List<Task> schedule() {
+		return new ArrayList<Task>();
 	}
 }

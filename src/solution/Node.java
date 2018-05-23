@@ -43,6 +43,11 @@ public class Node {
 				&& this.machine == other.machine;
 	}
 	
+	@Override
+	public String toString() {
+		return job+"."+operation+"."+machine;
+	}
+	
 	public int getIndex() {
 		return index;
 	}
@@ -55,5 +60,7 @@ public class Node {
 		return this.job;
 	}
 	
-	
+	protected int getMachineId() {
+		return this.machine;
+	}
 }
