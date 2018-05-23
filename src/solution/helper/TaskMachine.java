@@ -11,21 +11,21 @@ import research.arraysolution.IdleAS;
 public class TaskMachine {
 	
 	private int id;
-	private List<TaskNode> tasks;
+	private List<Task> tasks;
 	
 	public TaskMachine(int id) {
 		this.id = id;
-		tasks = new ArrayList<TaskNode>();
+		tasks = new ArrayList<Task>();
 	}
 	
 	public List<IdleArea> getIdleAreas() {
-		Iterator<TaskNode> it = tasks.iterator();
+		Iterator<Task> it = tasks.iterator();
 		List<IdleArea> idles = new LinkedList<IdleArea>();
 		
 		if(!it.hasNext())
 			return idles; // no operation so no idle time
 		
-		TaskNode current = null, next = null;
+		Task current = null, next = null;
 		
 		while(it.hasNext()) {
 			next = it.next();
@@ -58,15 +58,15 @@ public class TaskMachine {
 		return -1; 
 	}
 	
-	public void addTask(TaskNode task) {
+	public void addTask(Task task) {
 		this.tasks.add(task);
 	}
 	
 	public int getLastCompletionTime() {
-		List<TaskNode> clone_tasks = new ArrayList<TaskNode>(this.tasks);
-		clone_tasks.sort(new Comparator<TaskNode>() {
+		List<Task> clone_tasks = new ArrayList<Task>(this.tasks);
+		clone_tasks.sort(new Comparator<Task>() {
 			@Override
-			public int compare(final TaskNode task1, final TaskNode task2) {
+			public int compare(final Task task1, final Task task2) {
 				return task2.completionTime - task1.completionTime;
 			}
 		});
