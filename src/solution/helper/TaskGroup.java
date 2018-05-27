@@ -19,7 +19,7 @@ public class TaskGroup { // == job
 		id = job.getId();
 		tasks = new LinkedList<Task>();
 		
-		pointer = tasks.listIterator();
+		pointer = null;
 		
 		sorted = false;
 	}
@@ -55,6 +55,7 @@ public class TaskGroup { // == job
 			}
 			
 		});
+		this.pointer = tasks.listIterator();
 	}
 	
 	@Override

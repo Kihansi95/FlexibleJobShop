@@ -8,7 +8,6 @@ public class Node {
 	private int operation;
 	private int machine;
 	
-	
 	private int index;
 	
 	/**
@@ -37,7 +36,7 @@ public class Node {
 	public Node(Node node) {
 		this.job = node.job;
 		this.operation = node.operation;
-		this.index = node.operation;
+		this.index = node.index;
 		this.machine = node.machine;
 	}
 	
@@ -52,7 +51,9 @@ public class Node {
 	
 	@Override
 	public String toString() {
-		return job+"."+operation+"."+machine;
+		
+		final String SEPARATOR = "/";
+		return job + SEPARATOR + operation + SEPARATOR + machine;
 	}
 	
 	public int getIndex() {
@@ -67,15 +68,7 @@ public class Node {
 		return this.job;
 	}
 	
-<<<<<<< HEAD
-	protected int getMachineId() {
+	protected int getMachine() {
 		return this.machine;
 	}
-=======
-	public int getMachine() {
-		return machine;
-	}
-	
-	
->>>>>>> branch 'master' of https://github.com/Kihansi95/FlexibleJobShop.git
 }

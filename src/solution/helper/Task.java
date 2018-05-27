@@ -14,17 +14,17 @@ public class Task extends Node {
 	
 	private TaskMachine machine;
 	
-	public Task(Node node, FlexibleJobShop context) {
+	public Task(Node node, FlexibleJobShop context) throws AlgorithmLogicException {
 		super(node);
 		this.startingTime = Integer.MAX_VALUE;
 		this.completionTime = Integer.MAX_VALUE;
 		this.processingTime = context
 								.getJobs().get(this.getJob())
 								.getOperations().get(this.getOperation())
-								.getProcessingTime(this.getMachineId());
+								.getProcessingTime(this.getMachine());
 		machine = null ;
 	}
-	
+
 	public void updateCompletionTime() {
 		this.completionTime = this.startingTime + this.processingTime;
 	}
@@ -34,11 +34,11 @@ public class Task extends Node {
 		return "{" + super.toString() + ", start: "+startingTime+", completion: "+ completionTime + "}";
 	}
 
-	public void setMachine(List<TaskMachine> machines) {
-		this.machine = machines.get(this.getMachineId() - 1);		
+	public void setMachine(List<TaskMachine> machines) throws AlgorithmLogicException {
+		this.machine = machines.get(this.getMachine() - 1);		
 	}
 	
-	public TaskMachine getMachine() throws AlgorithmLogicException {
+	public TaskMachine getTaskMachine() throws AlgorithmLogicException {
 		if(machine == null) {
 			throw new AlgorithmLogicException("TaskMachine has never been assigned to this task "+this);
 		}

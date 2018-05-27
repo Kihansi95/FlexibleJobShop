@@ -1,14 +1,12 @@
 package jobshopflexible;
-import java.util.List;
-import java.util.Map;
 
 import data.DataFactory;
-import solution.Edge;
-import solution.Graph;
-import solution.Node;
 import data.FlexibleJobShop;
-import data.Operation;
+import exception.AlgorithmLogicException;
+import output.pdflatex.PdfWriter;
+import research.initial.Converter;
 import research.initial.InitialSolution;
+import solution.Solution;
 
 public class Main {
 	
@@ -20,13 +18,26 @@ public class Main {
     	// initiate research context
         FlexibleJobShop shop = DataFactory.instance(conf).initiateJobShop(conf);
         
-        // Process the initial solution
+        // initiate output method
+        PdfWriter pdfWriter = new PdfWriter(conf);
         
+        // Process the initial solution
         InitialSolution is = new InitialSolution(conf, shop);
+        is.start();
 
         // Visualize the solution
-        //System.out.println(is.getSolution());
-        is.visualizeSolution();
+        // System.out.println(is.getSolution());
+        // is.visualize(new PdfWriter(conf)); 		// test initial solution
+        
+        Solution sol = Converter.convert(is, shop);
+        // sol.visualize(new PdfWriter(conf));		// test graph visualization
+        
+        try {
+			sol.updateGraph(shop);
+			sol.visualize(pdfWriter);
+		} catch (AlgorithmLogicException e) {
+			e.printStackTrace();
+		}
         
         System.out.println("done");
     }

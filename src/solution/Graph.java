@@ -8,7 +8,9 @@ import java.util.Map;
 import java.util.TreeMap;
 
 import data.*;
+import output.pdflatex.PdfWriter;
 import research.initial.Label;
+import utility.Verbose;
 
 public class Graph {
 	
@@ -31,7 +33,7 @@ public class Graph {
 		this.endNode = end;
 	}
 	
-	public Node getDisjunctiveFather(Node current ) {
+	public Node getDisjunctiveFather(Node current) {
 		for (Edge edge : this.disjuncEdges) 
 			if (edge.getSuccessor().equals(current)) 
 				return edge.getPredecessor();
@@ -106,8 +108,6 @@ public class Graph {
 
 	}
 	
-	
-	
 	public void update(Operation opA, Operation opB) {
 		Node savNd= this.getNode(opB);
 		for (Edge iteredge : this.conjuncEdges) {
@@ -125,6 +125,83 @@ public class Graph {
 			return edge1.value - edge2.value;
 			
 		}
+	}
+	
+	public void visualize(PdfWriter pdfOutput) {
+		
+		// print nodes
+		pdfOutput.addStartNode(this.startNode.toString());
+		List<Node> ordered_nodes = new ArrayList<Node>(this.nodes.values());
+		ordered_nodes.sort(new Comparator<Node>() {
+
+			@Override
+			public int compare(Node n1, Node n2) {
+				int diff = n1.getJob() - n2.getJob();
+				diff = diff == 0 ? n1.getOperation() - n2.getOperation() : diff;
+				diff = diff == 0 ? n1.getMachine() - n2.getMachine() : diff;
+				return diff;
+			}
+			
+		});
+		
+		for(Node node : ordered_nodes) {
+			String param = convertParam(node);
+			pdfOutput.addNode(node.toString(), param);
+			
+		}
+		
+		int middle_job = ordered_nodes.get(ordered_nodes.size() - 1).getJob() / 2;
+		Node last_op = null;
+		for(Node node : ordered_nodes) {
+			if(node.getJob() == middle_job) {
+				last_op = last_op == null ? node : last_op.getOperation() < node.getOperation() ? node : last_op;
+			}
+		}
+		
+		pdfOutput.addEndNode(this.endNode.toString(), "right of=" + last_op.toString() );
+		
+		// print edges
+		for(Edge edge : this.conjuncEdges) {
+			pdfOutput.addPath(edge.getPredecessor().toString(), edge.getSuccessor().toString(), edge.getValue());
+		}
+		
+		for(Edge edge : this.disjuncEdges) {
+			pdfOutput.addPath(edge.getPredecessor().toString(), edge.getSuccessor().toString(), edge.getValue());
+		}
+		
+		// clean template and write down
+		pdfOutput.write();
+		
+	}
+	
+	private String convertParam(Node node) {
+		
+		// for the first job's operation line
+		if(node.getJob() == 0) {
+			if(node.getOperation() == 0)
+				return "above right of=start";
+			
+			
+		}
+		
+		// for other operation
+		if(node.getOperation() == 0) {
+			for(Node upper_node : nodes.values()) {
+				if(upper_node.getOperation() == 0 && upper_node.getJob() == node.getJob() - 1) {
+					return "below " + (node.getJob() % 2 == 0 ? "left" : "right") + " of=" + upper_node;
+				}
+			}
+		}
+		
+		// get father of the same job
+		for(Edge conjunc : conjuncEdges) {
+			if(conjunc.getSuccessor().equals(node)) {
+				return "right of=" + conjunc.getPredecessor();
+			}
+		}
+		
+		// how can you reach here ???
+		throw new RuntimeException("Can't be here");
 	}
 	
 	public static void main(String args[]) {
@@ -153,8 +230,8 @@ public class Graph {
         Node nd21 = new Node(op21, 4);
         Node nd22 = new Node(op22, 2);
         
-        Node end = new Node();
-        Node start = new Node();
+        Node end = new SpecialNode(false);
+        Node start = new SpecialNode(true);
         
         Map<Operation, Node> nodes=new HashMap<Operation, Node>();
         nodes.put(op00, nd00);
@@ -204,6 +281,8 @@ public class Graph {
         	System.out.println("J : "+currentNode.getJob()+" / Op : "+currentNode.getOperation()+" / M : "+currentNode.getMachine());
         	currentNode=critical.getPredecessor(currentNode);
         }
+        
+        
         
 	}
 

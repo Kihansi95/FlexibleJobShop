@@ -12,6 +12,7 @@ import solution.Edge;
 import solution.Graph;
 import solution.Node;
 import solution.Solution;
+import solution.SpecialNode;
 
 public class Converter {
 
@@ -49,8 +50,8 @@ public class Converter {
 		}
 		
 		// create special node for end node and start node
-		Node end_node = new Node();
-		Node start_node = new Node();
+		Node end_node = new SpecialNode(false);
+		Node start_node = new SpecialNode(true);
 		
 		List<Edge> conjunctives = new ArrayList<Edge>();
 		List<Edge> disjunctives = new ArrayList<Edge>();
