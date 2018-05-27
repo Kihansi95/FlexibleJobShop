@@ -282,11 +282,13 @@ public class Graph {
         	currentNode=critical.getPredecessor(currentNode);
         }
         
-        
-        
 	}
 
 	public List<Node> getNodes() {
 		return new ArrayList<Node>(this.nodes.values());
+	}
+
+	public void setDisjunctiveEdges(List<Edge> disjuncs) {
+		this.disjuncEdges = disjuncs;		
 	}
 }

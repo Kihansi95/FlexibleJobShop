@@ -3,6 +3,7 @@ package solution.helper;
 import java.util.List;
 
 import data.FlexibleJobShop;
+import data.Operation;
 import exception.AlgorithmLogicException;
 import solution.Node;
 
@@ -14,6 +15,14 @@ public class Task extends Node {
 	
 	private TaskMachine machine;
 	
+	public Task(Operation operation, int machine, int startingTime, int completionTime, int processingTime) {
+		super(operation, machine);
+		this.startingTime = startingTime;
+		this.processingTime = processingTime;
+		this.completionTime = completionTime;
+	}
+	
+	/*
 	public Task(Node node, FlexibleJobShop context) throws AlgorithmLogicException {
 		super(node);
 		this.startingTime = Integer.MAX_VALUE;
@@ -24,14 +33,10 @@ public class Task extends Node {
 								.getProcessingTime(this.getMachine());
 		machine = null ;
 	}
+	*/
 
 	public void updateCompletionTime() {
 		this.completionTime = this.startingTime + this.processingTime;
-	}
-	
-	@Override
-	public String toString() {
-		return "{" + super.toString() + ", start: "+startingTime+", completion: "+ completionTime + "}";
 	}
 
 	public void setMachine(List<TaskMachine> machines) throws AlgorithmLogicException {

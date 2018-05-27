@@ -13,6 +13,7 @@ import solution.Graph;
 import solution.Node;
 import solution.Solution;
 import solution.SpecialNode;
+import solution.helper.Task;
 
 public class Converter {
 
@@ -38,13 +39,12 @@ public class Converter {
 		for(Label assign: initial_assigments) {
 			
 			// create normal Node for corresponding label
-			Node n = new Node(
+			Node n = new Task(
 					assign.getOperation(), 
-					assign.getMachine().getId()
-					/*
+					assign.getMachine().getId(),
 					assign.getStartTime(),
-					assign.getFinishTime()
-					*/
+					assign.getFinishTime(),
+					assign.getProcessingTime()
 					);
 			nodes.put(assign.getOperation(), n);
 		}

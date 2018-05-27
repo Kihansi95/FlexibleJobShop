@@ -1,6 +1,7 @@
 package solution;
 
 import data.Operation;
+import solution.helper.TaskMachine;
 
 public class Node {
 	

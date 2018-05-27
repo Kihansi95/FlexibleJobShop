@@ -88,8 +88,8 @@ public class Solution {
 			jobs.add(new TaskGroup(job));
 		}
 		for(Node node : graph.getNodes()) {
-			Task task = new Task(node, context);
-			jobs.get(node.getJob()).add(task);
+			Task task = (Task) node;
+			jobs.get(task.getJob()).add(task);
 			
 			// generate machine for each operation based on MS
 			//TaskMachine machine = machines.get(ms[task.getIndex()]);
@@ -102,7 +102,8 @@ public class Solution {
 		for(int id_job : this.os) {
 			
 			TaskGroup job = jobs.get(id_job); // TODO check if we use jobs[idJob] for something else to be sure that we can get the correct job here
-			Task task = job.poll();
+			
+			Task task = job.poll();			
 			TaskMachine machine = task.getTaskMachine();
 			
 			int allowable_starting_time = -1;
@@ -126,11 +127,19 @@ public class Solution {
 		}
 		
 		// update disjunctive edges
+		List<Edge> disjuncs = new ArrayList<Edge>();
 		for(TaskMachine machine : machines) {
-			for(Task task : machine.schedule()) {
+			List<Task> tasks = machine.schedule();
+			for(int i = 0; i < tasks.size() - 1; i++) {
 				
+				Task from = tasks.get(i), to = tasks.get(i + 1);
+				
+				if(from.getJob() != to.getJob()) // avoid to duplicate with conjunctive edges
+					disjuncs.add(new Edge(tasks.get(i), tasks.get(i+1), tasks.get(i).processingTime));
 			}
 		}
+		
+		graph.setDisjunctiveEdges(disjuncs);
 	}
 
 	public void visualize(PdfWriter pdfWriter) {

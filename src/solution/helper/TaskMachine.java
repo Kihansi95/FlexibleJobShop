@@ -83,6 +83,6 @@ public class TaskMachine {
 	}
 
 	public List<Task> schedule() {
-		return new ArrayList<Task>();
+		return tasks;
 	}
 }
