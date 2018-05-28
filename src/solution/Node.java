@@ -61,15 +61,9 @@ public class Node {
 		return this.job;
 	}
 	
-<<<<<<< HEAD
-	protected int getMachineId() {
-		return this.machine;
-	}
-=======
 	public int getMachine() {
 		return machine;
 	}
 	
-	
->>>>>>> branch 'master' of https://github.com/Kihansi95/FlexibleJobShop.git
+
 }
