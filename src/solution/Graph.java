@@ -8,11 +8,14 @@ import java.util.Map;
 import java.util.TreeMap;
 
 import data.*;
+import output.pdflatex.PdfWriter;
 import research.initial.Label;
+import utility.Verbose;
 
 public class Graph {
 	
-	private List<Node> nodes;
+	private Map<Operation, Node> nodes;
+	private Node startNode, endNode;
 	
 	private List<Edge> disjuncEdges;
 	private List<Edge> conjuncEdges;
@@ -22,14 +25,15 @@ public class Graph {
 	/**
 	 * Default constructor
 	 */
-	public Graph(Map<Operation, Node> nodes, List<Edge> disjunctives, List<Edge> conjunctives) {
-		this.nodes = new ArrayList<Node>(nodes.values());
+	public Graph(Map<Operation, Node> nodes, List<Edge> disjunctives, List<Edge> conjunctives, Node start, Node end) {
+		this.nodes = nodes;
 		this.disjuncEdges = disjunctives;
 		this.conjuncEdges = conjunctives;
-		
+		this.startNode = start;
+		this.endNode = end;
 	}
 	
-	public Node getDisjunctiveFather(Node current ) {
+	public Node getDisjunctiveFather(Node current) {
 		for (Edge edge : this.disjuncEdges) 
 			if (edge.getSuccessor().equals(current)) 
 				return edge.getPredecessor();
@@ -43,11 +47,10 @@ public class Graph {
 		return null;
 	}
 	
-	/*
 	private Node getNode(Operation operation) {
 		return nodes.get(operation);	
 	}
-	*/
+	
 	public CriticalPath getCriticalPath() {
 		
 		
@@ -105,7 +108,6 @@ public class Graph {
 
 	}
 	
-	/*
 	public void update(Operation opA, Operation opB) {
 		Node savNd= this.getNode(opB);
 		for (Edge iteredge : this.conjuncEdges) {
@@ -115,39 +117,121 @@ public class Graph {
 		}
 		
 	}
-	*/
+	
 	private class EdgeValueComparator implements Comparator<Edge> {
 		
 		@Override
 		public int compare(Edge edge1, Edge edge2) {
-			return  edge2.value - edge1.value ;
+			return edge1.value - edge2.value;
 			
 		}
 	}
 	
+	public void visualize(PdfWriter pdfOutput) {
+		
+		// print nodes
+		pdfOutput.addStartNode(this.startNode.toString());
+		List<Node> ordered_nodes = new ArrayList<Node>(this.nodes.values());
+		ordered_nodes.sort(new Comparator<Node>() {
+
+			@Override
+			public int compare(Node n1, Node n2) {
+				int diff = n1.getJob() - n2.getJob();
+				diff = diff == 0 ? n1.getOperation() - n2.getOperation() : diff;
+				diff = diff == 0 ? n1.getMachine() - n2.getMachine() : diff;
+				return diff;
+			}
+			
+		});
+		
+		for(Node node : ordered_nodes) {
+			String param = convertParam(node);
+			pdfOutput.addNode(node.toString(), param);
+			
+		}
+		
+		int middle_job = ordered_nodes.get(ordered_nodes.size() - 1).getJob() / 2;
+		Node last_op = null;
+		for(Node node : ordered_nodes) {
+			if(node.getJob() == middle_job) {
+				last_op = last_op == null ? node : last_op.getOperation() < node.getOperation() ? node : last_op;
+			}
+		}
+		
+		pdfOutput.addEndNode(this.endNode.toString(), "right of=" + last_op.toString() );
+		
+		// print edges
+		for(Edge edge : this.conjuncEdges) {
+			pdfOutput.addPath(edge.getPredecessor().toString(), edge.getSuccessor().toString(), edge.getValue());
+		}
+		
+		for(Edge edge : this.disjuncEdges) {
+			pdfOutput.addPath(edge.getPredecessor().toString(), edge.getSuccessor().toString(), edge.getValue());
+		}
+		
+		// clean template and write down
+		pdfOutput.write();
+		
+	}
+	
+	private String convertParam(Node node) {
+		
+		// for the first job's operation line
+		if(node.getJob() == 0) {
+			if(node.getOperation() == 0)
+				return "above right of=start";
+			
+			
+		}
+		
+		// for other operation
+		if(node.getOperation() == 0) {
+			for(Node upper_node : nodes.values()) {
+				if(upper_node.getOperation() == 0 && upper_node.getJob() == node.getJob() - 1) {
+					return "below " + (node.getJob() % 2 == 0 ? "left" : "right") + " of=" + upper_node;
+				}
+			}
+		}
+		
+		// get father of the same job
+		for(Edge conjunc : conjuncEdges) {
+			if(conjunc.getSuccessor().equals(node)) {
+				return "right of=" + conjunc.getPredecessor();
+			}
+		}
+		
+		// how can you reach here ???
+		throw new RuntimeException("Can't be here");
+	}
+	
 	public static void main(String args[]) {
-//Test Bellman Ford 
+		//Test Bellman Ford 
+        Job j0 = new Job(0);
+        Job j1 = new Job(1);
+        Job j2 = new Job(2);
         
-        Operation op00=new Operation(0, 0, 1);
-        Operation op01=new Operation(0, 1, 1);
-        Operation op02=new Operation(0, 2, 1);
-        Operation op10=new Operation(1, 0, 1);
-        Operation op11=new Operation(1, 1, 1);
-        Operation op20=new Operation(2, 0, 1);
-        Operation op21=new Operation(2, 1, 1);
-        Operation op22=new Operation(2, 2, 1);
-        Operation opEnd=new Operation(-1, -1, 1);
+        Operation op00 = new Operation(j0, 0, 1);
+        Operation op01 = new Operation(j0, 1, 1);
+        Operation op02 = new Operation(j0, 2, 1);
+        Operation op10 = new Operation(j1, 0, 1);
+        Operation op11 = new Operation(j1, 1, 1);
+        Operation op20 = new Operation(j1, 0, 1);
+        Operation op21 = new Operation(j2, 1, 1);
+        Operation op22 = new Operation(j2, 2, 1);
+        // Operation opEnd=new Operation(-1, -1, 1);
         
-        Node nd00=new Node(op00, 1);
-        Node nd01=new Node(op01, 3);
-        Node nd02=new Node(op02, 2);
-        Node nd10=new Node(op10, 3);
-        Node nd11=new Node(op11, 4);
-        Node nd20=new Node(op20, 1);
-        Node nd21=new Node(op21, 4);
-        Node nd22=new Node(op22, 2);
-        Node ndEnd=new Node(opEnd, -1);
+        // init nodes
+        Node nd00 = new Node(op00, 1);
+        Node nd01 = new Node(op01, 3);
+        Node nd02 = new Node(op02, 2);
+        Node nd11 = new Node(op11, 4);
+        Node nd10 = new Node(op10, 3);
+        Node nd20 = new Node(op20, 1);
+        Node nd21 = new Node(op21, 4);
+        Node nd22 = new Node(op22, 2);
         
+        Node end = new SpecialNode(false);
+        Node start = new SpecialNode(true);
         
         Map<Operation, Node> nodes=new HashMap<Operation, Node>();
         nodes.put(op00, nd00);
@@ -158,40 +242,30 @@ public class Graph {
         nodes.put(op20, nd20);
         nodes.put(op21, nd21);
         nodes.put(op22, nd22);
-        nodes.put(opEnd, ndEnd);
+        nodes.put(null, start);
+        nodes.put(null, start);
+        nodes.put(null, start);
         
-        Edge conj1 = new Edge(nd00,nd01,10);
-        Edge conj2 = new Edge(nd01,nd02,4);
-        Edge conj3 = new Edge(nd02,ndEnd,5);
-        Edge conj4 = new Edge(nd10,nd11,7);
-        Edge conj5 = new Edge(nd11,ndEnd,15);
-        Edge conj6 = new Edge(nd20,nd21,11);
-        Edge conj7 = new Edge(nd21,nd22,12);
-        Edge conj8 = new Edge(nd22,ndEnd,10);
-        
+        // init conjunctives
         List<Edge> conjunctives=new ArrayList<Edge>();
-        conjunctives.add(conj1);
-        conjunctives.add(conj2);
-        conjunctives.add(conj3);
-        conjunctives.add(conj4);
-        conjunctives.add(conj5);
-        conjunctives.add(conj6);
-        conjunctives.add(conj7);
-        conjunctives.add(conj8);
+        conjunctives.add(new Edge(nd00,nd01,10));
+        conjunctives.add(new Edge(nd01,nd02,4));
+        conjunctives.add(new Edge(nd02,end,5));
+        conjunctives.add(new Edge(nd10,nd11,7));
+        conjunctives.add(new Edge(nd11,end,15));
+        conjunctives.add(new Edge(nd20,nd21,11));
+        conjunctives.add(new Edge(nd21,nd22,12));
+        conjunctives.add(new Edge(nd22,end,10));
         
-        Edge disj1 = new Edge(nd00,nd20,10);
-        Edge disj2 = new Edge(nd10,nd01,7);
-        Edge disj3 = new Edge(nd11,nd21,15);
-        Edge disj4 = new Edge(nd02,nd22,5);
-        
+        // init disjunctives
         List<Edge> disjunctives=new ArrayList<Edge>();
-        disjunctives.add(disj1);
-        disjunctives.add(disj2);
-        disjunctives.add(disj3);
-        disjunctives.add(disj4);
+        disjunctives.add(new Edge(nd00,nd20,10));
+        disjunctives.add(new Edge(nd10,nd01,7));
+        disjunctives.add(new Edge(nd11,nd21,15));
+        disjunctives.add(new Edge(nd02,nd22,5));
         
         
-        Graph gr = new Graph(nodes, disjunctives,conjunctives);
+        Graph gr = new Graph(nodes, disjunctives,conjunctives, start, end);
         CriticalPath critical = gr.getCriticalPath();
         
         
@@ -211,7 +285,10 @@ public class Graph {
 	}
 
 	public List<Node> getNodes() {
-		return this.nodes;
-		//return new ArrayList<Node>(this.nodes.values());
+		return new ArrayList<Node>(this.nodes.values());
+	}
+
+	public void setDisjunctiveEdges(List<Edge> disjuncs) {
+		this.disjuncEdges = disjuncs;		
 	}
 }

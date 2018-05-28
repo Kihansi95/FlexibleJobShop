@@ -3,6 +3,7 @@ package solution.helper;
 import java.util.List;
 
 import data.FlexibleJobShop;
+import data.Operation;
 import exception.AlgorithmLogicException;
 import solution.Node;
 
@@ -14,31 +15,35 @@ public class Task extends Node {
 	
 	private TaskMachine machine;
 	
-	public Task(Node node, FlexibleJobShop context) {
+	public Task(Operation operation, int machine, int startingTime, int completionTime, int processingTime) {
+		super(operation, machine);
+		this.startingTime = startingTime;
+		this.processingTime = processingTime;
+		this.completionTime = completionTime;
+	}
+	
+	/*
+	public Task(Node node, FlexibleJobShop context) throws AlgorithmLogicException {
 		super(node);
 		this.startingTime = Integer.MAX_VALUE;
 		this.completionTime = Integer.MAX_VALUE;
 		this.processingTime = context
 								.getJobs().get(this.getJob())
 								.getOperations().get(this.getOperation())
-								.getProcessingTime(this.getMachineId());
+								.getProcessingTime(this.getMachine());
 		machine = null ;
 	}
-	
+	*/
+
 	public void updateCompletionTime() {
 		this.completionTime = this.startingTime + this.processingTime;
 	}
-	
-	@Override
-	public String toString() {
-		return "{" + super.toString() + ", start: "+startingTime+", completion: "+ completionTime + "}";
-	}
 
-	public void setMachine(List<TaskMachine> machines) {
-		this.machine = machines.get(this.getMachineId() - 1);		
+	public void setMachine(List<TaskMachine> machines) throws AlgorithmLogicException {
+		this.machine = machines.get(this.getMachine() - 1);		
 	}
 	
-	public TaskMachine getMachine() throws AlgorithmLogicException {
+	public TaskMachine getTaskMachine() throws AlgorithmLogicException {
 		if(machine == null) {
 			throw new AlgorithmLogicException("TaskMachine has never been assigned to this task "+this);
 		}

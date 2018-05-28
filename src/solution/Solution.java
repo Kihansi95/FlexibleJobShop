@@ -7,6 +7,7 @@ import java.util.List;
 
 import data.Operation;
 import exception.AlgorithmLogicException;
+import output.pdflatex.PdfWriter;
 import research.arraysolution.MachineAS;
 import research.initial.Label;
 import research.initial.Machine;
@@ -49,7 +50,7 @@ public class Solution {
 	}
 
 
-	public Graph getGraphe() {
+	public Graph getGraph() {
 		return graph;
 	}
 
@@ -71,7 +72,7 @@ public class Solution {
 		this.graph.update(opA,opB);
 	}
 	
-	private void updateGraph(FlexibleJobShop context) throws AlgorithmLogicException {
+	public void updateGraph(FlexibleJobShop context) throws AlgorithmLogicException {
 		
 		List<TaskGroup> jobs = new ArrayList<TaskGroup>();
 		List<TaskMachine> machines = new ArrayList<TaskMachine>();
@@ -82,10 +83,13 @@ public class Solution {
 			machines.add(new TaskMachine(idMachine));
 		}
 		
-		// prepare jobs and operations		
+		// prepare jobs and operations	
+		for(Job job : context.getJobs()) {
+			jobs.add(new TaskGroup(job));
+		}
 		for(Node node : graph.getNodes()) {
-			Task task = new Task(node, context);
-			jobs.get(node.getJob() - 1).add(task);
+			Task task = (Task) node;
+			jobs.get(task.getJob()).add(task);
 			
 			// generate machine for each operation based on MS
 			//TaskMachine machine = machines.get(ms[task.getIndex()]);
@@ -97,9 +101,10 @@ public class Solution {
 		// calculation of starting and completion time
 		for(int id_job : this.os) {
 			
-			TaskGroup job = jobs.get(id_job - 1); // TODO check if we use jobs[idJob - 1] for something else to be sure that we can get the correct job here
-			Task task = job.poll();
-			TaskMachine machine = task.getMachine();
+			TaskGroup job = jobs.get(id_job); // TODO check if we use jobs[idJob] for something else to be sure that we can get the correct job here
+			
+			Task task = job.poll();			
+			TaskMachine machine = task.getTaskMachine();
 			
 			int allowable_starting_time = -1;
 			if(job.hasPrevious(task)) {
@@ -122,11 +127,24 @@ public class Solution {
 		}
 		
 		// update disjunctive edges
+		List<Edge> disjuncs = new ArrayList<Edge>();
 		for(TaskMachine machine : machines) {
-			for(Task task : machine.schedule()) {
+			List<Task> tasks = machine.schedule();
+			for(int i = 0; i < tasks.size() - 1; i++) {
 				
+				Task from = tasks.get(i), to = tasks.get(i + 1);
+				
+				if(from.getJob() != to.getJob()) // avoid to duplicate with conjunctive edges
+					disjuncs.add(new Edge(tasks.get(i), tasks.get(i+1), tasks.get(i).processingTime));
 			}
 		}
+		
+		graph.setDisjunctiveEdges(disjuncs);
+	}
+
+	public void visualize(PdfWriter pdfWriter) {
+		this.graph.visualize(pdfWriter);
+		
 	}
 	
 	

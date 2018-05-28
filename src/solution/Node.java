@@ -1,6 +1,7 @@
 package solution;
 
 import data.Operation;
+import solution.helper.TaskMachine;
 
 public class Node {
 	
@@ -8,18 +9,23 @@ public class Node {
 	private int operation;
 	private int machine;
 	
-	
 	private int index;
 	
 	/**
-	 * Default constructor
+	 * Empty node, initialize with default value. Can be use for end node and start node
 	 */
-	private Node() {
+	public Node() {
 		this.job = Integer.MIN_VALUE;
 		this.operation = Integer.MIN_VALUE;
 		this.machine = Integer.MIN_VALUE;
+		this.index = Integer.MIN_VALUE;
 	}
 	
+	/**
+	 * Node correspond to Label
+	 * @param operation
+	 * @param machine
+	 */
 	public Node(Operation operation, int machine) {
 		this();
 		this.job = operation.getIdJob();
@@ -31,7 +37,7 @@ public class Node {
 	public Node(Node node) {
 		this.job = node.job;
 		this.operation = node.operation;
-		this.index = node.operation;
+		this.index = node.index;
 		this.machine = node.machine;
 	}
 	
@@ -46,7 +52,9 @@ public class Node {
 	
 	@Override
 	public String toString() {
-		return job+"."+operation+"."+machine;
+		
+		final String SEPARATOR = "/";
+		return job + SEPARATOR + operation + SEPARATOR + machine;
 	}
 	
 	public int getIndex() {
@@ -61,15 +69,7 @@ public class Node {
 		return this.job;
 	}
 	
-<<<<<<< HEAD
-	protected int getMachineId() {
+	protected int getMachine() {
 		return this.machine;
 	}
-=======
-	public int getMachine() {
-		return machine;
-	}
-	
-	
->>>>>>> branch 'master' of https://github.com/Kihansi95/FlexibleJobShop.git
 }

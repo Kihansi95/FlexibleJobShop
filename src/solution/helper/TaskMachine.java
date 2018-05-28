@@ -34,10 +34,11 @@ public class TaskMachine {
 		while(it.hasNext()) {
 			next = it.next();
 			
-			if(current == null && next.startingTime > 0) {
+			if(current == null) {
 				
 				// check if machine has idle time before starting an operation
-				idles.add(new IdleArea(0, next.startingTime));
+				if(next.startingTime > 0)
+					idles.add(new IdleArea(0, next.startingTime));
 			} else {
 				int startIdle = current.completionTime; // machine start idle when finish the last task
 				int endIdle = next.startingTime;
@@ -67,6 +68,10 @@ public class TaskMachine {
 	}
 	
 	public int getLastCompletionTime() {
+		
+		if(this.tasks.isEmpty())
+			return 0;
+		
 		List<Task> clone_tasks = new ArrayList<Task>(this.tasks);
 		clone_tasks.sort(new Comparator<Task>() {
 			@Override
@@ -78,6 +83,6 @@ public class TaskMachine {
 	}
 
 	public List<Task> schedule() {
-		return new ArrayList<Task>();
+		return tasks;
 	}
 }

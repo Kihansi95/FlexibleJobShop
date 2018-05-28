@@ -80,8 +80,8 @@ public class PdfWriter extends Verbose {
 		this.addNode(node, "initial");
 	}
 	
-	public void addEndNode(String node) {
-		this.addNode(node, "accepting");
+	public void addEndNode(String node, String param) {
+		this.addNode(node, "accepting, "+param);
 	}
 	
 	public void addNode(String node, String param) {
