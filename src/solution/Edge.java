@@ -19,5 +19,9 @@ public class Edge {
 	public Node getPredecessor() {
 		return from;
 	}
+	
+	public int getValue() {
+		return value;
+	}
 
 }

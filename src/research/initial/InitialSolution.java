@@ -22,7 +22,6 @@ public class InitialSolution extends Verbose {
 	
 	// output
 	private List<Label> assignments;	// solution
-	private PdfWriter pdfOutput;		// solution visualizer
 	
 	// comparator based on processing time
 	private class ProcessingTimeComparator implements Comparator<Label> {
@@ -71,7 +70,6 @@ public class InitialSolution extends Verbose {
 		this.availableOperations = new LinkedList<Label>();
 		this.context = context; // TODO to copy context or to reference
 		this.assignments = new LinkedList<Label>();
-		pdfOutput = new PdfWriter(conf);
 		
 		// init machine from context
 		int nbMachines = context.getNbMachine();		
@@ -179,22 +177,8 @@ public class InitialSolution extends Verbose {
 				System.out.println("[IS - " + (step++) + ", time = "+ time +"] Solution = "+ assignments);
 		}
 	}
-	
-	/*
-	public Solution getSolution(){
-		return new Solution(assignments, context.getNbMachine(), context.getJobs().size());
-	}
-	
-	public int[][] getSolution() {
-		return null; //TODO
-	}
-	
-	public List<Label> getCriticalPath() {
-		
-	}
-	*/
-	
-	public void visualizeSolution() {
+
+	public void visualize(PdfWriter pdfOutput) {
 		
 		// copy so that not modify it
 		List<Label> solution = getAssignments();

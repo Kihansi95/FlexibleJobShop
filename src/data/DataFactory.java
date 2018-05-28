@@ -79,7 +79,7 @@ public final class DataFactory extends Verbose {
     	for(int operation = 0; operation < nb_activities; operation++) {
 
     		int nb_machine = input.nextInt(); //get nb machine allowed for this operation
-    		Operation op = new Operation(idJob,operation, nb_machine);
+    		Operation op = new Operation(job, operation, nb_machine);
     		
     		if(operation > 0)
     			lastCreatedOp.setNext(op);

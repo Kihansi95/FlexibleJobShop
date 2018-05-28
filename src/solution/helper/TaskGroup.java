@@ -13,13 +13,13 @@ public class TaskGroup { // == job
 	private List<Task> tasks;
 	private boolean sorted;
 	
-	private ListIterator<Task> pointer; // get the current element of the list
+	private int current;
 	
 	public TaskGroup(Job job) {
 		id = job.getId();
 		tasks = new LinkedList<Task>();
 		
-		pointer = tasks.listIterator();
+		current = 0;
 		
 		sorted = false;
 	}
@@ -39,7 +39,7 @@ public class TaskGroup { // == job
 			sort();
 		}
 		
-		return pointer.next();
+		return tasks.get(current ++);
 	}
 	
 	public boolean isSorted() {
@@ -55,6 +55,7 @@ public class TaskGroup { // == job
 			}
 			
 		});
+		//this.pointer = tasks.listIterator();
 	}
 	
 	@Override
@@ -63,10 +64,12 @@ public class TaskGroup { // == job
 	}
 
 	public boolean hasPrevious(Task task) {
-		return pointer.hasPrevious();
+		ListIterator<Task> it = this.tasks.listIterator(task.getOperation());
+		return it.hasPrevious();
 	}
 	
 	public Task previous(Task task) {
-		return pointer.previous();
+		ListIterator<Task> it = this.tasks.listIterator(task.getOperation());
+		return it.previous();
 	}
 }
