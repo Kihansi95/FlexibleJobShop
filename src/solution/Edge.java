@@ -10,6 +10,9 @@ public class Edge {
 		this.from = from;
 		this.to = to;
 		this.value = value;
+		
+		from.addSuccessor(to, this);
+		to.addPredecessor(from, this);
 	}
 	
 	public Node getSuccessor() {

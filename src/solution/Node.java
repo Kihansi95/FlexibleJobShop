@@ -1,5 +1,10 @@
 package solution;
 
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+
 import data.Operation;
 import solution.helper.TaskMachine;
 
@@ -19,6 +24,9 @@ public class Node {
 		this.operation = Integer.MIN_VALUE;
 		this.machine = Integer.MIN_VALUE;
 		this.index = Integer.MIN_VALUE;
+		
+		this.successors = new HashMap<Node, Edge>();
+		this.predecessors = new HashMap<Node, Edge>();
 	}
 	
 	/**
@@ -71,6 +79,24 @@ public class Node {
 	
 	protected int getMachine() {
 		return this.machine;
+	}
+
+	
+	private Map<Node, Edge> successors, predecessors;
+	public void addSuccessor(Node successor, Edge edge) {
+		successors.put(successor, edge);
+	}
+
+	public void addPredecessor(Node predecessor, Edge edge) {
+		predecessors.put(predecessor, edge);
+	}
+	
+	public Map<Node, Edge> getSuccessors() {
+		return new HashMap<Node, Edge>(this.successors);
+	}
+	
+	public Map<Node, Edge> getPredecessor() {
+		return new HashMap<Node, Edge>(this.predecessors);
 	}
 
 }

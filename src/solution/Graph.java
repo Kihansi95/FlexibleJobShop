@@ -1,18 +1,21 @@
 package solution;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.Comparator;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
+import java.util.Stack;
 import java.util.TreeMap;
 
 import data.*;
 import jobshopflexible.Configuration;
 import output.pdflatex.PdfWriter;
-import research.initial.Label;
+import solution.helper.BMFLabel;
+import solution.helper.Task;
 import utility.Verbose;
 
 public class Graph {
@@ -50,11 +53,18 @@ public class Graph {
 		return null;
 	}
 	
+	public List<Edge> getEdges() {
+		List<Edge> edges = new ArrayList<Edge>(this.conjuncEdges);
+		edges.addAll(this.disjuncEdges);
+		return edges;
+	}
+	
 	private Node getNode(Operation operation) {
 		return nodes.get(operation);	
 	}
-	
-	public CriticalPath getCriticalPath2() {
+		
+	/*
+	public CriticalPath getCriticalPath() {
 		List<Edge> edges = new ArrayList <Edge>(conjuncEdges);
 		edges.addAll(disjuncEdges); 					//fusion of both disjunctive and conjunctive edges
 		edges.sort(new EdgeValueComparator()); 			//sort by descending edge cost
@@ -126,62 +136,64 @@ public class Graph {
 		
 		return new CriticalPath(critical_path, makespan);
 	}
+		*/
 	
 	public CriticalPath getCriticalPath() {
+		Stack<Node> nodes = sortTopology();
+		Map<Node, BMFLabel> dicts = new HashMap<Node, BMFLabel>();
 		
-		List<Node> currentNodes = new ArrayList <Node>(); //successors
-		List<Node> nodesFrom = new ArrayList<Node>(); //predecessors
-		List<Integer> cost = new ArrayList<Integer>(); //cumulated cost for corresponding edge
-
-		List<Edge> edges = new ArrayList <Edge>(conjuncEdges);
-		edges.addAll(disjuncEdges); //fusion of both disjunctive and conjunctive edges
-		edges.sort(new EdgeValueComparator()); //sort by descending edge cost
-		
-		int previousCost=0;
-		
-		for (Edge iteredge : edges) {
-			if (!(nodesFrom.contains(iteredge.from)&&currentNodes.contains(iteredge.to))) { //checking if edge has already been inserted in the tree
-				nodesFrom.add(iteredge.from);
-				currentNodes.add(iteredge.to);
-				for (Node nd : currentNodes) {
-					if (nd==iteredge.from) {
-						previousCost=cost.get(currentNodes.indexOf(nd)); //getting the cost of preceding edge to add it to the current edge cost
-					}
-				}
-				cost.add(iteredge.value+previousCost); //previousCost=0 if no preceding edge found : PROBLEM 
-			}
+		while(!nodes.isEmpty()) {
+			BMFLabel label = new BMFLabel(nodes.pop(), dicts);
 		}
 		
-		int maxcost =0;
-		int index =0;
-		int maxIndex=0;;
-		boolean endOfList=false;
+		BMFLabel label = dicts.get(endNode);
+		List<Edge> critical_path = new ArrayList<Edge>();
+		int makespan = label.getStartTime();
 		
-		
-		
-		for (int currentCost : cost) { //in this loop, getting the makespan(maxcost) and its index to know the corresponding node
-			if (currentCost > maxcost) {
-				maxcost=currentCost;
-				maxIndex=index;
-			}
-			index++;
-		}
-			 
-		while (!endOfList) { //building the critical path riding up edges
-			edges.add(new Edge(nodesFrom.get(maxIndex), currentNodes.get(maxIndex), cost.get(maxIndex))); //adding edge to critical path
-			maxIndex=currentNodes.indexOf(nodesFrom.get(maxIndex)); //finding index of predecessor which belongs to the preceding edge
-			if (maxIndex<0) {
-				endOfList=true;
-			}
-			
+		while(!label.equals(dicts.get(startNode))) {
+			critical_path.add(label.getEdge());
+			System.out.println(label.getEdge());
+			label = label.getFather();
+			if(label == null)
+				System.out.println("toto");
 		}
 		
-		CriticalPath criticalPath = new CriticalPath(edges,maxcost);
-		
-		return criticalPath; 
-
+		Collections.reverse(critical_path);
+		return new CriticalPath(critical_path, makespan);
 	}
 	
+	private Stack<Node> sortTopology() {
+		List<Node> all_nodes = this.getNodes();
+		all_nodes.add(startNode);
+		all_nodes.add(endNode);
+		
+		Stack stack = new Stack<Node>();
+		Map<Node, Boolean> visited = new HashMap<Node, Boolean>();
+		
+		// mark all node as not visited yet
+		for(Node n : all_nodes) {
+			visited.put(n, false);
+		}
+		
+		// call recursively the sub sort to store 
+		
+		for(Node node : all_nodes) {
+			if(!visited.get(node))
+				recursiveTopoSort(node, visited, stack);
+		}
+		return stack;
+	}
+	
+	private void recursiveTopoSort(Node node, Map<Node, Boolean> visited, Stack<Node> stack) {
+		visited.replace(node, true);
+		for(Node succ : node.getSuccessors().keySet()) {			
+			if(!visited.get(succ)) {
+				recursiveTopoSort(succ, visited, stack);
+			}
+		}
+		
+		stack.push(node);
+	}
 	
 	private class EdgeValueComparator implements Comparator<Edge> {
 		
@@ -286,6 +298,15 @@ public class Graph {
         Operation op21 = new Operation(j2, 1, 1);
         Operation op22 = new Operation(j2, 2, 1);
         
+        op00.setIndex(0);
+        op01.setIndex(1);
+        op02.setIndex(2);
+        op10.setIndex(3);
+        op11.setIndex(4);
+        op20.setIndex(5);
+        op21.setIndex(6);
+        op22.setIndex(7);
+        
         // init nodes
         Node nd00 = new Node(op00, 1);
         Node nd01 = new Node(op01, 3);
@@ -344,7 +365,7 @@ public class Graph {
         Graph gr = new Graph(nodes, disjunctives,conjunctives, start, end);
         // gr.visualize(new PdfWriter(new Configuration()));
         
-        CriticalPath critical = gr.getCriticalPath2();
+        CriticalPath critical = gr.getCriticalPath();
         
         
         
