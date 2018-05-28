@@ -35,6 +35,9 @@ public class Main {
         try {
 			sol.updateGraph(shop);
 			sol.visualize(pdfWriter);
+			
+			
+			
 		} catch (AlgorithmLogicException e) {
 			e.printStackTrace();
 		}

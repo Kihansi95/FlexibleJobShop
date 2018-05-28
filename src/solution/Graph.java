@@ -3,8 +3,10 @@ package solution;
 import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 import java.util.TreeMap;
 
 import data.*;
@@ -51,19 +53,49 @@ public class Graph {
 		return nodes.get(operation);	
 	}
 	
+	public CriticalPath getCriticalPath2() {
+		List<Edge> edges = new ArrayList <Edge>(conjuncEdges);
+		edges.addAll(disjuncEdges); 					//fusion of both disjunctive and conjunctive edges
+		edges.sort(new EdgeValueComparator()); 			//sort by descending edge cost
+		
+		List<Edge> critical_segments = new ArrayList<Edge>();
+		
+		Set<Node> visited = new HashSet<Node>();
+		int makespan = 0;
+		while(critical_segments.size() + 1 < nodes.size()) {
+			
+			Edge edge = edges.remove(0);
+			boolean ok = false;
+			if(!visited.contains(edge.getPredecessor())) {
+				ok = true;
+				visited.add(edge.getPredecessor());
+			}
+			
+			if(!visited.contains(edge.getSuccessor())) {
+				ok = true;
+				visited.add(edge.getSuccessor());
+			}
+			
+			if(ok) {
+				critical_segments.add(edge);
+				makespan += edge.value;
+			}
+		}
+		
+		return new CriticalPath(critical_segments, makespan);
+	}
+	
 	public CriticalPath getCriticalPath() {
 		
-		
-		List<Edge> edges = new ArrayList <Edge>();
 		List<Node> currentNodes = new ArrayList <Node>(); //successors
 		List<Node> nodesFrom = new ArrayList<Node>(); //predecessors
 		List<Integer> cost = new ArrayList<Integer>(); //cumulated cost for corresponding edge
-		edges.addAll(conjuncEdges);
+
+		List<Edge> edges = new ArrayList <Edge>(conjuncEdges);
 		edges.addAll(disjuncEdges); //fusion of both disjunctive and conjunctive edges
 		edges.sort(new EdgeValueComparator()); //sort by descending edge cost
-		int previousCost=0;
 		
-
+		int previousCost=0;
 		
 		for (Edge iteredge : edges) {
 			if (!(nodesFrom.contains(iteredge.from)&&currentNodes.contains(iteredge.to))) { //checking if edge has already been inserted in the tree
