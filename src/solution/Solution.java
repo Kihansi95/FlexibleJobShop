@@ -64,12 +64,12 @@ public class Solution {
 	}
 	
 	
-	public void permute (Operation opA, Operation opB) {
-		int indexA=opA.getIndex();
-		int indexB=opB.getIndex();
-		this.os[indexA]=opB.getId();
-		this.os[indexB]=opA.getId();
-		this.graph.update(opA,opB);
+	public void permute (Node opA, Node opB, FlexibleJobShop context )throws AlgorithmLogicException {
+		int indexA=opA.getOperation();
+		int indexB=opB.getOperation();
+		this.os[indexA]=opB.getOperation();
+		this.os[indexB]=opA.getOperation();
+		this.updateGraph(context);
 	}
 	
 	public void updateGraph(FlexibleJobShop context) throws AlgorithmLogicException {

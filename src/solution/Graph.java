@@ -140,15 +140,6 @@ public class Graph {
 
 	}
 	
-	public void update(Operation opA, Operation opB) {
-		Node savNd= this.getNode(opB);
-		for (Edge iteredge : this.conjuncEdges) {
-			if (iteredge.from.equals(savNd)) {
-				
-			}
-		}
-		
-	}
 	
 	private class EdgeValueComparator implements Comparator<Edge> {
 		
@@ -298,7 +289,7 @@ public class Graph {
         
         
         Graph gr = new Graph(nodes, disjunctives,conjunctives, start, end);
-        CriticalPath critical = gr.getCriticalPath();
+        CriticalPath critical = gr.getCriticalPath2();
         
         
         System.out.println("done");

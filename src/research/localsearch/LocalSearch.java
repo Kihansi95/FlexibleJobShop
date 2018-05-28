@@ -6,6 +6,7 @@ import java.util.Map;
 
 import data.FlexibleJobShop;
 import data.Operation;
+import exception.AlgorithmLogicException;
 import research.initial.Machine;
 import solution.CriticalPath;
 import solution.Node;
@@ -13,7 +14,7 @@ import solution.Solution;
 
 public class LocalSearch {
 
-	public LocalSearch(Solution solution, FlexibleJobShop context) {
+	public LocalSearch(Solution solution, FlexibleJobShop context)throws AlgorithmLogicException {
 		
 		LocalSearchDij(solution,context);
 		
@@ -63,13 +64,13 @@ public class LocalSearch {
 	
 	
 	
-	boolean LocalSearchDij(Solution solution, FlexibleJobShop context) {
+	boolean LocalSearchDij(Solution solution, FlexibleJobShop context)throws AlgorithmLogicException {
 		
 		boolean ok = false;
 		
 		Node op;
-		Node saveOp;
-		Node savePrec; 
+		Node saveOp=null;
+		Node savePrec=null;
 		
 		Node disjunctiveFather;
 		Solution new_solution;
@@ -81,7 +82,7 @@ public class LocalSearch {
 			
 			while (op!=null) {
 				
-				disjunctiveFather = solution.getGraphe().getDisjunctiveFather(op);
+				disjunctiveFather = solution.getGraph().getDisjunctiveFather(op);
 				
 				if (disjunctiveFather!=null) {
 					saveOp=op;
@@ -96,7 +97,7 @@ public class LocalSearch {
 				
 				new_solution = solution;
 				
-				new_solution.permute(saveOp,savePrec); //swap in OA
+				new_solution.permute(saveOp,savePrec,context); //swap in OA
 				
 				if (new_solution.getMakespan() < solution.getMakespan()) {
 					
