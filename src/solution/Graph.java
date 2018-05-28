@@ -12,7 +12,7 @@ import research.initial.Label;
 
 public class Graph {
 	
-	private Map<Operation, Node> nodes;
+	private List<Node> nodes;
 	
 	private List<Edge> disjuncEdges;
 	private List<Edge> conjuncEdges;
@@ -23,7 +23,7 @@ public class Graph {
 	 * Default constructor
 	 */
 	public Graph(Map<Operation, Node> nodes, List<Edge> disjunctives, List<Edge> conjunctives) {
-		this.nodes = nodes;
+		this.nodes = new ArrayList<Node>(nodes.values());
 		this.disjuncEdges = disjunctives;
 		this.conjuncEdges = conjunctives;
 		
@@ -43,10 +43,11 @@ public class Graph {
 		return null;
 	}
 	
+	/*
 	private Node getNode(Operation operation) {
 		return nodes.get(operation);	
 	}
-	
+	*/
 	public CriticalPath getCriticalPath() {
 		
 		
@@ -104,8 +105,7 @@ public class Graph {
 
 	}
 	
-	
-	
+	/*
 	public void update(Operation opA, Operation opB) {
 		Node savNd= this.getNode(opB);
 		for (Edge iteredge : this.conjuncEdges) {
@@ -115,7 +115,7 @@ public class Graph {
 		}
 		
 	}
-	
+	*/
 	private class EdgeValueComparator implements Comparator<Edge> {
 		
 		@Override
@@ -211,6 +211,7 @@ public class Graph {
 	}
 
 	public List<Node> getNodes() {
-		return new ArrayList<Node>(this.nodes.values());
+		return this.nodes;
+		//return new ArrayList<Node>(this.nodes.values());
 	}
 }
