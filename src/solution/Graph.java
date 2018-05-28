@@ -10,6 +10,7 @@ import java.util.Set;
 import java.util.TreeMap;
 
 import data.*;
+import jobshopflexible.Configuration;
 import output.pdflatex.PdfWriter;
 import research.initial.Label;
 import utility.Verbose;
@@ -58,31 +59,72 @@ public class Graph {
 		edges.addAll(disjuncEdges); 					//fusion of both disjunctive and conjunctive edges
 		edges.sort(new EdgeValueComparator()); 			//sort by descending edge cost
 		
-		List<Edge> critical_segments = new ArrayList<Edge>();
+		List<Edge> spanning_tree = new ArrayList<Edge>();
 		
-		Set<Node> visited = new HashSet<Node>();
-		int makespan = 0;
-		while(critical_segments.size() + 1 < nodes.size()) {
+		List<Set<Node>> cfc = new ArrayList<Set<Node>>();
+		
+		// build spanning tree
+		while(spanning_tree.size() < nodes.size()) {
 			
 			Edge edge = edges.remove(0);
-			boolean ok = false;
-			if(!visited.contains(edge.getPredecessor())) {
-				ok = true;
-				visited.add(edge.getPredecessor());
+			Set<Node> cfc_prec = null, cfc_succ = null;
+			
+			for(Set<Node> composant : cfc) {
+				if(composant.contains(edge.getPredecessor())) {
+					cfc_prec = composant;
+				}
+				
+				if(composant.contains(edge.getSuccessor())) {
+					cfc_succ = composant;
+				}
 			}
 			
-			if(!visited.contains(edge.getSuccessor())) {
-				ok = true;
-				visited.add(edge.getSuccessor());
-			}
-			
-			if(ok) {
-				critical_segments.add(edge);
-				makespan += edge.value;
+			if(cfc_succ == null && cfc_prec == null) {
+				
+				Set<Node> composant = new HashSet<Node>();
+				composant.add(edge.getPredecessor());
+				composant.add(edge.getSuccessor());
+				cfc.add(composant);
+				spanning_tree.add(edge);
+				
+			} else if( cfc_succ != null && cfc_prec == null) {
+				cfc_succ.add(edge.getPredecessor());
+				spanning_tree.add(edge);
+				
+			} else if(cfc_succ == null && cfc_prec != null) {
+				
+				cfc_prec.add(edge.getSuccessor());
+				spanning_tree.add(edge);
+			} else {
+				// cfc_succ != null && cfc_prec != null
+				
+				if(cfc_succ != cfc_prec) {
+					cfc_succ.addAll(cfc_prec);
+					cfc.remove(cfc_prec);
+					spanning_tree.add(edge);
+				}
 			}
 		}
 		
-		return new CriticalPath(critical_segments, makespan);
+		// build critical path from spanning tree
+		Node successor = this.endNode;
+		List<Edge> critical_path = new ArrayList<Edge>();
+		int makespan = 0;
+		while(!successor.equals(startNode)) {
+			for(Edge edge : spanning_tree) {
+				
+				if(edge.getSuccessor().equals(successor)) {
+					critical_path.add(edge);
+					successor = edge.getPredecessor();
+					makespan += edge.value;
+					System.out.println(edge);
+					break;
+				}
+				
+			}
+		}
+		
+		return new CriticalPath(critical_path, makespan);
 	}
 	
 	public CriticalPath getCriticalPath() {
@@ -145,7 +187,7 @@ public class Graph {
 		
 		@Override
 		public int compare(Edge edge1, Edge edge2) {
-			return edge1.value - edge2.value;
+			return edge2.value - edge1.value;
 			
 		}
 	}
@@ -236,19 +278,22 @@ public class Graph {
         Operation op00 = new Operation(j0, 0, 1);
         Operation op01 = new Operation(j0, 1, 1);
         Operation op02 = new Operation(j0, 2, 1);
+        
         Operation op10 = new Operation(j1, 0, 1);
         Operation op11 = new Operation(j1, 1, 1);
-        Operation op20 = new Operation(j1, 0, 1);
+        
+        Operation op20 = new Operation(j2, 0, 1);
         Operation op21 = new Operation(j2, 1, 1);
         Operation op22 = new Operation(j2, 2, 1);
-        // Operation opEnd=new Operation(-1, -1, 1);
         
         // init nodes
         Node nd00 = new Node(op00, 1);
         Node nd01 = new Node(op01, 3);
         Node nd02 = new Node(op02, 2);
+        
         Node nd11 = new Node(op11, 4);
         Node nd10 = new Node(op10, 3);
+        
         Node nd20 = new Node(op20, 1);
         Node nd21 = new Node(op21, 4);
         Node nd22 = new Node(op22, 2);
@@ -260,22 +305,30 @@ public class Graph {
         nodes.put(op00, nd00);
         nodes.put(op01, nd01);
         nodes.put(op02, nd02);
+        
         nodes.put(op10, nd10);
         nodes.put(op11, nd11);
+        
         nodes.put(op20, nd20);
         nodes.put(op21, nd21);
         nodes.put(op22, nd22);
+        
         nodes.put(null, start);
-        nodes.put(null, start);
-        nodes.put(null, start);
+        nodes.put(null, end);
         
         // init conjunctives
         List<Edge> conjunctives=new ArrayList<Edge>();
+        
+        conjunctives.add(new Edge(start,nd00,0));
         conjunctives.add(new Edge(nd00,nd01,10));
         conjunctives.add(new Edge(nd01,nd02,4));
         conjunctives.add(new Edge(nd02,end,5));
+        
+        conjunctives.add(new Edge(start,nd10,0));
         conjunctives.add(new Edge(nd10,nd11,7));
         conjunctives.add(new Edge(nd11,end,15));
+        
+        conjunctives.add(new Edge(start,nd20,0));
         conjunctives.add(new Edge(nd20,nd21,11));
         conjunctives.add(new Edge(nd21,nd22,12));
         conjunctives.add(new Edge(nd22,end,10));
@@ -289,12 +342,17 @@ public class Graph {
         
         
         Graph gr = new Graph(nodes, disjunctives,conjunctives, start, end);
+        // gr.visualize(new PdfWriter(new Configuration()));
+        
         CriticalPath critical = gr.getCriticalPath2();
+        
         
         
         System.out.println("done");
         
         System.out.println("Check if valid : "+critical.isValid());
+        
+        System.out.println("Critical path : "+ critical);
         
         System.out.println("Makespan : "+critical.getMakespan()+" Path : ");
         

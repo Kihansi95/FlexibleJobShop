@@ -23,5 +23,9 @@ public class Edge {
 	public int getValue() {
 		return value;
 	}
+	
+	public String toString() {
+		return "(" + from + "->" + to +  ")";
+	}
 
 }

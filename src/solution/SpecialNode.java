@@ -11,4 +11,8 @@ public class SpecialNode extends Node {
 	public String toString() {
 		return start ? "start" : "end";
 	}
+	
+	public boolean equals(Object node) {
+		return super.equals(node) && node instanceof SpecialNode && ((SpecialNode) node).start == this.start;
+	}
 }

@@ -44,11 +44,9 @@ public class Solution {
 		return os;
 	}
 
-
 	public CriticalPath getCriticalPath() {
 		return this.criticalPath;
 	}
-
 
 	public Graph getGraph() {
 		return graph;
@@ -144,7 +142,6 @@ public class Solution {
 
 	public void visualize(PdfWriter pdfWriter) {
 		this.graph.visualize(pdfWriter);
-		
 	}
 	
 	
