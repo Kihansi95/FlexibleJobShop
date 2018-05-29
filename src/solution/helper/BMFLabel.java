@@ -4,6 +4,7 @@ import java.util.Map;
 import java.util.Map.Entry;
 
 import solution.Edge;
+import solution.Graph;
 import solution.Node;
 
 public class BMFLabel {
@@ -16,7 +17,6 @@ public class BMFLabel {
 		
 		Map<Node, Edge> fathers = node.getPredecessor();
 		startTime = Integer.MIN_VALUE;
-		
 		for(Entry<Node, Edge> f : fathers.entrySet()) {
 			BMFLabel fl = dicts.get(f.getKey());
 			Edge edge = f.getValue();
@@ -26,6 +26,12 @@ public class BMFLabel {
 				this.criticalFather = fl;
 			}
 				
+		}
+		
+		if(this.startTime < 0) {
+			startTime = 0;
+			edgeFromFather = null;
+			criticalFather = null;
 		}
 		
 		dicts.put(node, this);

@@ -59,8 +59,12 @@ public class Graph {
 		return edges;
 	}
 	
-	private Node getNode(Operation operation) {
-		return nodes.get(operation);	
+	public Node getEndNode() {
+		return endNode;
+	}
+	
+	public Node getStartNode() {
+		return startNode;
 	}
 		
 	/*
@@ -374,16 +378,7 @@ public class Graph {
         System.out.println("Check if valid : "+critical.isValid());
         
         System.out.println("Critical path : "+ critical);
-        
-        System.out.println("Makespan : "+critical.getMakespan()+" Path : ");
-        
-        Node currentNode = critical.getLastNode();
-        
-        while (currentNode != null) {
-        	System.out.println("J : "+currentNode.getJob()+" / Op : "+currentNode.getOperation()+" / M : "+currentNode.getMachine());
-        	currentNode=critical.getPredecessor(currentNode);
-        }
-        
+                
 	}
 
 	public List<Node> getNodes() {

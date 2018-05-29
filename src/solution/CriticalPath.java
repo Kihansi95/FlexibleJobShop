@@ -24,15 +24,19 @@ public class CriticalPath {
 	 * @return
 	 */
 	public boolean isValid() {
-		Edge after = edges.get(0);
-		Edge before = null;
-		for(int i = 1; i < edges.size(); i++) {
-			before = edges.get(i);
-			if(!before.getSuccessor().equals(after.getSuccessor())) {
+		Edge last = null;
+		for(Edge edge : edges) {
+			if(last != null && !last.getSuccessor().equals(edge.getPredecessor())) {
 				return false;
-			}
+			} 
+			last = edge;
 		}
+		
 		return true;
+	}
+	
+	public String toString() {
+		return "{makespan = "+makespan+", "+edges+"}"; 
 	}
 	
 	public Node getPredecessor(Node node) {
