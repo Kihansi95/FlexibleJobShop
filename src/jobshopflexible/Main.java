@@ -6,6 +6,7 @@ import exception.AlgorithmLogicException;
 import output.pdflatex.PdfWriter;
 import research.initial.Converter;
 import research.initial.InitialSolution;
+import research.localsearch.LocalSearch;
 import solution.CriticalPath;
 import solution.Solution;
 
@@ -22,6 +23,9 @@ public class Main {
         // initiate output method
         PdfWriter pdfWriter = new PdfWriter(conf);
         
+        // initiate algorithm
+        LocalSearch ls = new LocalSearch(shop);
+        
         // Process the initial solution
         InitialSolution is = new InitialSolution(conf, shop);
         is.start();
@@ -35,8 +39,10 @@ public class Main {
         
         try {
 			sol.updateGraph(shop);
-			sol.visualize(pdfWriter);
+			// sol.visualize(pdfWriter);			// test solution representation
 		
+			ls.start(sol);
+			sol.visualize(pdfWriter);
 			
 		} catch (AlgorithmLogicException e) {
 			e.printStackTrace();

@@ -298,4 +298,11 @@ public class Graph {
 	public void setDisjunctiveEdges(List<Edge> disjuncs) {
 		this.disjuncEdges = disjuncs;		
 	}
+
+	public void updateMachineOnNode(int index, int machine) {
+		for(Node node: getNodes()) {
+			if(node.getIndex() == index)
+				node.setMachine(machine);
+		}
+	}
 }

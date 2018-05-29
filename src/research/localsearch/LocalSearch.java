@@ -1,22 +1,24 @@
 package research.localsearch;
 
-import java.util.ArrayList;
 import java.util.List;
-import java.util.Map;
 
 import data.FlexibleJobShop;
-import data.Operation;
 import exception.AlgorithmLogicException;
-import research.initial.Machine;
 import solution.CriticalPath;
 import solution.Solution;
 import solution.graph.Node;
 
 public class LocalSearch {
 
-	public LocalSearch(Solution solution, FlexibleJobShop context)throws AlgorithmLogicException {
+	private FlexibleJobShop context;
+
+	public LocalSearch(FlexibleJobShop context) {
+		this.context = context;
+	}
+	
+	public void start(Solution solution) throws AlgorithmLogicException {
 		
-		LocalSearchDij(solution,context);
+		localSearchDij(solution, context);
 		
 		boolean ok;
 		Solution tmp_solution; //not used ? 
@@ -45,7 +47,9 @@ public class LocalSearch {
 					
 					//modify machine sequence
 					solution.setMs(ms); 
-					ok = LocalSearchDij(solution,context);
+					solution.updateGraph(context);
+					
+					ok = localSearchDij(solution,context);
 					
 					if (ok) {
 						node = critical_path.getLastNode();
@@ -59,12 +63,9 @@ public class LocalSearch {
 				node = critical_path.getPredecessor(node);
 			}
 		}
-		
 	}
 	
-	
-	
-	boolean LocalSearchDij(Solution solution, FlexibleJobShop context)throws AlgorithmLogicException {
+	private boolean localSearchDij(Solution solution, FlexibleJobShop context)throws AlgorithmLogicException {
 		
 		boolean ok = false;
 		
@@ -111,7 +112,4 @@ public class LocalSearch {
 		return ok;
 	}
 	
-	
-	
-
 }

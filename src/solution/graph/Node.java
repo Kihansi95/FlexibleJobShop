@@ -96,4 +96,8 @@ public class Node {
 		return new HashMap<Node, Edge>(this.predecessors);
 	}
 
+	public void setMachine(int machine) {
+		this.machine = machine;
+	}
+
 }

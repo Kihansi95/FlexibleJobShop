@@ -29,6 +29,10 @@ public class Solution {
 	}
 
 	public void setMs(int[] ms) {
+		for(int i = 0; i < this.ms.length; i++)
+			if(this.ms[i] != ms[i]) {
+				graph.updateMachineOnNode(i, ms[i]);
+			}
 		this.ms = ms;
 	}
 	
@@ -47,7 +51,6 @@ public class Solution {
 	public Graph getGraph() {
 		return graph;
 	}
-
 
 	public int getEndTime() {
 		return endTime;
