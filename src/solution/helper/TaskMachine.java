@@ -6,8 +6,6 @@ import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
 
-import research.arraysolution.IdleAS;
-
 public class TaskMachine {
 	
 	private int id;
@@ -82,6 +80,10 @@ public class TaskMachine {
 		return clone_tasks.get(0).completionTime;
 	}
 
+	public String toString() {
+		return "{"+id+": "+tasks+"}";
+	}
+	
 	public List<Task> schedule() {
 		return tasks;
 	}

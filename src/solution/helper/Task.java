@@ -49,4 +49,9 @@ public class Task extends Node {
 		}
 		return machine;
 	}
+	
+	public String toString() {
+		return "{"+startingTime+"-"+completionTime+"}";
+	}
+	
 }

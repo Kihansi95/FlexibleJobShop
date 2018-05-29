@@ -49,6 +49,10 @@ public class CriticalPath {
 			}
 		}
 		return null;
+	}
+
+	public List<Edge> getEdges() {
+		return this.edges;
 	}	
 	
 }

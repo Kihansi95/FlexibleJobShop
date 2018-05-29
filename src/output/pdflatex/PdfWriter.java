@@ -91,7 +91,7 @@ public class PdfWriter extends Verbose {
 		if(param != null) 
 			nodeString.append(", " +param);
 		
-		nodeString.append("] (" + node + ") {$" + node + "$};");
+		nodeString.append("] (" + node + ") {$" + node + "$};" + endL);
 		
 		// fill into the template
 		int place = template.indexOf(nodeToken);

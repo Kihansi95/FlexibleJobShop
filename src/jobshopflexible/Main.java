@@ -6,6 +6,7 @@ import exception.AlgorithmLogicException;
 import output.pdflatex.PdfWriter;
 import research.initial.Converter;
 import research.initial.InitialSolution;
+import solution.CriticalPath;
 import solution.Solution;
 
 public class Main {
@@ -35,8 +36,7 @@ public class Main {
         try {
 			sol.updateGraph(shop);
 			sol.visualize(pdfWriter);
-			
-			
+		
 			
 		} catch (AlgorithmLogicException e) {
 			e.printStackTrace();

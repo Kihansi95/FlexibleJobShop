@@ -31,8 +31,6 @@ public class BMFLabel {
 			edgeFromFather = null;
 			criticalFather = null;
 		}
-		
-		dicts.put(node, this);
 	}
 	
 	public BMFLabel getFather() {

@@ -1,12 +1,9 @@
 package solution.graph;
 
-import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
 
 import data.Operation;
-import solution.helper.TaskMachine;
 
 public class Node {
 	
@@ -77,7 +74,7 @@ public class Node {
 		return this.job;
 	}
 	
-	protected int getMachine() {
+	public int getMachine() {
 		return this.machine;
 	}
 

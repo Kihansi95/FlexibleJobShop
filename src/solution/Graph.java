@@ -4,22 +4,16 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.HashMap;
-import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
-import java.util.Set;
 import java.util.Stack;
-import java.util.TreeMap;
 
 import data.*;
-import jobshopflexible.Configuration;
 import output.pdflatex.PdfWriter;
 import solution.graph.BMFLabel;
 import solution.graph.Edge;
 import solution.graph.Node;
 import solution.graph.SpecialNode;
-import solution.helper.Task;
-import utility.Verbose;
 
 public class Graph {
 	
@@ -69,88 +63,14 @@ public class Graph {
 	public Node getStartNode() {
 		return startNode;
 	}
-		
-	/*
-	public CriticalPath getCriticalPath() {
-		List<Edge> edges = new ArrayList <Edge>(conjuncEdges);
-		edges.addAll(disjuncEdges); 					//fusion of both disjunctive and conjunctive edges
-		edges.sort(new EdgeValueComparator()); 			//sort by descending edge cost
-		
-		List<Edge> spanning_tree = new ArrayList<Edge>();
-		
-		List<Set<Node>> cfc = new ArrayList<Set<Node>>();
-		
-		// build spanning tree
-		while(spanning_tree.size() < nodes.size()) {
-			
-			Edge edge = edges.remove(0);
-			Set<Node> cfc_prec = null, cfc_succ = null;
-			
-			for(Set<Node> composant : cfc) {
-				if(composant.contains(edge.getPredecessor())) {
-					cfc_prec = composant;
-				}
-				
-				if(composant.contains(edge.getSuccessor())) {
-					cfc_succ = composant;
-				}
-			}
-			
-			if(cfc_succ == null && cfc_prec == null) {
-				
-				Set<Node> composant = new HashSet<Node>();
-				composant.add(edge.getPredecessor());
-				composant.add(edge.getSuccessor());
-				cfc.add(composant);
-				spanning_tree.add(edge);
-				
-			} else if( cfc_succ != null && cfc_prec == null) {
-				cfc_succ.add(edge.getPredecessor());
-				spanning_tree.add(edge);
-				
-			} else if(cfc_succ == null && cfc_prec != null) {
-				
-				cfc_prec.add(edge.getSuccessor());
-				spanning_tree.add(edge);
-			} else {
-				// cfc_succ != null && cfc_prec != null
-				
-				if(cfc_succ != cfc_prec) {
-					cfc_succ.addAll(cfc_prec);
-					cfc.remove(cfc_prec);
-					spanning_tree.add(edge);
-				}
-			}
-		}
-		
-		// build critical path from spanning tree
-		Node successor = this.endNode;
-		List<Edge> critical_path = new ArrayList<Edge>();
-		int makespan = 0;
-		while(!successor.equals(startNode)) {
-			for(Edge edge : spanning_tree) {
-				
-				if(edge.getSuccessor().equals(successor)) {
-					critical_path.add(edge);
-					successor = edge.getPredecessor();
-					makespan += edge.value;
-					System.out.println(edge);
-					break;
-				}
-				
-			}
-		}
-		
-		return new CriticalPath(critical_path, makespan);
-	}
-		*/
 	
 	public CriticalPath getCriticalPath() {
 		Stack<Node> nodes = sortTopology();
 		Map<Node, BMFLabel> dicts = new HashMap<Node, BMFLabel>();
 		
 		while(!nodes.isEmpty()) {
-			BMFLabel label = new BMFLabel(nodes.pop(), dicts);
+			BMFLabel label = new BMFLabel(nodes.peek(), dicts);
+			dicts.put(nodes.pop(), label);
 		}
 		
 		BMFLabel label = dicts.get(endNode);
@@ -159,7 +79,6 @@ public class Graph {
 		
 		while(!label.equals(dicts.get(startNode))) {
 			critical_path.add(label.getEdge());
-			System.out.println(label.getEdge());
 			label = label.getFather();
 			if(label == null)
 				System.out.println("toto");
@@ -174,7 +93,7 @@ public class Graph {
 		all_nodes.add(startNode);
 		all_nodes.add(endNode);
 		
-		Stack stack = new Stack<Node>();
+		Stack<Node> stack = new Stack<Node>();
 		Map<Node, Boolean> visited = new HashMap<Node, Boolean>();
 		
 		// mark all node as not visited yet
@@ -200,15 +119,6 @@ public class Graph {
 		}
 		
 		stack.push(node);
-	}
-	
-	private class EdgeValueComparator implements Comparator<Edge> {
-		
-		@Override
-		public int compare(Edge edge1, Edge edge2) {
-			return edge2.value - edge1.value;
-			
-		}
 	}
 	
 	public void visualize(PdfWriter pdfOutput) {
@@ -252,9 +162,6 @@ public class Graph {
 		for(Edge edge : this.disjuncEdges) {
 			pdfOutput.addPath(edge.getPredecessor().toString(), edge.getSuccessor().toString(), edge.getValue());
 		}
-		
-		// clean template and write down
-		pdfOutput.write();
 		
 	}
 	

@@ -8,7 +8,6 @@ import java.util.Properties;
 public class Configuration {
 
 	public String DataPath;
-	public Mode mode;
 	public String pdfLatexPath;
 	
 	private  final Properties prop = new Properties();

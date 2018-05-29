@@ -1,16 +1,10 @@
 package solution;
 
 import java.util.ArrayList;
-import java.util.Comparator;
-import java.util.LinkedList;
 import java.util.List;
 
-import data.Operation;
 import exception.AlgorithmLogicException;
 import output.pdflatex.PdfWriter;
-import research.arraysolution.MachineAS;
-import research.initial.Label;
-import research.initial.Machine;
 import solution.helper.TaskGroup;
 import solution.helper.TaskMachine;
 import solution.graph.Edge;
@@ -140,10 +134,18 @@ public class Solution {
 		}
 		
 		graph.setDisjunctiveEdges(disjuncs);
+		
+		// update the critical path as disjunctives have been changed
+		this.criticalPath = graph.getCriticalPath();
 	}
 
 	public void visualize(PdfWriter pdfWriter) {
+		
 		this.graph.visualize(pdfWriter);
+		
+		pdfWriter.addDescription(new SolutionDescriptor(this.criticalPath));
+		
+		pdfWriter.write();
 	}
 	
 	
