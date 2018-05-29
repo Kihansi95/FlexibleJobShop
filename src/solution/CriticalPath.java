@@ -2,6 +2,9 @@ package solution;
 
 import java.util.List;
 
+import solution.graph.Edge;
+import solution.graph.Node;
+
 public class CriticalPath {
 	private List<Edge> edges;
 	private int makespan;

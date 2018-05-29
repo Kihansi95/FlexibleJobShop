@@ -1,4 +1,4 @@
-package solution;
+package solution.graph;
 
 public class SpecialNode extends Node {
 	private boolean start; // true == start node, false == end node

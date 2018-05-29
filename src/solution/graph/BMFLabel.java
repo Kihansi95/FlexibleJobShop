@@ -1,11 +1,9 @@
-package solution.helper;
+package solution.graph;
 
 import java.util.Map;
 import java.util.Map.Entry;
 
-import solution.Edge;
 import solution.Graph;
-import solution.Node;
 
 public class BMFLabel {
 	

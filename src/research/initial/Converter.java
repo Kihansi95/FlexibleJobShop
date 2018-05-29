@@ -8,11 +8,11 @@ import java.util.Map;
 import data.FlexibleJobShop;
 import data.Job;
 import data.Operation;
-import solution.Edge;
 import solution.Graph;
-import solution.Node;
 import solution.Solution;
-import solution.SpecialNode;
+import solution.graph.Edge;
+import solution.graph.Node;
+import solution.graph.SpecialNode;
 import solution.helper.Task;
 
 public class Converter {

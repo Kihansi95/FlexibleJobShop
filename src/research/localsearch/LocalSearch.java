@@ -9,8 +9,8 @@ import data.Operation;
 import exception.AlgorithmLogicException;
 import research.initial.Machine;
 import solution.CriticalPath;
-import solution.Node;
 import solution.Solution;
+import solution.graph.Node;
 
 public class LocalSearch {
 

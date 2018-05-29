@@ -14,7 +14,10 @@ import java.util.TreeMap;
 import data.*;
 import jobshopflexible.Configuration;
 import output.pdflatex.PdfWriter;
-import solution.helper.BMFLabel;
+import solution.graph.BMFLabel;
+import solution.graph.Edge;
+import solution.graph.Node;
+import solution.graph.SpecialNode;
 import solution.helper.Task;
 import utility.Verbose;
 

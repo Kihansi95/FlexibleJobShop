@@ -13,6 +13,8 @@ import research.initial.Label;
 import research.initial.Machine;
 import solution.helper.TaskGroup;
 import solution.helper.TaskMachine;
+import solution.graph.Edge;
+import solution.graph.Node;
 import solution.helper.Task;
 import data.FlexibleJobShop;
 import data.Job; 

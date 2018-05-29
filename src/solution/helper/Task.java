@@ -5,7 +5,7 @@ import java.util.List;
 import data.FlexibleJobShop;
 import data.Operation;
 import exception.AlgorithmLogicException;
-import solution.Node;
+import solution.graph.Node;
 
 public class Task extends Node {
 	
