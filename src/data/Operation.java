@@ -17,15 +17,12 @@ public class Operation {
 		return index;
 	}
 
-	public void setIndex(int index) {
-		this.index = index;
-	}
-
-	public Operation(Job job, int id, int nb_machines){
+	public Operation(Job job, int id, int nb_machines, int index){
     	this.job = job;
     	this.id = id;
         this.tuples = new HashMap<Integer, Integer>();
         this.next = null;
+        this.index = index;
     }
     
     public void setNext(Operation next) {

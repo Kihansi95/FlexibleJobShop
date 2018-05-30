@@ -38,8 +38,9 @@ public class TaskGroup { // == job
 		if(!isSorted()) {
 			sort();
 		}
+		System.out.println("poll job "+ id +" for "+current + " times");
+		return tasks.get(current++);
 		
-		return tasks.get(current ++);
 	}
 	
 	public boolean isSorted() {
@@ -60,7 +61,7 @@ public class TaskGroup { // == job
 	
 	@Override
 	public String toString() {
-		return "{id : "+ id + "}";
+		return "{id : "+ id + ", " + tasks + "}";
 	}
 
 	public boolean hasPrevious(Task task) {

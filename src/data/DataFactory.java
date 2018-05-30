@@ -46,7 +46,10 @@ public final class DataFactory extends Verbose {
 	        // for each following line, we get a new job
 	        int index = 0;
 	        for(int job = 0; job < nb_job; job++) {
-	        	jobs.add(scanJob(job, input));
+	        	Job new_job = scanJob(job, input, index);
+	        	index += new_job.getNbOperation();
+	        	jobs.add(new_job);
+	        	
 	        }
 	        
 	        if(verbose) {
@@ -69,17 +72,15 @@ public final class DataFactory extends Verbose {
 	}
 
     
-    private Job scanJob(int idJob, Scanner input) {
+    private Job scanJob(int idJob, Scanner input, int job_index) {
     	int nb_activities = input.nextInt();
     	Job job = new Job(idJob);
     	Operation lastCreatedOp = null;	// memory the last one in order to set next
     	
-    	int index = 0;
-    	
     	for(int operation = 0; operation < nb_activities; operation++) {
 
     		int nb_machine = input.nextInt(); //get nb machine allowed for this operation
-    		Operation op = new Operation(job, operation, nb_machine);
+    		Operation op = new Operation(job, operation, nb_machine, job_index + operation);
     		
     		if(operation > 0)
     			lastCreatedOp.setNext(op);

@@ -20,7 +20,6 @@ public class Converter {
 	public static Solution convert(InitialSolution init, FlexibleJobShop context) {
 		
 		// 1. create ms and os
-		int nbMachine = context.getNbMachine();
 		int nbOp = context.getNbOperation();
 		
 		int ms[] = new int[nbOp];

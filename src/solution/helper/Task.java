@@ -50,7 +50,7 @@ public class Task extends Node {
 		return machine;
 	}
 	
-	public String toString() {
+	public String getString() {
 		return "{"+startingTime+"-"+completionTime+"}";
 	}
 	

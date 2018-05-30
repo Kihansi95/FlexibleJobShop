@@ -62,10 +62,11 @@ public class Solution {
 	
 	
 	public void permute (Node opA, Node opB, FlexibleJobShop context )throws AlgorithmLogicException {
-		int indexA=opA.getOperation();
-		int indexB=opB.getOperation();
-		this.os[indexA]=opB.getOperation();
-		this.os[indexB]=opA.getOperation();
+		
+		// permute the job of the two operation
+		this.os[opA.getIndex()] = opB.getJob();
+		this.os[opB.getIndex()] = opA.getJob();
+		
 		this.updateGraph(context);
 	}
 	
