@@ -101,7 +101,7 @@ public class LocalSearch {
 			
 			if (ok) {
 				
-				new_solution = solution;
+				new_solution = new Solution(solution); // clone
 				
 				System.out.println("[Local search] Try to permute "+saveOp+" <-> "+savePrec);
 				new_solution.permute(saveOp,savePrec,context); //swap in OA
@@ -114,6 +114,8 @@ public class LocalSearch {
 					System.out.println("[Local search] accept new solution: "+solution);
 					
 				}
+				
+				new_solution = null;
 			}
 		}
 		

@@ -35,6 +35,19 @@ public class Graph {
 		this.endNode = end;
 	}
 	
+	/**
+	 * Clone constructor
+	 * @param graph
+	 */
+	public Graph(Graph graph) {
+		
+		startNode = new Node(graph.startNode);
+		endNode = new Node(graph.startNode);
+		this.disjuncEdges = new ArrayList<Edge>(graph.disjuncEdges);
+		this.conjuncEdges = new ArrayList<Edge>(graph.conjuncEdges);
+		this.nodes = new HashMap<Operation, Node>(graph.nodes);
+	}
+
 	public Node getDisjunctiveFather(Node current) {
 		for (Edge edge : this.disjuncEdges) 
 			if (edge.getSuccessor().equals(current)) 
@@ -137,6 +150,11 @@ public class Graph {
 	private void recursiveTopoSort(Node node, Map<Node, Boolean> visited, Stack<Node> stack) {
 		visited.replace(node, true);
 		for(Node succ : getSuccessors(node).keySet()) {			
+						
+			if(visited.get(succ) == null) {
+				System.out.println("null in visited");
+			}
+			
 			if(!visited.get(succ)) {
 				recursiveTopoSort(succ, visited, stack);
 			}

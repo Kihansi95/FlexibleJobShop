@@ -53,4 +53,7 @@ public class Task extends Node {
 		return "{"+this.toString()+" : ["+startingTime +" - "+completionTime +"]}";
 	}
 	
+	public boolean equals(Object task) {
+		return super.equals(task);
+	}
 }

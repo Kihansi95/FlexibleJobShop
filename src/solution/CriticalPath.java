@@ -1,5 +1,6 @@
 package solution;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import solution.graph.Edge;
@@ -14,6 +15,15 @@ public class CriticalPath {
 		this.makespan = makespan;
 	}
 	
+	/**
+	 * Clone constructor
+	 * @param criticalPath
+	 */
+	public CriticalPath(CriticalPath criticalPath) {
+		this.makespan = criticalPath.makespan;
+		this.edges = new ArrayList<Edge>(criticalPath.edges);
+	}
+
 	public int getMakespan() {
 		return makespan;
 	}

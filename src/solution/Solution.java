@@ -29,6 +29,17 @@ public class Solution {
 		this.graph = graph;
 	}
 
+	/**
+	 * Clone construtor
+	 * @param solution
+	 */
+	public Solution(Solution solution) {
+		this.ma = solution.ma.clone();
+		this.os = solution.os.clone();
+		this.graph = new Graph(solution.graph);
+		this.criticalPath = new CriticalPath(solution.criticalPath);
+	}
+
 	public void setMa(int[] ma, FlexibleJobShop context) throws AlgorithmLogicException {
 		for(int i = 0; i < this.ma.length; i++)
 			if(this.ma[i] != ma[i]) {

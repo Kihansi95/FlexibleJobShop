@@ -32,4 +32,12 @@ public class Edge {
 	public String toString() {
 		return "{" + from + "->" + to +  ", "+value+"}";
 	}
+
+	@Override
+	public boolean equals(Object edge) {
+		return edge instanceof Edge
+				&&	((Edge) edge).from.equals(this.from)
+				&&	((Edge) edge).from.equals(this.value)
+				&&	((Edge) edge).value == this.value;
+	}
 }

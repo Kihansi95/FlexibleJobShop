@@ -47,15 +47,6 @@ public class Node {
 	}
 	
 	@Override
-	public boolean equals(Object another) {
-		Node other = (Node) another;
-		return another instanceof Node
-				&& this.job == other.job 
-				&& this.operation == other.operation 
-				&& this.machine == other.machine;
-	}
-	
-	@Override
 	public String toString() {
 		
 		final String SEPARATOR = "/";
@@ -78,26 +69,17 @@ public class Node {
 		return this.machine;
 	}
 
-	/*
-	private Map<Node, Edge> successors, predecessors;
-	public void addSuccessor(Node successor, Edge edge) {
-		successors.put(successor, edge);
-	}
-
-	public void addPredecessor(Node predecessor, Edge edge) {
-		predecessors.put(predecessor, edge);
-	}
-	
-	public Map<Node, Edge> getSuccessors() {
-		return new HashMap<Node, Edge>(this.successors);
-	}
-	
-	public Map<Node, Edge> getPredecessor() {
-		return new HashMap<Node, Edge>(this.predecessors);
-	}
-	*/
 	public void setMachine(int machine) {
 		this.machine = machine;
+	}
+	
+	@Override
+	public boolean equals(Object node) {
+		return node instanceof Node
+				&& ((Node) node).index == this.index
+				&& ((Node) node).job == this.job
+				&& ((Node) node).machine == this.machine
+				&& ((Node) node).operation == this.operation;
 	}
 
 }
