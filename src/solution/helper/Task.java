@@ -22,25 +22,19 @@ public class Task extends Node {
 		this.completionTime = completionTime;
 	}
 	
-	/*
-	public Task(Node node, FlexibleJobShop context) throws AlgorithmLogicException {
-		super(node);
-		this.startingTime = Integer.MAX_VALUE;
-		this.completionTime = Integer.MAX_VALUE;
-		this.processingTime = context
-								.getJobs().get(this.getJob())
-								.getOperations().get(this.getOperation())
-								.getProcessingTime(this.getMachine());
-		machine = null ;
+	public void resetTime() {
+		this.startingTime = Integer.MIN_VALUE;
+		this.completionTime = Integer.MIN_VALUE;
 	}
-	*/
 
 	public void updateCompletionTime() {
 		this.completionTime = this.startingTime + this.processingTime;
 	}
 
-	public void setMachine(List<TaskMachine> machines) throws AlgorithmLogicException {
-		this.machine = machines.get(this.getMachine() - 1);		
+	public void setMachine(List<TaskMachine> machines, FlexibleJobShop context) throws AlgorithmLogicException {
+		this.machine = machines.get(this.getMachine() - 1);	
+		this.processingTime = context.getJobs().get(this.job)
+									.getOperations().get(this.operation).getProcessingTime(machine.getId());
 	}
 	
 	public TaskMachine getTaskMachine() throws AlgorithmLogicException {
@@ -50,8 +44,13 @@ public class Task extends Node {
 		return machine;
 	}
 	
+	/*
 	public String getString() {
 		return "{"+startingTime+"-"+completionTime+"}";
+	}*/
+
+	public String getSchedule() {
+		return "{"+this.toString()+" : ["+startingTime +" - "+completionTime +"]}";
 	}
 	
 }

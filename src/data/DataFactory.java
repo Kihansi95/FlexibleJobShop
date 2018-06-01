@@ -4,6 +4,7 @@ import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Locale;
 import java.util.Scanner;
 
 import jobshopflexible.Configuration;
@@ -37,11 +38,12 @@ public final class DataFactory extends Verbose {
 		try {
         
 			input = new Scanner(new FileReader(conf.getParam(DATAPATH[0], DATAPATH[1])));
+			input.useLocale(Locale.US);
 			
 			// scan the first line
 	        int nb_job = input.nextInt();
 	        int nb_machine = input.nextInt();
-	        int avg_machine_per_operation = input.nextInt(); // really dont need
+	        float avg_machine_per_operation = input.nextFloat(); // really dont need
 	        
 	        // for each following line, we get a new job
 	        int index = 0;

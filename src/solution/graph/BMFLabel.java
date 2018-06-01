@@ -11,13 +11,17 @@ public class BMFLabel {
 	private Edge edgeFromFather;
 	private BMFLabel criticalFather;
 
-	public BMFLabel(Node node, Map<Node, BMFLabel> dicts) {
+	public BMFLabel(Node node, Map<Node, BMFLabel> dicts, Graph graph) {
 		
-		Map<Node, Edge> fathers = node.getPredecessor();
+		Map<Node, Edge> fathers = graph.getPredecessor(node);
 		startTime = Integer.MIN_VALUE;
+				
 		for(Entry<Node, Edge> f : fathers.entrySet()) {
+			
 			BMFLabel fl = dicts.get(f.getKey());
+			
 			Edge edge = f.getValue();
+						
 			if(fl.startTime + edge.getValue() > this.startTime) {
 				this.startTime = fl.startTime + edge.getValue();
 				this.edgeFromFather = edge;
@@ -43,6 +47,11 @@ public class BMFLabel {
 
 	public int getStartTime() {
 		return startTime;
+	}
+	
+	@Override
+	public String toString() {
+		return "{start time : "+startTime+", edge : "+edgeFromFather+"}";
 	}
 
 }

@@ -81,7 +81,14 @@ public class TaskMachine {
 	}
 
 	public String toString() {
-		return "{"+id+": "+tasks+"}";
+		//return tasks+"\n}";
+		
+		StringBuilder msg = new StringBuilder("{"+id+": ");
+		for(Task task : tasks) {
+			msg.append(task.getSchedule());
+		}
+				
+		return msg.toString();		
 	}
 	
 	public List<Task> schedule() {

@@ -35,10 +35,11 @@ public class TaskGroup { // == job
 	}
 	
 	public Task poll() {
+		
 		if(!isSorted()) {
 			sort();
 		}
-		System.out.println("poll job "+ id +" for "+current + " times");
+				
 		return tasks.get(current++);
 		
 	}

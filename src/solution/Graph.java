@@ -23,7 +23,6 @@ public class Graph {
 	private List<Edge> disjuncEdges;
 	private List<Edge> conjuncEdges;
 	
-	private boolean changed; // to assert the change in graph's data
 	
 	/**
 	 * Default constructor
@@ -50,6 +49,34 @@ public class Graph {
 		return null;
 	}
 	
+	public Map<Node, Edge> getSuccessors(Node node) {
+		Map<Node, Edge> tmp = new HashMap<Node, Edge>();
+		for(Edge edge : disjuncEdges) {
+			if(edge.getPredecessor().equals(node))
+				tmp.put(edge.getSuccessor(), edge);
+		}
+		for(Edge edge : conjuncEdges) {
+			if(edge.getPredecessor().equals(node))
+				tmp.put(edge.getSuccessor(), edge);
+		}
+		return tmp;
+	}
+	
+
+
+	public Map<Node, Edge> getPredecessor(Node node) {
+		Map<Node, Edge> tmp = new HashMap<Node, Edge>();
+		for(Edge edge : disjuncEdges) {
+			if(edge.getSuccessor().equals(node))
+				tmp.put(edge.getPredecessor(), edge);
+		}
+		for(Edge edge : conjuncEdges) {
+			if(edge.getSuccessor().equals(node))
+				tmp.put(edge.getPredecessor(), edge);
+		}
+		return tmp;
+	}
+	
 	public List<Edge> getEdges() {
 		List<Edge> edges = new ArrayList<Edge>(this.conjuncEdges);
 		edges.addAll(this.disjuncEdges);
@@ -67,9 +94,8 @@ public class Graph {
 	public CriticalPath getCriticalPath() {
 		Stack<Node> nodes = sortTopology();
 		Map<Node, BMFLabel> dicts = new HashMap<Node, BMFLabel>();
-		
 		while(!nodes.isEmpty()) {
-			BMFLabel label = new BMFLabel(nodes.peek(), dicts);
+			BMFLabel label = new BMFLabel(nodes.peek(), dicts, this);
 			dicts.put(nodes.pop(), label);
 		}
 		
@@ -80,8 +106,6 @@ public class Graph {
 		while(!label.equals(dicts.get(startNode))) {
 			critical_path.add(label.getEdge());
 			label = label.getFather();
-			if(label == null)
-				System.out.println("toto");
 		}
 		
 		Collections.reverse(critical_path);
@@ -112,7 +136,7 @@ public class Graph {
 	
 	private void recursiveTopoSort(Node node, Map<Node, Boolean> visited, Stack<Node> stack) {
 		visited.replace(node, true);
-		for(Node succ : node.getSuccessors().keySet()) {			
+		for(Node succ : getSuccessors(node).keySet()) {			
 			if(!visited.get(succ)) {
 				recursiveTopoSort(succ, visited, stack);
 			}
@@ -196,31 +220,25 @@ public class Graph {
 	}
 	
 	public static void main(String args[]) {
+		
 		//Test Bellman Ford 
-        Job j0 = new Job(0);
+        System.out.println("Test Bellman Ford");
+		
+		Job j0 = new Job(0);
         Job j1 = new Job(1);
         Job j2 = new Job(2);
         
-        Operation op00 = new Operation(j0, 0, 1);
-        Operation op01 = new Operation(j0, 1, 1);
-        Operation op02 = new Operation(j0, 2, 1);
+        Operation op00 = new Operation(j0, 0, 1, 0);
+        Operation op01 = new Operation(j0, 1, 1, 1);
+        Operation op02 = new Operation(j0, 2, 1, 2);
         
-        Operation op10 = new Operation(j1, 0, 1);
-        Operation op11 = new Operation(j1, 1, 1);
+        Operation op10 = new Operation(j1, 0, 1, 3);
+        Operation op11 = new Operation(j1, 1, 1, 4);
         
-        Operation op20 = new Operation(j2, 0, 1);
-        Operation op21 = new Operation(j2, 1, 1);
-        Operation op22 = new Operation(j2, 2, 1);
-        
-        op00.setIndex(0);
-        op01.setIndex(1);
-        op02.setIndex(2);
-        op10.setIndex(3);
-        op11.setIndex(4);
-        op20.setIndex(5);
-        op21.setIndex(6);
-        op22.setIndex(7);
-        
+        Operation op20 = new Operation(j2, 0, 1, 5);
+        Operation op21 = new Operation(j2, 1, 1, 6);
+        Operation op22 = new Operation(j2, 2, 1, 7);
+                
         // init nodes
         Node nd00 = new Node(op00, 1);
         Node nd01 = new Node(op01, 3);
@@ -281,13 +299,11 @@ public class Graph {
         
         CriticalPath critical = gr.getCriticalPath();
         
-        
-        
-        System.out.println("done");
-        
         System.out.println("Check if valid : "+critical.isValid());
         
         System.out.println("Critical path : "+ critical);
+        
+        System.out.println("done");
                 
 	}
 

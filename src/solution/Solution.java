@@ -1,6 +1,7 @@
 package solution;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 import exception.AlgorithmLogicException;
@@ -15,29 +16,30 @@ import data.Job;
 
 public class Solution {
 	
-	private int[] ms ;
+	private int[] ma ;
 	private int[] os ;
 	private Graph graph;
 	private CriticalPath criticalPath;
 	
 	private int endTime; 
 	
-	public Solution(int[] ms, int[] os, Graph graph) {
-		this.ms = ms;
+	public Solution(int[] ma, int[] os, Graph graph) {
+		this.ma = ma;
 		this.os = os;
 		this.graph = graph;
 	}
 
-	public void setMs(int[] ms) {
-		for(int i = 0; i < this.ms.length; i++)
-			if(this.ms[i] != ms[i]) {
-				graph.updateMachineOnNode(i, ms[i]);
+	public void setMa(int[] ma, FlexibleJobShop context) throws AlgorithmLogicException {
+		for(int i = 0; i < this.ma.length; i++)
+			if(this.ma[i] != ma[i]) {
+				graph.updateMachineOnNode(i, ma[i]);
 			}
-		this.ms = ms;
+		this.ma = ma;
+		this.updateGraph(context);
 	}
 	
-	public int[] getMs() {
-		return ms;
+	public int[] getMa() {
+		return ma;
 	}
 
 	public int[] getOs() {
@@ -60,12 +62,31 @@ public class Solution {
 		return this.getCriticalPath().getMakespan();
 	}
 	
-	
-	public void permute (Node opA, Node opB, FlexibleJobShop context )throws AlgorithmLogicException {
+	private int getOsIndex(Node node) throws AlgorithmLogicException {
+		int op = 0;
+		for(int i = 0; i < this.os.length; i++) {
+			if(os[i] == node.getJob()) {
+				if(op == node.getOperation())
+					return i;
+				else
+					op++;
+			}
+		}
 		
-		// permute the job of the two operation
-		this.os[opA.getIndex()] = opB.getJob();
-		this.os[opB.getIndex()] = opA.getJob();
+		throw new AlgorithmLogicException("Node not found on os : "+ node);
+	}
+	
+	public void permute (Node operation, Node precedent, FlexibleJobShop context ) throws AlgorithmLogicException {
+		
+		// find index in os:
+		int index_op = getOsIndex(operation);
+		int index_prec = getOsIndex(precedent);
+		
+		// permute the job of the two operation	in os	
+		this.os[index_op] = precedent.getJob();
+		this.os[index_prec] = operation.getJob();
+		
+		
 		
 		this.updateGraph(context);
 	}
@@ -87,11 +108,12 @@ public class Solution {
 		}
 		for(Node node : graph.getNodes()) {
 			Task task = (Task) node;
+			task.resetTime();
 			jobs.get(task.getJob()).add(task);
 			
-			// generate machine for each operation based on MS
-			//TaskMachine machine = machines.get(ms[task.getIndex()]);
-			task.setMachine(machines); // we supposed that machine has been saved into node
+			// generate machine for each operation based on MA
+			//TaskMachine machine = machines.get(ma[task.getIndex()]);
+			task.setMachine(machines, context); // we supposed that machine has been saved into node
 			
 		}
 		
@@ -138,7 +160,7 @@ public class Solution {
 		}
 		
 		graph.setDisjunctiveEdges(disjuncs);
-		
+				
 		// update the critical path as disjunctives have been changed
 		this.criticalPath = graph.getCriticalPath();
 	}
@@ -152,5 +174,9 @@ public class Solution {
 		pdfWriter.write();
 	}
 	
+	@Override
+	public String toString() {
+		return "{ Solution makespan : " + this.criticalPath.getMakespan() + "}";
+	}
 	
 }

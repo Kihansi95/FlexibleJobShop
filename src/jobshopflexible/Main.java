@@ -39,10 +39,10 @@ public class Main {
         
         try {
 			sol.updateGraph(shop);
-			// sol.visualize(pdfWriter);			// test solution representation
+			//sol.visualize(pdfWriter);			// test solution representation
 		
 			ls.start(sol);
-			sol.visualize(pdfWriter);
+			//sol.visualize(pdfWriter);
 			
 		} catch (AlgorithmLogicException e) {
 			e.printStackTrace();
