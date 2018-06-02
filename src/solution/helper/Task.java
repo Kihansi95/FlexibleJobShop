@@ -15,6 +15,16 @@ public class Task extends Node {
 	
 	private TaskMachine machine;
 	
+	public Task(Node node) {
+		super(node);
+		if(!(node instanceof Task))
+			System.err.println("[Task] Warning : trying to clone a non task as a task");
+		Task task = (Task) node;
+		this.startingTime = task.startingTime;
+		this.completionTime = task.completionTime;
+		this.processingTime = task.processingTime;
+	}
+	
 	public Task(Operation operation, int machine, int startingTime, int completionTime, int processingTime) {
 		super(operation, machine);
 		this.startingTime = startingTime;
@@ -44,11 +54,6 @@ public class Task extends Node {
 		return machine;
 	}
 	
-	/*
-	public String getString() {
-		return "{"+startingTime+"-"+completionTime+"}";
-	}*/
-
 	public String getSchedule() {
 		return "{"+this.toString()+" : ["+startingTime +" - "+completionTime +"]}";
 	}

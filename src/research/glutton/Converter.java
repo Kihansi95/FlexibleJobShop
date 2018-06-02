@@ -1,4 +1,4 @@
-package research.initial;
+package research.glutton;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -17,7 +17,7 @@ import solution.helper.Task;
 
 public class Converter {
 
-	public static Solution convert(InitialSolution init, FlexibleJobShop context) {
+	public static Solution convert(GluttonSearch init, FlexibleJobShop context) {
 		
 		// 1. create ms and os
 		int nbOp = context.getNbOperation();

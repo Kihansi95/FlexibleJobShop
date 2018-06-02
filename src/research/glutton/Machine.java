@@ -1,4 +1,4 @@
-package research.initial;
+package research.glutton;
 
 public class Machine {
 

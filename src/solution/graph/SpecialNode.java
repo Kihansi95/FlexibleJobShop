@@ -8,6 +8,13 @@ public class SpecialNode extends Node {
 		this.start = start;
 	}
 	
+	public SpecialNode(Node node) {
+		super(node);
+		if(!(node instanceof SpecialNode))
+			System.err.println("[SpecialNode] warning: trying to clone a non special node as a special node");
+		this.start = ((SpecialNode) node).start;
+	}
+	
 	public String toString() {
 		return start ? "start" : "end";
 	}

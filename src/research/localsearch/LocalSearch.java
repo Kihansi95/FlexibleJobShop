@@ -82,7 +82,7 @@ public class LocalSearch {
 		CriticalPath critical_path = solution.getCriticalPath();
 		
 		while(!ok) {
-			System.out.println("[localSearchDij] makespan = "+solution.getMakespan());
+			System.out.println("[local search disjunctive] makespan = "+solution.getMakespan());
 			
 			op = critical_path.getLastNode();
 			
@@ -103,9 +103,9 @@ public class LocalSearch {
 				
 				new_solution = new Solution(solution); // clone
 				
-				System.out.println("[Local search] Try to permute "+saveOp+" <-> "+savePrec);
+				System.out.println("[local search disjunctive] Try to permute "+saveOp+" <-> "+savePrec);
 				new_solution.permute(saveOp,savePrec,context); //swap in OA
-				System.out.println("[Local search] Candidat solution has makespan = " + new_solution.getMakespan());
+				System.out.println("[local search disjunctive] Candidat solution has makespan = " + new_solution.getMakespan());
 				
 				if (new_solution.getMakespan() < solution.getMakespan()) {
 					

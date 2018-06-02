@@ -4,8 +4,8 @@ import data.DataFactory;
 import data.FlexibleJobShop;
 import exception.AlgorithmLogicException;
 import output.pdflatex.PdfWriter;
-import research.initial.Converter;
-import research.initial.InitialSolution;
+import research.glutton.Converter;
+import research.glutton.GluttonSearch;
 import research.localsearch.LocalSearch;
 import solution.CriticalPath;
 import solution.Solution;
@@ -21,28 +21,29 @@ public class Main {
         FlexibleJobShop shop = DataFactory.instance(conf).initiateJobShop(conf);
         
         // initiate output method
-        PdfWriter pdfWriter = new PdfWriter(conf);
+        //PdfWriter pdfWriter = new PdfWriter(conf);
         
         // initiate algorithm
-        LocalSearch ls = new LocalSearch(shop);
+        LocalSearch local_s = new LocalSearch(shop);
         
         // Process the initial solution
-        InitialSolution is = new InitialSolution(conf, shop);
-        is.start();
+        GluttonSearch glutton_s = new GluttonSearch(conf, shop);
+        glutton_s.start();
 
         // Visualize the solution
         // System.out.println(is.getSolution());
         // is.visualize(new PdfWriter(conf)); 		// test initial solution
         
-        Solution sol = Converter.convert(is, shop);
+        Solution sol = Converter.convert(glutton_s, shop);
         // sol.visualize(new PdfWriter(conf));		// test graph visualization
         
         try {
 			sol.updateGraph(shop);
 			//sol.visualize(pdfWriter);			// test solution representation
 		
-			ls.start(sol);
+			local_s.start(sol);
 			//sol.visualize(pdfWriter);
+			System.out.println("Final solution has makespan = " + sol.getMakespan());
 			
 		} catch (AlgorithmLogicException e) {
 			e.printStackTrace();

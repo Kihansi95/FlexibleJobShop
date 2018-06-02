@@ -1,4 +1,4 @@
-package research.initial;
+package research.glutton;
 
 import java.util.Stack;
 
@@ -8,13 +8,13 @@ public class LabelDescriptor implements IDescriptor {
 
 	private Stack<Label> criticalNodes;
 	private int totalTime;
-	private InitialSolution is;
+	private GluttonSearch is;
 	
 	/**
 	 * the last node of the critical path
 	 * @param lastNode
 	 */
-	public LabelDescriptor(Label lastNode, InitialSolution is) {
+	public LabelDescriptor(Label lastNode, GluttonSearch is) {
 		totalTime = lastNode.getFinishTime();
 		criticalNodes = new Stack<Label>();
 		for(Label node = lastNode; node != null; node = node.getCriticalFather()) {

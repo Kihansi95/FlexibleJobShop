@@ -1,4 +1,4 @@
-package research.initial;
+package research.glutton;
 
 import java.util.ArrayList;
 import java.util.Comparator;
@@ -13,7 +13,7 @@ import output.pdflatex.PdfWriter;
 import solution.Solution;
 import utility.Verbose;
 
-public class InitialSolution extends Verbose {
+public class GluttonSearch extends Verbose {
 	
 	// input
 	private FlexibleJobShop context; //TODO need it??
@@ -62,7 +62,7 @@ public class InitialSolution extends Verbose {
 		}
 	}
 	
-	public InitialSolution(Configuration conf, FlexibleJobShop context) {
+	public GluttonSearch(Configuration conf, FlexibleJobShop context) {
 		
 		super(conf, "is");
 		

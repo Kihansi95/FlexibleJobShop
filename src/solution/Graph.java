@@ -8,12 +8,15 @@ import java.util.List;
 import java.util.Map;
 import java.util.Stack;
 
+import org.apache.commons.collections.bag.SynchronizedSortedBag;
+
 import data.*;
 import output.pdflatex.PdfWriter;
 import solution.graph.BMFLabel;
 import solution.graph.Edge;
 import solution.graph.Node;
 import solution.graph.SpecialNode;
+import solution.helper.Task;
 
 public class Graph {
 	
@@ -41,11 +44,48 @@ public class Graph {
 	 */
 	public Graph(Graph graph) {
 		
-		startNode = new Node(graph.startNode);
-		endNode = new Node(graph.startNode);
-		this.disjuncEdges = new ArrayList<Edge>(graph.disjuncEdges);
-		this.conjuncEdges = new ArrayList<Edge>(graph.conjuncEdges);
-		this.nodes = new HashMap<Operation, Node>(graph.nodes);
+		startNode = new SpecialNode(graph.startNode);
+		endNode = new SpecialNode(graph.endNode);
+		
+		this.nodes = new HashMap<Operation, Node>();
+		for(Map.Entry<Operation, Node> original_node : graph.nodes.entrySet()) {
+			Task clone_node = new Task(original_node.getValue());
+			nodes.put(original_node.getKey(), clone_node);
+		}
+		
+		// clone disjunc edges
+		this.disjuncEdges = new ArrayList<Edge>();
+		for(Edge original_edge : graph.disjuncEdges) {
+			
+			// clone exactly the edge
+			Node from = this.getNode(original_edge.getPredecessor());
+			Node to = this.getNode(original_edge.getSuccessor());
+			Edge clone_edge = new Edge(from, to, original_edge.getValue());
+			
+			this.disjuncEdges.add(clone_edge);
+		}
+		
+		// clone conjunc edges
+		this.conjuncEdges = new ArrayList<Edge>();
+		for(Edge original_edge : graph.conjuncEdges) {
+			
+			// clone exactly the edge
+			Node from = original_edge.getPredecessor().equals(this.startNode) ? this.startNode : this.getNode(original_edge.getPredecessor());
+			
+			Node to = original_edge.getSuccessor().equals(this.endNode) ? this.endNode : this.getNode(original_edge.getSuccessor());
+			
+			Edge clone_edge = new Edge(from, to, original_edge.getValue());
+			
+			this.conjuncEdges.add(clone_edge);
+		}
+	}
+	
+	private Node getNode(Node referenceNode) {
+		for(Node node: this.nodes.values()) {
+			if(node.equals(referenceNode))
+				return node;
+		}
+		return null;
 	}
 
 	public Node getDisjunctiveFather(Node current) {
@@ -69,13 +109,14 @@ public class Graph {
 				tmp.put(edge.getSuccessor(), edge);
 		}
 		for(Edge edge : conjuncEdges) {
+			if(edge.getPredecessor() == null) {
+				System.out.println("cici");
+			}
 			if(edge.getPredecessor().equals(node))
 				tmp.put(edge.getSuccessor(), edge);
 		}
 		return tmp;
 	}
-	
-
 
 	public Map<Node, Edge> getPredecessor(Node node) {
 		Map<Node, Edge> tmp = new HashMap<Node, Edge>();
@@ -139,7 +180,6 @@ public class Graph {
 		}
 		
 		// call recursively the sub sort to store 
-		
 		for(Node node : all_nodes) {
 			if(!visited.get(node))
 				recursiveTopoSort(node, visited, stack);
@@ -149,6 +189,7 @@ public class Graph {
 	
 	private void recursiveTopoSort(Node node, Map<Node, Boolean> visited, Stack<Node> stack) {
 		visited.replace(node, true);
+		
 		for(Node succ : getSuccessors(node).keySet()) {			
 						
 			if(visited.get(succ) == null) {
