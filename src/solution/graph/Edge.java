@@ -32,6 +32,10 @@ public class Edge {
 	public String toString() {
 		return "{" + from + "->" + to +  ", "+value+"}";
 	}
+	
+	public boolean isDisjunctive() {
+		return from.job >= 0 && to.job >= 0 && from.job != to.job;
+	}
 
 	@Override
 	public boolean equals(Object edge) {

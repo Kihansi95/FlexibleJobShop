@@ -6,7 +6,7 @@
 
 ## Getting started
 ### Eclipse configuration
-* Download testing data from [here}(http://people.idsia.ch/~monaldo/fjsp.html)
+* Download testing data from [here](http://people.idsia.ch/~monaldo/fjsp.html)
 * Once downloaded, unzip the files into a folder (named for ex. `data`).
 * Drag `data` to the **Package Explorer**, into the **FlexibleJobShop**, at the same level with **src**, **JRE System Library**
 * Right click to the project name **FlexibleJobShop** > New > Folder, type `conf` in Folder name

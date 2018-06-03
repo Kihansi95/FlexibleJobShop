@@ -37,7 +37,7 @@ public class Solution {
 		this.ma = solution.ma.clone();
 		this.os = solution.os.clone();
 		this.graph = new Graph(solution.graph);
-		this.criticalPath = new CriticalPath(solution.criticalPath);
+		this.criticalPath = this.graph.getCriticalPath();
 	}
 
 	public void setMa(int[] ma, FlexibleJobShop context) throws AlgorithmLogicException {
@@ -46,6 +46,13 @@ public class Solution {
 				graph.updateMachineOnNode(i, ma[i]);
 			}
 		this.ma = ma;
+		this.updateGraph(context);
+	}
+	
+	//TODO better ma?
+	public void setMa(FlexibleJobShop context, int index, int machine) throws AlgorithmLogicException {
+		this.ma[index] = machine;
+		graph.updateMachineOnNode(index, machine);
 		this.updateGraph(context);
 	}
 	
@@ -96,8 +103,6 @@ public class Solution {
 		// permute the job of the two operation	in os	
 		this.os[index_op] = precedent.getJob();
 		this.os[index_prec] = operation.getJob();
-		
-		
 		
 		this.updateGraph(context);
 	}
@@ -187,7 +192,7 @@ public class Solution {
 	
 	@Override
 	public String toString() {
-		return "{ Solution makespan : " + this.criticalPath.getMakespan() + "}";
+		return "{\n\tmakespan : " + this.criticalPath.getMakespan() + ",\n\tcritical path: "+ this.criticalPath + "\n}";
 	}
 	
 }

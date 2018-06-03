@@ -29,7 +29,8 @@ public class CriticalPath {
 	}
 	
 	public Node getLastNode() {
-		return edges.get(edges.size() - 1).getSuccessor();
+		//return edges.get(edges.size() - 1).getSuccessor();
+		return edges.get(edges.size() - 1).getPredecessor(); // skip end node
 	}
 	
 	/**
@@ -49,7 +50,14 @@ public class CriticalPath {
 	}
 	
 	public String toString() {
-		return "{makespan = "+makespan+", "+edges+"}"; 
+		StringBuilder msg = new StringBuilder("{\n");
+		msg.append("\tmakespan: "+makespan+",\n");
+		msg.append("\t" + edges.get(0).getPredecessor());
+		for(Edge edge : edges) {
+			msg.append(" -(" + edge.getValue() + ")-> "+edge.getSuccessor());
+		}
+		msg.append("\n}");
+		return msg.toString(); 
 	}
 	
 	public Node getPredecessor(Node node) {

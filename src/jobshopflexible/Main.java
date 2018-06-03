@@ -42,8 +42,9 @@ public class Main {
 			//sol.visualize(pdfWriter);			// test solution representation
 		
 			local_s.start(sol);
+			sol = local_s.getSolution();
 			//sol.visualize(pdfWriter);
-			System.out.println("Final solution has makespan = " + sol.getMakespan());
+			System.out.println("Final solution: " + sol);
 			
 		} catch (AlgorithmLogicException e) {
 			e.printStackTrace();
