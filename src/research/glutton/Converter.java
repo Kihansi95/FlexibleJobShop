@@ -68,7 +68,7 @@ public class Converter {
 			// add conjunctive edge (last_node -> end_node)
 			if(assign.getOperation().isLast()) {
 				Node last = to;
-				conjunctives.add(new Edge(last, end_node, 0));
+				conjunctives.add(new Edge(last, end_node, assign.getProcessingTime()));
 			}
 			
 			// other case add edge for every father found

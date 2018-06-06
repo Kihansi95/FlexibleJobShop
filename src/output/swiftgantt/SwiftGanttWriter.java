@@ -33,10 +33,10 @@ public class SwiftGanttWriter {
 		model.setDeadline(new Time(new GregorianCalendar(2008, 0, 30)));
 		
 		// Create basic element for Gantt Chart
-		Task taskGroup = new Task("My Work 1", new Time(2008, 1, 1), new Time(2008, 1, 30));
-		Task task1 = new Task("Sub-task 1", new Time(2008, 1, 1), new Time(2008, 1, 5));
+		Task taskGroup = new Task("Ordonnancement", new Time(2008, 1, 1), new Time(2008, 1, 30));
+		Task task1 = new Task("Machine 0", new Time(2008, 1, 1), new Time(2008, 1, 5));
 		Task task2 = new Task();
-		task2.setName("Sub-task 2");
+		task2.setName("Machine 1");
 		task2.setStart(new Time(2008, 1, 6));
 		task2.setEnd(new Time(2008, 1, 18));// Since version 0.3.0, the end time set to a task is included in duration of the task
 

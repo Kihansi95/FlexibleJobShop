@@ -6,17 +6,21 @@ import com.sun.org.glassfish.external.statistics.impl.StatsImpl;
 
 import data.FlexibleJobShop;
 import exception.AlgorithmLogicException;
+import jobshopflexible.Configuration;
 import solution.CriticalPath;
 import solution.Solution;
 import solution.graph.Edge;
 import solution.graph.Node;
+import utility.Verbose;
 
-public class LocalSearch {
+public class LocalSearch extends Verbose {
 
 	final private FlexibleJobShop context;
 	private Solution optimizedSolution;
 
-	public LocalSearch(FlexibleJobShop context) {
+	public LocalSearch(Configuration conf, FlexibleJobShop context) {
+		
+		super(conf, "localsearch");
 		this.context = context;
 		this.optimizedSolution = null;
 	}
@@ -27,9 +31,14 @@ public class LocalSearch {
 	
 	public void start(Solution solution) throws AlgorithmLogicException {
 		
-		localSearchDij(solution);
+		Solution first_improved_solution = localSearchDij(solution);
+		if(first_improved_solution != null) {
+			solution = first_improved_solution;
+			first_improved_solution = null; // try to free memory
+		}
 		
 		int current_Machine;
+		
 		Node node = solution.getCriticalPath().getLastNode();
 				
 		int[] ma = solution.getMa();
@@ -49,10 +58,12 @@ public class LocalSearch {
 				current_Machine = ma[node.getIndex()]; //get the currently assigned machine
 				machines.remove(new Integer(current_Machine));
 				
+				if(this.verbose)
+					System.out.println("[Local search] Exploring ma neighbor on node " + node);
+				
 				for(int machine : machines) {
 														
 					//modify machine sequence
-					System.out.println("try machine " + machine + " to node "+node);
 					Solution tmp_solution = new Solution(solution);
 					tmp_solution.setMa(context, node.getIndex(), machine); 
 					
@@ -69,9 +80,12 @@ public class LocalSearch {
 				if(improved_neighbor) {
 					solution = neighbor_ma;
 					node = solution.getCriticalPath().getLastNode();
-					System.out.println("[Local search] =====================================");
-					System.out.println("[Local search] A better solution found: "+solution);
-					System.out.println("[Local serach] restart to the sink node "+node);
+					if(this.verbose) {
+						System.out.println("[Local search] =====================================");
+						System.out.println("[Local search] A better solution found: "+solution);
+						System.out.println("[Local serach] restart to the sink node "+node);
+					}
+					
 				} else {
 					node = solution.getCriticalPath().getPredecessor(node);
 				}
@@ -99,20 +113,22 @@ public class LocalSearch {
 			// check if disjunctive
 			if(edge.isDisjunctive()) {
 				
-				//TODO debug
-				//System.out.println("Disjunctive found : "+edge);
 				Solution neighbor = new Solution(solution); // clone
 				
 				neighbor.permute(edge.getSuccessor(), edge.getPredecessor(), context);
-				//System.out.println("[local search disjunctive] Try to permute " + edge.getPredecessor() + " <-> " + edge.getSuccessor() +" : makespan = " + neighbor.getMakespan());
-				//System.out.println("Compare : neighbor = "+neighbor.getMakespan()+", new_solution = "+new_solution.getMakespan());
+				
+				if(this.verbose)
+					System.out.println("[local search] Try to permute " + edge.getPredecessor() + " <-> " + edge.getSuccessor() +" : makespan = " + neighbor.getMakespan());
+				
 				if (neighbor.getMakespan() < new_solution.getMakespan()) {
 					
 					solution_updated = true;
 					new_solution = neighbor;
-					System.out.println("[Local search] found a better neighbor solution: " + new_solution);
+					if(this.verbose)
+						System.out.println("[Local search] found a better neighbor solution: " + new_solution);
 					
 				}
+				
 			}
 		}
 		
@@ -120,58 +136,4 @@ public class LocalSearch {
 			return new_solution;	
 		return null;
 	}
-	/*
-	private boolean localSearchDij(Solution solution, FlexibleJobShop context)throws AlgorithmLogicException {
-		
-		boolean ok = false;
-		
-		Node op;
-		Node saveOp = null;
-		Node savePrec = null;
-		
-		Node disjunctiveFather;
-		Solution new_solution;
-		CriticalPath critical_path = solution.getCriticalPath();
-		
-		while(!ok) {
-			System.out.println("[local search disjunctive] makespan = "+solution.getMakespan());
-			
-			op = critical_path.getLastNode();
-			
-			while (op!=null) {
-				
-				disjunctiveFather = solution.getGraph().getDisjunctiveFather(op);
-				
-				if (disjunctiveFather != null) {
-					saveOp = op;
-					savePrec = disjunctiveFather;
-					ok = true;
-				}
-				
-				op = critical_path.getPredecessor(op);
-			}
-			
-			if (ok) {
-				
-				new_solution = new Solution(solution); // clone
-				
-				System.out.println("[local search disjunctive] Try to permute "+saveOp+" <-> "+savePrec);
-				new_solution.permute(saveOp,savePrec,context); //swap in OA
-				System.out.println("[local search disjunctive] Candidat solution has makespan = " + new_solution.getMakespan());
-				
-				if (new_solution.getMakespan() < solution.getMakespan()) {
-					
-					solution = new_solution;
-					ok = false;
-					System.out.println("[Local search] accept new solution: "+solution);
-					
-				}
-				
-				new_solution = null;
-			}
-		}
-		
-		return ok;
-	}
-	*/
 }

@@ -24,7 +24,7 @@ public class SolutionDescriptor implements IDescriptor {
 				first = false;
 			}
 				
-			des.append(" $\\\\rightarrow$  ("+edge.getSuccessor()+ ")");
+			des.append(" $\\rightarrow$  ("+edge.getSuccessor()+ ")");
 		}
 		return des.toString();
 	}

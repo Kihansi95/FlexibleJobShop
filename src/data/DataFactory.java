@@ -17,8 +17,6 @@ public final class DataFactory extends Verbose {
 				"conf/fjs.conf"		// default value if not found
 			};
 	
-	
-	
 	// singleton
 	private static DataFactory _instance;
 	private DataFactory(Configuration conf) {
@@ -30,43 +28,46 @@ public final class DataFactory extends Verbose {
 		return _instance;
 	}
 	
+	public FlexibleJobShop initiateJobShop(Scanner input) {
+		
+		List<Job> jobs = new ArrayList<Job>();
+		
+		// scan the first line
+        int nb_job = input.nextInt();
+        int nb_machine = input.nextInt();
+        float avg_machine_per_operation = input.nextFloat(); // really dont need
+        
+        // for each following line, we get a new job
+        int index = 0;
+        for(int job = 0; job < nb_job; job++) {
+        	Job new_job = scanJob(job, input, index);
+        	index += new_job.getNbOperation();
+        	jobs.add(new_job);
+        }
+        
+        if(verbose) {
+        	// check if all the job has been correctly instantiated
+	        System.out.println("The problem has "+nb_job+" jobs, "+nb_machine+" machines:");
+	        for(Job job: jobs) {
+	        	System.out.println(job);
+	        }
+        }
+        
+		input.close();
+		
+		FlexibleJobShop context = new FlexibleJobShop(jobs, nb_machine);
+		return context;
+	}
+	
 	public FlexibleJobShop initiateJobShop(Configuration conf){
 		
-    	List<Job> jobs = new ArrayList<Job>();
-    	Scanner input;
-    	
 		try {
-        
+			Scanner input;
 			input = new Scanner(new FileReader(conf.getParam(DATAPATH[0], DATAPATH[1])));
 			input.useLocale(Locale.US);
 			
-			// scan the first line
-	        int nb_job = input.nextInt();
-	        int nb_machine = input.nextInt();
-	        float avg_machine_per_operation = input.nextFloat(); // really dont need
-	        
-	        // for each following line, we get a new job
-	        int index = 0;
-	        for(int job = 0; job < nb_job; job++) {
-	        	Job new_job = scanJob(job, input, index);
-	        	index += new_job.getNbOperation();
-	        	jobs.add(new_job);
-	        	
-	        }
-	        
-	        if(verbose) {
-	        	// check if all the job has been correctly instantiated
-		        System.out.println("The problem has "+nb_job+" jobs, "+nb_machine+" machines:");
-		        for(Job job: jobs) {
-		        	System.out.println(job);
-		        }
-	        }
-	        
-	        
-			input.close();
-			
-			FlexibleJobShop context = new FlexibleJobShop(jobs, nb_machine);
-			return context;
+			return this.initiateJobShop(input);
+
 		} catch (FileNotFoundException e) {
 			e.printStackTrace();
 			return null;

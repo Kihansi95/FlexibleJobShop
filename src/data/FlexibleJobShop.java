@@ -34,4 +34,22 @@ public class FlexibleJobShop {
 		return nbOperation;
 	}
 
+	/**
+	 * Return the complexity of a dataset.
+	 * o(n) = nb_machine + S(nb_operation in each job) + S(nb_tuple in each operation)
+	 * @return int
+	 */
+	public int getComplexity() {
+		
+		int o = nbMachine;	// o(n)
+		
+		for(Job job : jobs) {
+			o += job.getNbOperation();
+			for(Operation operation : job.getOperations()) {
+				o += operation.getTuples().size();
+			}
+		}
+		
+		return o;
+	}
 }

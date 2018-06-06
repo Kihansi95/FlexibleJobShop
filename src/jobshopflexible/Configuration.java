@@ -11,15 +11,13 @@ public class Configuration {
 	public String pdfLatexPath;
 	
 	private  final Properties prop = new Properties();
-	
-	private static final String CONF = "conf/fjs.conf";
-	
-	public Configuration() {
+		
+	public Configuration(String filename) {
 		
 		InputStream input = null;
 		
 		try {
-			input = new FileInputStream(CONF);
+			input = new FileInputStream(filename);
 
 			// load conf file
 			prop.load(input);

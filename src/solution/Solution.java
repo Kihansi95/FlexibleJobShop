@@ -27,6 +27,7 @@ public class Solution {
 		this.ma = ma;
 		this.os = os;
 		this.graph = graph;
+		this.criticalPath = graph.getCriticalPath();
 	}
 
 	/**
