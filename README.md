@@ -1,8 +1,8 @@
 # Flexible Job Shop
 
 ## Authors
-* Duc Hau NGUYEN
-* Gael AYOUBA
+* Duc Hau NGUYEN - Computer Engineering student at INSA Toulouse, promo 52
+* Gael AYOUBA - Computer Engineering student at INSA Toulouse, promo 52
 
 ## Getting started
 
