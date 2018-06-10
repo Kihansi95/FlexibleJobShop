@@ -24,15 +24,28 @@ The project's solution is configured by a `.conf` file. We propose a `fjs.conf` 
 
 ### data.*
 Parameter for initializing fjs problem.
+```
+data.path=data/Dauzere_Data/11a.fjs
+data.verbose=false
+```
 * **data.path** specify the relative path to the dataset of problem. In the data folder, we placed some example of dataset from the idsia's proposal.
 * **data.verbose** will display log process to console.
 
 ### is.*
 Parameter for initializing glutton research.
+```
+is.verbose=false
+```
 * **is.verbose** will display log process to console.
 
 ### output.*
 Parameter for visualizing the found solution.
+```
+output.directory=tmp
+output.filename=is
+output.pdflatex=C:\\Program Files\\MiKTeX 2.9\\miktex\\bin\\x64\\pdflatex
+output.verbose=false
+```
 * **output.directory** the folder where we write down the visualisation of solution (in pdf file or png/jpg images, etc.)
 * **output.filename** the output file name 
 * **output.pdflatex** path to execute the pdflatex. In window this path must lead to the .exe file. In Linux the instruction is given in the section [Solution Visualisation](#solution-visualization).
@@ -40,6 +53,9 @@ Parameter for visualizing the found solution.
 
 ### localsearch.*
 Parameter for initializing the method of local search.
+```
+localsearch.verbose=false
+```
 * **localsearch.verbose** will display log process to console.
 
 
