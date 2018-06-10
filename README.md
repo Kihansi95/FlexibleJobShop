@@ -5,6 +5,11 @@
 * Gael AYOUBA
 
 ## Getting started
+
+### Requirement
+* Java JDK 1.8.x
+* Eclipse (Oxygen for preference)
+
 ### Eclipse configuration
 * Download testing data from [here](http://people.idsia.ch/~monaldo/fjsp.html)
 * Once downloaded, unzip the files into a folder (named for ex. `data`).
@@ -14,7 +19,29 @@
 * You can see an example of configuration in the below section. For the dev reason, we ignore to put track fjs.conf in the project.
 
 ## Configuration
-Copy the from the template file **fjs.conf** and paste it into **conf/fjs.conf**, adapt conf parameter as you environment.
+The project's solution is configured by a `.conf` file. We propose a `fjs.conf` file template with all the parameter. Each line, the parameter must set by the format `key=value`, the key of parameter are defined by developer. The following section explain the parameters.
+
+
+### data.*
+Parameter for initializing fjs problem.
+* **data.path** specify the relative path to the dataset of problem. In the data folder, we placed some example of dataset from the idsia's proposal.
+* **data.verbose** will display log process to console.
+
+### is.*
+Parameter for initializing glutton research.
+* **is.verbose** will display log process to console.
+
+### output.*
+Parameter for visualizing the found solution.
+* **output.directory** the folder where we write down the visualisation of solution (in pdf file or png/jpg images, etc.)
+* **output.filename** the output file name 
+* **output.pdflatex** path to execute the pdflatex. In window this path must lead to the .exe file. In Linux the instruction is given in the section [Solution Visualisation](#solution-visualisation).
+* **output.verbose** will display log process to console.
+
+### localsearch.*
+Parameter for initializing the method of local search.
+* **localsearch.verbose** will display log process to console.
+
 
 ## Solution Visualization
 
@@ -30,15 +57,5 @@ This step is optional, do it when you have error:
 * Right click in the **Referenced Libraries**, right click on one `.jar` file > **Build Path** > **Configure Build Path**
 * Click to the tab **Order and export**, move all the `.jar` files up and let the project source at the final order.
 
-## TODO
-* :poop: Repr�sentation de probl�me (graphe)
-* :poop: Repr�sentation de solution
-* Impl�mentation de l'algorithme:
-	* M�ta heuristique de recherche local
-	* M�thode � population de solution
-* Test avec jeu de donnée
-* Visualiser mesure de performance (temps d'exec, espace m�moire occup�e)
-
-* une solution
-* evaluation, stockage
-* -> faire evoluer
+## Licence
+No licence (or MIT???). Just give us a start for our hard work if you use or study something in our code.
