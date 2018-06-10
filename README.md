@@ -35,7 +35,7 @@ Parameter for initializing glutton research.
 Parameter for visualizing the found solution.
 * **output.directory** the folder where we write down the visualisation of solution (in pdf file or png/jpg images, etc.)
 * **output.filename** the output file name 
-* **output.pdflatex** path to execute the pdflatex. In window this path must lead to the .exe file. In Linux the instruction is given in the section [Solution Visualisation](#solution-visualisation).
+* **output.pdflatex** path to execute the pdflatex. In window this path must lead to the .exe file. In Linux the instruction is given in the section [Solution Visualisation](#solution-visualization).
 * **output.verbose** will display log process to console.
 
 ### localsearch.*
